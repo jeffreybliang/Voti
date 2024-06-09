@@ -26,7 +26,7 @@ class Song:
         return f'{self.name}, {self.artists_names}, {self.release_date}, {self.url}'
     
     def __repr__(self) -> str:
-        return f'{self.name}, {self.artists_names}, {self.release_date}, {self.url}, {self.image_urls}'
+        return f'{self.name}, {self.artists_names}, {self.release_date}, {self.url}'
 
 def get_artists_ids(artists):
     ids = [a['id'] for a in artists]
@@ -46,20 +46,24 @@ def get_image_urls(image_urls):
 def valid_release_date(release_date:str, start='2023-12-01', end='2024-11-30'):
     return start<=release_date<=end
 
-def search(query: str, limit=40):
-    search_results = sp.search(q=query+" year:2023-2024", limit=limit)
+def search(query: str, limit=10):
+    search_results = sp.search(q=query+"%2520year%3A2023-2024", limit=limit)
     search_results = search_results['tracks']['items']
     
     invalid_songs = []
     unique_tracks = []
-
-    for track in search_results:
-        song = Song(track)
+    search_results = [Song(track) for track in search_results]
+    for song in search_results:
         if (song not in unique_tracks and song not in invalid_songs):
             if valid_release_date(song.release_date):
                 unique_tracks.append(song)
             else:
                 invalid_songs.append(song)
-
     return unique_tracks
 
+while True:
+    q = input("What song do you want to look at? ")
+    if q == '0':
+        break
+    else:
+        print(search(q))
