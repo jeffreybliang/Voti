@@ -1,3 +1,5 @@
 *.ipynb
 *.cache*
 *.cache_ggshield
+*Web_Dev_Demo*
+node_modules
