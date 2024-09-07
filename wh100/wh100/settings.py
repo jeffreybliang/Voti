@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'api.apps.ApiConfig',
+    'frontend.apps.FrontendConfig',
+    'spotify.apps.SpotifyConfig'
+    'accounts.apps.AccountsConfig'
 ]
 
 MIDDLEWARE = [
@@ -72,13 +76,21 @@ WSGI_APPLICATION = 'wh100.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+import dj_database_url
+import environ
+import os
 
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+environ.Env.read_env()
+DATABASE_URL = env.db_url()
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config()
 }
+
+# User model
+AUTH_USER_MODEL = 'accounts.User'
 
 
 # Password validation
