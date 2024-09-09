@@ -7,17 +7,15 @@ from django.utils.translation import gettext_lazy as _
 
 class UserManager(BaseUserManager):
     def create_user(self, username, password=None, **extra_fields):
-        # Ensure that email is not passed in extra_fields to avoid conflict
-        extra_fields.pop('email', None)  # Remove 'email' if it's in extra_fields
-
         if not username:
             raise ValueError('The uID field must be set')
         if not username.startswith('u') or not username[1:].isdigit() or len(username) != 8:
             raise ValueError('Username must be of format uXXXXXXX where X are digits (0-9).')
 
-        email = f'{username}@anu.edu.au'  # Derive email from username
+        email = f'{username}@anu.edu.au'
 
         user = self.model(username=username, email=email, **extra_fields)
+        
         user.set_password(password)
         user.save(using=self._db)
         return user

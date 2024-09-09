@@ -33,10 +33,6 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
-    
-    'allauth',
-    'allauth.account',
-
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -45,7 +41,6 @@ INSTALLED_APPS = [
     'frontend.apps.FrontendConfig',
     'spotify.apps.SpotifyConfig',
     'accounts.apps.AccountsConfig'
-    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -56,7 +51,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = 'wh100.urls'
@@ -72,12 +66,10 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-
             ],
         },
     },
 ]
-
 
 WSGI_APPLICATION = 'wh100.wsgi.application'
 
@@ -99,15 +91,6 @@ DATABASES = {
 
 # User model
 AUTH_USER_MODEL = 'accounts.User'
-
-
-AUTHENTICATION_BACKENDS = [
-    # Needed to login by username in Django admin, regardless of `allauth`
-    'django.contrib.auth.backends.ModelBackend',
-
-    # `allauth` specific authentication methods, such as login by email
-    'allauth.account.auth_backends.AuthenticationBackend',
-]
 
 
 # Password validation
@@ -150,24 +133,3 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-ACCOUNT_EMAIL_VERIFICATION = "optional"
-ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = False
-ACCOUNT_LOGIN_BY_CODE_ENABLED = True
-ACCOUNT_SESSION_REMEMBER = True
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-ACCOUNT_EMAIL_REQUIRED = False
-
-
-HEADLESS_ONLY = True
-HEADLESS_FRONTEND_URLS = {
-    "account_confirm_email": "/account/verify-email/{key}",
-    "account_reset_password": "/account/password/reset",
-    "account_reset_password_from_key": "/account/password/reset/key/{key}",
-    "account_signup": "/account/signup",
-}
-
-SITE_ID = 1
-
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False
-SESSION_COOKIE_AGE = 5256000
