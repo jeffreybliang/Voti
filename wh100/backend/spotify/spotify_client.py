@@ -57,7 +57,7 @@ class SpotifyOAuthClient:
     def get_oauth(self):
         return self.sp_oauth
 
-spotify_client_instance = SpotifyClient()
+# spotify_client_instance = SpotifyClient()
 
 def get_artists_ids(artists):
     ids = [a['id'] for a in artists]
