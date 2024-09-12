@@ -1,0 +1,16 @@
+<!-- complete_uid.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Complete Signup</title>
+</head>
+<body>
+    <h1>Complete Your Signup</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
