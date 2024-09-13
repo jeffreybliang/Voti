@@ -3,30 +3,45 @@ from django.contrib.auth import get_user_model
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from accounts.serializers import UserSerializer
-from spotify.serializers import SongSerializer, VoteSerializer
+from spotify.serializers import SongSerializer, VoteSerializer, SpotifySongSerializer
 from spotify.models import Song, Vote
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from spotify.spotify_client import SpotifySong, SpotifyClient
+import spotipy
+
 
 @api_view(['GET'])
 def get_user_votes(request):
     user = request.user
     if not user.has_voted:
         return Response({'message': 'No votes found.'}, status=status.HTTP_404_NOT_FOUND)
+
     votes = Vote.objects.filter(username=user)
     if not votes.exists():
         return Response({'message': 'No votes found.'}, status=status.HTTP_404_NOT_FOUND)
+
+    # Extract song IDs from votes
     song_ids = votes.values_list('song_id', flat=True)
     songs = Song.objects.filter(song_id__in=song_ids)
-    serializer = SongSerializer(songs, many=True)
-    response_data = [
-        {
-            'vote_id': vote.id,
-            'song': serializer.data[i]  
-        }
-        for i, vote in enumerate(votes)
-    ]
-    return Response(response_data, status=status.HTTP_200_OK)
+
+    # Initialize Spotify client
+    sp_client = SpotifyClient().get_client()
+    if not isinstance(sp_client, spotipy.Spotify):
+        return Response({'Bad Request': "Couldn't get Spotify client"}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Convert Song objects to SpotifySong objects
+    spotify_songs = []
+    for vote in votes:
+        song = songs.get(song_id=vote.song_id)
+        track = sp_client.track(song.song_id)
+        spotify_song = SpotifySong(track)
+        spotify_songs.append(spotify_song)  # Append SpotifySong instance
+
+    # Serialize the data
+    serializer = SpotifySongSerializer(spotify_songs, many=True)
+    return Response({'songs': serializer.data}, status=status.HTTP_200_OK)
+        
 
 
 @api_view(['POST', 'PUT'])

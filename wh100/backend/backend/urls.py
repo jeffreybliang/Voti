@@ -16,11 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views import defaults
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("accounts/email/", defaults.page_not_found, kwargs={"exception": Exception("Page not Found")},),
     path("accounts/", include("allauth.urls")),
-    path('accounts/', include('allauth.socialaccount.urls')),
     path('accounts/', include('accounts.urls')),
     path("_allauth/", include("allauth.headless.urls")),
     path('api/', include('api.urls')),  # Include API URLs

@@ -50,52 +50,37 @@ INSTALLED_APPS = [
     
     'allauth',
     'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
 
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'api.apps.ApiConfig',
-    # 'frontend.apps.FrontendConfig',
     'spotify.apps.SpotifyConfig',
     'accounts.apps.AccountsConfig',
     'rest_framework',
+
     'corsheaders'
 ]
 
 
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'APP': {
-            'client_id': env('GOOGLE_CLIENT_ID'),
-            'secret': env('GOOGLE_CLIENT_SECRET'),
-            'key': ''
-        },
-        'SCOPE': [
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        }
-    }
-}
-
-
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "allauth.account.middleware.AccountMiddleware",
-    'accounts.middleware.EnsureUIDMiddleware',
 ]
+
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',  # Add your React app URL here
+]
+
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -149,11 +134,14 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "OPTIONS": {
+            "min_length": 5,
+        },
     },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    # },
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
@@ -187,11 +175,10 @@ ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = False
 ACCOUNT_LOGIN_BY_CODE_ENABLED = True
 ACCOUNT_SESSION_REMEMBER = True
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_USERNAME_REQUIRED = True
 
-SOCIALACCOUNT_LOGIN_ON_GET=True
-SOCIALACCOUNT_ADAPTER = 'accounts.custom_adapter.CustomSocialAccountAdapter'
+ACCOUNT_FORMS = {'signup': 'accounts.forms.CustomSignupForm'}
 
 # HEADLESS_ONLY = True
 HEADLESS_FRONTEND_URLS = {
@@ -208,3 +195,8 @@ SESSION_COOKIE_AGE = 5256000
 
 from django.contrib.messages import constants as message_constants
 MESSAGE_LEVEL = message_constants.DEBUG
+
+SIGNUP_PASSWORD_ENTER_TWICE = False
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
+
+ACCOUNT_MAX_EMAIL_ADDRESSES = 1

@@ -29,3 +29,11 @@ class VoteSerializer(serializers.ModelSerializer):
         
         vote = Vote.objects.create(song_id=song, **validated_data)
         return vote
+
+class SpotifySongSerializer(serializers.Serializer):
+    song_id = serializers.CharField()
+    name = serializers.CharField()
+    artist_ids = serializers.ListField(child=serializers.CharField())
+    artist_names = serializers.ListField(child=serializers.CharField())
+    release_date = serializers.DateField()
+    image_url = serializers.URLField()
