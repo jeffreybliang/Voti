@@ -9,6 +9,23 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from spotify.spotify_client import SpotifySong, SpotifyClient
 import spotipy
+from django.http import JsonResponse
+
+@api_view(['GET'])
+def search_songs(request):
+    query = request.GET.get('query', '')
+    
+    if not query:
+        return JsonResponse({'error': 'Query parameter is required'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        sp_client = SpotifyClient()  # Create a new SpotifyClient instance
+        search_results = sp_client.search(query)
+        
+        serializer = SpotifySongSerializer(search_results, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['GET'])

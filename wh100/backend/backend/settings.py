@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     
     'allauth',
     'allauth.account',
+    'allauth.headless',
 
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -78,8 +79,21 @@ MIDDLEWARE = [
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000',  # Add your React app URL here
+    'http://localhost:3000',
 ]
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+]
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:3000',
+]
+SESSION_COOKIE_DOMAIN = '.localhost'
+CSRF_COOKIE_DOMAIN = '.localhost'
+# SESSION_COOKIE_SECURE = False
+# CSRF_COOKIE_SECURE = False
+# SESSION_COOKIE_HTTPONLY = False
+# CSRF_COOKIE_HTTPONLY = False
+
 
 
 ROOT_URLCONF = 'backend.urls'
@@ -180,7 +194,7 @@ ACCOUNT_USERNAME_REQUIRED = True
 
 ACCOUNT_FORMS = {'signup': 'accounts.forms.CustomSignupForm'}
 
-# HEADLESS_ONLY = True
+HEADLESS_ONLY = True
 HEADLESS_FRONTEND_URLS = {
     "account_confirm_email": "/account/verify-email/{key}",
     "account_reset_password": "/account/password/reset",

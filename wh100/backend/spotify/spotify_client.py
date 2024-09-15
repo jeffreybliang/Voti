@@ -27,8 +27,8 @@ class SpotifyClient:
     def get_client(self):
         return self.sp
     
-    def search_unique(query: str, limit=10):
-        sp_client = SpotifyClient()
+    def search(self, query: str, limit=10):
+        sp_client = self.get_client()
         search_results = sp_client.search(q=query + " year:2023-2024", limit=limit, type="track")['tracks']['items']
         
         unique_tracks = []
@@ -86,6 +86,7 @@ class SpotifySong:
 
 
 class SpotifyOAuthClient:
+    
     def __init__(self, redirect_uri=REDIRECT_URI):
         self.cache_handler = spotipy.cache_handler.CacheFileHandler()
         self.oauth_manager = SpotifyOAuth(
