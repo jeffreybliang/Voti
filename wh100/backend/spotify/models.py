@@ -11,6 +11,7 @@ class Song(models.Model):
     artists = ArrayField(base_field=models.CharField(max_length=50))
     release = models.DateField(auto_now=False, auto_now_add=False)
     img_url = models.URLField()
+    # can add the duration
 
 class Vote(models.Model):
     username = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
