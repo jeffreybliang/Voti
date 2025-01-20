@@ -31,8 +31,6 @@ def search_songs(request):
 @api_view(['GET'])
 def get_user_votes(request):
     user = request.user
-    if not user.has_voted:
-        return Response({'message': 'No votes found.'}, status=status.HTTP_404_NOT_FOUND)
 
     votes = Vote.objects.filter(username=user)
     if not votes.exists():
@@ -50,7 +48,7 @@ def get_user_votes(request):
     # Convert Song objects to SpotifySong objects
     spotify_songs = []
     for vote in votes:
-        song = songs.get(song_id=vote.song_id)
+        song = songs.get(song_id=vote.song.song_id)
         track = sp_client.track(song.song_id)
         spotify_song = SpotifySong(track)
         spotify_songs.append(spotify_song)  # Append SpotifySong instance
@@ -92,9 +90,6 @@ def submit_votes(request):
     removed_votes = current_votes - new_song_ids
     if removed_votes:
         Vote.objects.filter(username=user.username, song_id__in=removed_votes).delete()
-    if user.has_voted == False:
-        user.has_voted = True
-        user.save()
     return Response({'message': 'Votes submitted successfully to database!'}, status=status.HTTP_200_OK)
 
 

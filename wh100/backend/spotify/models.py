@@ -15,12 +15,12 @@ class Song(models.Model):
 
 class Vote(models.Model):
     username = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-    song_id = models.ForeignKey(Song, on_delete=models.CASCADE)
+    song = models.ForeignKey(Song, on_delete=models.CASCADE)
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['username', 'song_id'], name='unique_vote')
+            models.UniqueConstraint(fields=['username', 'song'], name='unique_vote')
         ]
         indexes = [
             models.Index(fields=['username']),
-            models.Index(fields=['song_id'])
+            models.Index(fields=['song'])
         ]
