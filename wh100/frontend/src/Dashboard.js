@@ -10,6 +10,62 @@ export default function Dashboard() {
   const base = process.env.REACT_APP_BACKEND_BASE_URL
   const search_endpoint = process.env.REACT_APP_API_SEARCH
 
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split("; ");
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i];
+      if (cookie.trim().startsWith(name + "=")) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+const saveVotes = async () => {
+  try {
+    if (!results || results.length === 0) {
+      throw new Error("No results to submit votes for.");
+    }
+
+    const submitVotesUrl = `http://localhost/api/submit-votes/`;
+
+    // Construct the payload expected by the backend
+    const songs = results.map(result => ({
+      song_id: result.song_id, // Assuming results have song_id
+      name: result.name,
+      artist_ids: result.artist_ids,
+      release_date: result.release_date,
+      img_url: result.img_url,
+    }));
+
+    // Send the data to the backend
+    const response = await fetch(submitVotesUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCookie("csrftoken"), // Include the CSRF token
+      },
+      body: JSON.stringify({ songs }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to submit votes: ${response.statusText}`);
+    }
+
+    const responseData = await response.json();
+    console.log("Votes submitted successfully:", responseData);
+    setVotes(responseData); // Update state with the response
+    showVotes();
+  } catch (error) {
+    console.error("Error submitting votes:", error);
+    setVotes(null); // Reset votes in case of error
+  }
+};
+
 
   const showVotes = async (event) => {
     try {
@@ -106,7 +162,7 @@ export default function Dashboard() {
           {JSON.stringify(results, null, 2)}
         </pre>
       )}
-      <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Save votes</button>
+      <button onClick = {saveVotes} type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Save votes</button>
       {votes && (
         <pre className="max-w-md mx-auto mt-4 p-4 bg-gray-100 border border-gray-300 rounded-lg">
           {JSON.stringify(votes, null, 2)}

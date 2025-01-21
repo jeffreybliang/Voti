@@ -58,7 +58,6 @@ def get_user_votes(request):
     return Response({'songs': serializer.data}, status=status.HTTP_200_OK)
         
 
-
 @api_view(['POST', 'PUT'])
 def submit_votes(request):
     user = request.user
@@ -71,25 +70,25 @@ def submit_votes(request):
     new_song_ids = set()
     new_votes = []
     for spotify_song in spotify_songs:
-        new_song_ids.add(spotify_song.song_id)
+        print(spotify_song)
+        new_song_ids.add(spotify_song["song_id"])
         # Check if the song is already in the database
         song, _ = Song.objects.get_or_create(
-            song_id=spotify_song.song_id,
+            song_id=spotify_song["song_id"],
             defaults={
-                'name': spotify_song.name,
-                'artists': spotify_song.artist_ids,
-                'release': spotify_song.release_date,
-                'img_url': spotify_song.img_url,
+                'name': spotify_song["name"],
+                'artists': spotify_song["artist_ids"],
+                'release': spotify_song["release_date"],
             }
         )
-        if spotify_song.song_id not in current_votes:
+        if spotify_song["song_id"] not in current_votes:
             new_votes.append(Vote(username=user, song=song))
     if new_votes:
         Vote.objects.bulk_create(new_votes)
     # Remove songs that the user has unselected
-    removed_votes = current_votes - new_song_ids
-    if removed_votes:
-        Vote.objects.filter(username=user.username, song_id__in=removed_votes).delete()
+    # removed_votes = current_votes - new_song_ids
+    # if removed_votes:
+    #     Vote.objects.filter(username=user.username, song_id__in=removed_votes).delete()
     return Response({'message': 'Votes submitted successfully to database!'}, status=status.HTTP_200_OK)
 
 
