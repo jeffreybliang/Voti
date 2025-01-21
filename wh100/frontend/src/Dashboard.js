@@ -1,5 +1,6 @@
 import { useUser } from "./auth";
 import React, { useState, useEffect } from 'react';
+import SongTable from "./SongTable";
 
 export default function Dashboard() {
   const user = useUser();
@@ -9,6 +10,17 @@ export default function Dashboard() {
 
   const base = process.env.REACT_APP_BACKEND_BASE_URL
   const search_endpoint = process.env.REACT_APP_API_SEARCH
+
+const handleDelete = (id) => {
+};
+
+// function returns component that displays the results
+function displayResults(results) {
+
+ return 
+
+}
+
 
 function getCookie(name) {
   let cookieValue = null;
@@ -158,9 +170,7 @@ const saveVotes = async () => {
       </form>
       {/* Render search results */}
       {results && (
-        <pre className="max-w-md mx-auto mt-4 p-4 bg-gray-100 border border-gray-300 rounded-lg">
-          {JSON.stringify(results, null, 2)}
-        </pre>
+        <SongTable songs={results} handleDelete={handleDelete} />
       )}
       <button onClick = {saveVotes} type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Save votes</button>
       {votes && (
