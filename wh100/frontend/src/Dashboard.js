@@ -1,17 +1,36 @@
 import { useUser } from "./auth";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function Dashboard() {
   const user = useUser();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState(null);
+  const [votes, setVotes] = useState(null);
 
   const base = process.env.REACT_APP_BACKEND_BASE_URL
   const search_endpoint = process.env.REACT_APP_API_SEARCH
 
+
+  const showVotes = async (event) => {
+    try {
+      const getsongsurl = `http://localhost/api/user-votes/`;
+      console.log(getsongsurl)
+      const votes = await fetch(getsongsurl);
+      if (votes.ok) {
+        const data = await votes.json();
+        setVotes(data);
+      } else {
+        console.error('Error fetching search results:', votes.statusText);
+        setVotes(null);
+      }
+    } catch (error) {
+      console.error('Error fetching search results:', error);
+      setVotes(null);
+    }
+  };
+
   const handleSearch = async (event) => {
     event.preventDefault(); // Prevent default form submission behavior
-
     try {
       const params = new URLSearchParams({ query: query });
       const endpoint_url = `http://localhost/api/search/?query=${encodeURIComponent(query)}`;
@@ -29,6 +48,10 @@ export default function Dashboard() {
       setResults(null);
     }
   };
+
+  useEffect(() => {
+    showVotes();
+  }, []); // Empty dependency array ensures it runs only once when the component mounts
 
   return (
     <div>
@@ -81,6 +104,12 @@ export default function Dashboard() {
       {results && (
         <pre className="max-w-md mx-auto mt-4 p-4 bg-gray-100 border border-gray-300 rounded-lg">
           {JSON.stringify(results, null, 2)}
+        </pre>
+      )}
+      <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Save votes</button>
+      {votes && (
+        <pre className="max-w-md mx-auto mt-4 p-4 bg-gray-100 border border-gray-300 rounded-lg">
+          {JSON.stringify(votes, null, 2)}
         </pre>
       )}
     </div>
