@@ -1,6 +1,7 @@
 import { useUser } from "./auth";
 import React, { useState, useEffect } from 'react';
 import SongTable from "./SongTable";
+import ResultsTable from "./ResultsTable";
 
 export default function Dashboard() {
   const user = useUser();
@@ -10,6 +11,22 @@ export default function Dashboard() {
 
   const base = process.env.REACT_APP_BACKEND_BASE_URL
   const search_endpoint = process.env.REACT_APP_API_SEARCH
+
+const handleAdd = (song) => {
+ // idx is the index (zero indexed).
+ // remove that index from votes
+ // loop through all the current votes array and check that it isn't there
+ for (let i = 0; i < votes.length; i++) {
+   let curr_vote = votes[i]
+   if (curr_vote.song_id === song.song_id) {
+     // we have already voted for this song!
+     alert("you have already voted for this song")
+     return
+   }
+ }
+ votes.push(song);
+ setVotes([...votes])
+};
 
 const handleDelete = (idx) => {
  // idx is the index (zero indexed).
@@ -168,7 +185,7 @@ const saveVotes = async () => { // update user's votes in database using the `vo
       </form>
       {/* Render search results */}
       {results && (
-        <SongTable songs={results} handleDelete={handleDelete} />
+        <ResultsTable songs={results} handleAdd={handleAdd} />
       )}
       <button onClick = {saveVotes} type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Save votes</button>
       {votes && (
