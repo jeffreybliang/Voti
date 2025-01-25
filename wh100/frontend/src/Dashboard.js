@@ -11,7 +11,14 @@ export default function Dashboard() {
   const base = process.env.REACT_APP_BACKEND_BASE_URL
   const search_endpoint = process.env.REACT_APP_API_SEARCH
 
-const handleDelete = (id) => {
+const handleDelete = (idx) => {
+ // idx is the index (zero indexed).
+ // remove that index from votes
+ console.log("idx: ", idx)
+ console.log("votes before:" + votes)
+ votes.splice(idx, 1);
+ console.log("votes after:" + votes)
+ setVotes([...votes])
 };
 
 // function returns component that displays the results
@@ -70,7 +77,7 @@ const saveVotes = async () => {
 
     const responseData = await response.json();
     console.log("Votes submitted successfully:", responseData);
-    setVotes(responseData); // Update state with the response
+    setVotes(responseData.songs); // Update state with the response
     showVotes();
   } catch (error) {
     console.error("Error submitting votes:", error);
@@ -86,7 +93,7 @@ const saveVotes = async () => {
       const votes = await fetch(getsongsurl);
       if (votes.ok) {
         const data = await votes.json();
-        setVotes(data);
+        setVotes(data.songs);
       } else {
         console.error('Error fetching search results:', votes.statusText);
         setVotes(null);
@@ -174,9 +181,7 @@ const saveVotes = async () => {
       )}
       <button onClick = {saveVotes} type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Save votes</button>
       {votes && (
-        <pre className="max-w-md mx-auto mt-4 p-4 bg-gray-100 border border-gray-300 rounded-lg">
-          {JSON.stringify(votes, null, 2)}
-        </pre>
+        <SongTable songs={votes} handleDelete={handleDelete} />
       )}
     </div>
   );

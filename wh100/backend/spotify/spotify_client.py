@@ -42,7 +42,7 @@ class SpotifyClient:
                 #     "release",ssong.release_date,
                 #     "iamges", ssong.image_url)
                 unique_tracks.append(song)
-        return unique_tracks[:1]
+        return unique_tracks
 
 def get_artist_ids(artists):
     ids = [a['id'] for a in artists]

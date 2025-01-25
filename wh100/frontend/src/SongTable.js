@@ -32,7 +32,7 @@ const SongTable = ({ songs, handleDelete }) => {
                     </td>
                     <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                       <button
-                        onClick={() => handleDelete(song.id)}
+                        onClick={() => handleDelete(index)}
                         className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                       >
                         Delete
