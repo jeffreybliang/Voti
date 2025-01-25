@@ -14,10 +14,7 @@ export default function Dashboard() {
 const handleDelete = (idx) => {
  // idx is the index (zero indexed).
  // remove that index from votes
- console.log("idx: ", idx)
- console.log("votes before:" + votes)
  votes.splice(idx, 1);
- console.log("votes after:" + votes)
  setVotes([...votes])
 };
 
@@ -44,21 +41,17 @@ function getCookie(name) {
   return cookieValue;
 }
 
-const saveVotes = async () => {
-  try {
-    if (!results || results.length === 0) {
-      throw new Error("No results to submit votes for.");
-    }
-
+const saveVotes = async () => { // update user's votes in database using the `votes` array
+ try {
     const submitVotesUrl = `http://localhost/api/submit-votes/`;
 
     // Construct the payload expected by the backend
-    const songs = results.map(result => ({
-      song_id: result.song_id, // Assuming results have song_id
-      name: result.name,
-      artist_ids: result.artist_ids,
-      release_date: result.release_date,
-      img_url: result.img_url,
+    const songs = votes.map(vote => ({
+      song_id: vote.song_id, // Assuming results have song_id
+      name: vote.name,
+      artist_ids: vote.artist_ids,
+      release_date: vote.release_date,
+      img_url: vote.img_url,
     }));
 
     // Send the data to the backend
@@ -77,8 +70,6 @@ const saveVotes = async () => {
 
     const responseData = await response.json();
     console.log("Votes submitted successfully:", responseData);
-    setVotes(responseData.songs); // Update state with the response
-    showVotes();
   } catch (error) {
     console.error("Error submitting votes:", error);
     setVotes(null); // Reset votes in case of error

@@ -86,9 +86,9 @@ def submit_votes(request):
     if new_votes:
         Vote.objects.bulk_create(new_votes)
     # Remove songs that the user has unselected
-    # removed_votes = current_votes - new_song_ids
-    # if removed_votes:
-    #     Vote.objects.filter(username=user.username, song_id__in=removed_votes).delete()
+    removed_votes = current_votes - new_song_ids
+    if removed_votes:
+        Vote.objects.filter(username=user.username, song_id__in=removed_votes).delete()
     return Response({'message': 'Votes submitted successfully to database!'}, status=status.HTTP_200_OK)
 
 
