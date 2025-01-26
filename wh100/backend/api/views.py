@@ -28,32 +28,25 @@ def search_songs(request):
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+import time
+
 @api_view(['GET'])
 def get_user_votes(request):
     user = request.user
-
-    votes = Vote.objects.filter(username=user)
-    if not votes.exists():
+    # Fetch votes and related songs in one query
+    votes = Vote.objects.filter(username=user).select_related('song')
+    if not votes:
         return Response({'message': 'No votes found.'}, status=status.HTTP_404_NOT_FOUND)
-
-    # Extract song IDs from votes
-    song_ids = votes.values_list('song_id', flat=True)
-    songs = Song.objects.filter(song_id__in=song_ids)
-
     # Initialize Spotify client
     sp_client = SpotifyClient().get_client()
     if not isinstance(sp_client, spotipy.Spotify):
         return Response({'Bad Request': "Couldn't get Spotify client"}, status=status.HTTP_400_BAD_REQUEST)
-
-    # Convert Song objects to SpotifySong objects
-    spotify_songs = []
-    for vote in votes:
-        song = songs.get(song_id=vote.song.song_id)
-        track = sp_client.track(song.song_id)
-        spotify_song = SpotifySong(track)
-        spotify_songs.append(spotify_song)  # Append SpotifySong instance
-
-    # Serialize the data
+    # Batch fetch Spotify track data
+    track_ids = [vote.song.song_id for vote in votes]
+    tracks = sp_client.tracks(track_ids)['tracks']
+    # Create SpotifySong objects
+    spotify_songs = [SpotifySong(track) for track in tracks]
+    # Serialize and return the data
     serializer = SpotifySongSerializer(spotify_songs, many=True)
     return Response({'songs': serializer.data}, status=status.HTTP_200_OK)
         

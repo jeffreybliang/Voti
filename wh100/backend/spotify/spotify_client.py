@@ -35,12 +35,6 @@ class SpotifyClient:
         for track in search_results:
             if valid_release_date(track['album']['release_date']):
                 song = SpotifySong(track)
-                # if (ssong not in unique_tracks):
-                #     print("name", ssong.name,
-                #     "artists", ssong.artists_ids,
-                #     "id", ssong.song_id,
-                #     "release",ssong.release_date,
-                #     "iamges", ssong.image_url)
                 unique_tracks.append(song)
         return unique_tracks
 
