@@ -185,12 +185,16 @@ const saveVotes = async () => { // update user's votes in database using the `vo
       </form>
       {/* Render search results */}
       {results && (
-        <ResultsTable songs={results} handleAdd={handleAdd} />
+        <div className="mx-auto">
+          <ResultsTable songs={results} handleAdd={handleAdd} />
+        </div>
       )}
       {votes && (
-        <SongTable songs={votes} handleDelete={handleDelete} />
+        <div className="items-center justify-center">
+          <SongTable songs={votes} handleDelete={handleDelete} />
+        </div>
       )}
-      <button onClick = {saveVotes} type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Save votes</button>
+      <button onClick = {saveVotes} type="button" class="items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Save votes</button>
     </div>
   );
 }

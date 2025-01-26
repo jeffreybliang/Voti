@@ -2,7 +2,7 @@ import React from "react";
 
 const ResultsTable = ({ songs, handleAdd }) => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col items-center">
       <div className="overflow-x-auto pb-4">
         <div className="min-w-full inline-block align-middle">
           <div className="border rounded-lg border-gray-300">
@@ -10,7 +10,7 @@ const ResultsTable = ({ songs, handleAdd }) => {
               <table className="table-auto min-w-full rounded-xl">
                 <tbody className="divide-y divide-gray-300">
                   {songs.map((song, index) => (
-                    <tr key={song.id} className="bg-white transition-all duration-500 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <tr key={song.id} className="bg-white transition-all duration-500 hover:bg-gray-10 dark:hover:bg-gray-600">
                       <td className="p-3 whitespace-nowrap text-right leading-6 font-medium text-gray-900">{index + 1}</td>
                       <td className="px-3 py-3 h-20">
                         <div className="flex items-center gap-3 w-60 break-words">

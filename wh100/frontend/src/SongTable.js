@@ -2,7 +2,7 @@ import React from "react";
 
 const SongTable = ({ songs, handleDelete }) => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col items-center">
       <div className="overflow-x-auto pb-4">
         <div className="min-w-full inline-block align-middle">
           <div className="overflow-hidden border rounded-lg border-gray-300">
