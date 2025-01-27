@@ -2,17 +2,33 @@ import { useUser } from "./auth";
 import React, { useState, useEffect } from 'react';
 import SongTable from "./SongTable";
 import ResultsTable from "./ResultsTable";
+import CustomAlert from "./CustomAlert";
+import TemporaryAlert from "./TemporaryAlert";
 
 export default function Dashboard() {
   const user = useUser();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState(null);
   const [votes, setVotes] = useState(null);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [temporaryMessage, setTemporaryMessage] = useState('');
+  const [showTemporaryAlert, setShowTemporaryAlert] = useState('');
+  const [alertKey, setAlertKey] = useState(0); // Key to force re-render the alert
 
   const base = process.env.REACT_APP_BACKEND_BASE_URL
   const search_endpoint = process.env.REACT_APP_API_SEARCH
 
+const closeAlert = () => {
+  setShowAlert(false);
+};
+
 const handleAdd = (song) => {
+ if (votes.length >= 10) {
+    setAlertMessage("You can only vote for a maximum of 10 songs!");
+    setShowAlert(true);
+    return;
+ }
  // idx is the index (zero indexed).
  // remove that index from votes
  // loop through all the current votes array and check that it isn't there
@@ -87,8 +103,14 @@ const saveVotes = async () => { // update user's votes in database using the `vo
 
     const responseData = await response.json();
     console.log("Votes submitted successfully:", responseData);
+    setTemporaryMessage("Votes submitted successfully");
+    setShowTemporaryAlert(true);
+    setAlertKey((prevKey) => prevKey + 1);
+
   } catch (error) {
     console.error("Error submitting votes:", error);
+    setAlertMessage("Error submitting votes");
+    setShowAlert(true);
     setVotes(null); // Reset votes in case of error
   }
 };
@@ -140,7 +162,12 @@ const saveVotes = async () => { // update user's votes in database using the `vo
     <div>
       <h1>Dashboard</h1>
       <p>Welcome user {user.display}!</p>
-
+      {showTemporaryAlert && (
+        <TemporaryAlert message={temporaryMessage} duration={5000} key = {alertKey}/>
+      )}
+      {showAlert && (
+        <CustomAlert message={alertMessage} onClose={closeAlert} />
+      )}
       <form className="max-w-md mx-auto" onSubmit={handleSearch}>
         <label
           htmlFor="default-search"
