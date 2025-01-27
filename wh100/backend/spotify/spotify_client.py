@@ -27,16 +27,27 @@ class SpotifyClient:
     def get_client(self):
         return self.sp
     
-    def search(self, query: str, limit=10):
+    def search(self, query: str, limit=12):
         sp_client = self.get_client()
         search_results = sp_client.search(q=query + " year:2023-2024", limit=limit, type="track")['tracks']['items']
         
-        unique_tracks = []
+        unique_tracks = {}
         for track in search_results:
             if valid_release_date(track['album']['release_date']):
                 song = SpotifySong(track)
-                unique_tracks.append(song)
-        return unique_tracks
+                # Create a unique key based on song name and artist
+                song_key = (song.name, " ".join(song.artist_names))
+                
+                # Check if the song is already in the dictionary
+                if song_key not in unique_tracks:
+                    unique_tracks[song_key] = song
+                else:
+                    # If the song is already in the dictionary, compare release dates
+                    existing_song = unique_tracks[song_key]
+                    if song.release_date > existing_song.release_date:
+                        unique_tracks[song_key] = song
+        
+        return list(unique_tracks.values())[:10]
 
 def get_artist_ids(artists):
     ids = [a['id'] for a in artists]

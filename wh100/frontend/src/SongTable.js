@@ -24,7 +24,7 @@ const SongTable = ({ songs, handleDelete }) => {
                           <img src={song.image_url} className="h-12 w-12 rounded-md object-cover" alt={song.name} />
                           <div class="data">
                               <p class="font-normal text-sm text-gray-900">{song.name}</p>
-                              <p class="font-normal text-xs leading-5 text-gray-400"> {song.artist_names} </p>
+                              <p class="font-normal text-xs leading-5 text-gray-400"> {song.artist_names.join(", ")} </p>
                           </div>
                       </div>
                     </td>

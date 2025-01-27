@@ -6,7 +6,7 @@ const ResultsTable = ({ songs, handleAdd, handleDelete, votes }) => {
       <div className="overflow-x-auto pb-4">
         <div className="min-w-full inline-block align-middle">
           <div className="border rounded-lg border-gray-300">
-            <div className=""> {/* Added max height and vertical scrollbar */}
+            <div className="max-h-96 overflow-y-auto"> {/* Added max height and vertical scrollbar */}
               <table className="table-auto min-w-full rounded-xl">
                 <tbody className="divide-y divide-gray-300">
                   {songs.map((song,index) => {
@@ -20,7 +20,7 @@ const ResultsTable = ({ songs, handleAdd, handleDelete, votes }) => {
                           <img src={song.image_url} className="h-12 w-12 rounded-md object-cover" alt={song.name} />
                           <div className="data">
                             <p className="font-normal text-sm text-gray-900">{song.name}</p>
-                            <p className="font-normal text-xs leading-5 text-gray-400"> {song.artist_names} </p>
+                            <p className="font-normal text-xs leading-5 text-gray-400"> {song.artist_names.join(", ")} </p>
                           </div>
                         </div>
                       </td>
