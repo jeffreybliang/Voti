@@ -40,16 +40,14 @@ const handleAdd = (song) => {
      return
    }
  }
- votes.push(song);
- setVotes([...votes])
+ setVotes([...votes, song])
+};
+const handleDelete = (song) => {
+  // Remove the song from votes
+  const newVotes = votes.filter(vote => vote.song_id !== song.song_id);
+  setVotes(newVotes);
 };
 
-const handleDelete = (idx) => {
- // idx is the index (zero indexed).
- // remove that index from votes
- votes.splice(idx, 1);
- setVotes([...votes])
-};
 
 // function returns component that displays the results
 function displayResults(results) {
@@ -222,7 +220,12 @@ const saveVotes = async () => { // update user's votes in database using the `vo
       {/* Render search results */}
       {results && (
         <div className="mx-auto">
-          <ResultsTable songs={results} handleAdd={handleAdd} />
+          <ResultsTable 
+            songs={results} 
+            handleAdd={handleAdd} 
+            handleDelete={handleDelete} 
+            votes={votes}
+            />
         </div>
       )}
       {votes && (
