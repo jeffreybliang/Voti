@@ -28,38 +28,28 @@ def search_songs(request):
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+import time
+
 @api_view(['GET'])
 def get_user_votes(request):
     user = request.user
-    if not user.has_voted:
+    # Fetch votes and related songs in one query
+    votes = Vote.objects.filter(username=user).select_related('song')
+    if not votes:
         return Response({'message': 'No votes found.'}, status=status.HTTP_404_NOT_FOUND)
-
-    votes = Vote.objects.filter(username=user)
-    if not votes.exists():
-        return Response({'message': 'No votes found.'}, status=status.HTTP_404_NOT_FOUND)
-
-    # Extract song IDs from votes
-    song_ids = votes.values_list('song_id', flat=True)
-    songs = Song.objects.filter(song_id__in=song_ids)
-
     # Initialize Spotify client
     sp_client = SpotifyClient().get_client()
     if not isinstance(sp_client, spotipy.Spotify):
         return Response({'Bad Request': "Couldn't get Spotify client"}, status=status.HTTP_400_BAD_REQUEST)
-
-    # Convert Song objects to SpotifySong objects
-    spotify_songs = []
-    for vote in votes:
-        song = songs.get(song_id=vote.song_id)
-        track = sp_client.track(song.song_id)
-        spotify_song = SpotifySong(track)
-        spotify_songs.append(spotify_song)  # Append SpotifySong instance
-
-    # Serialize the data
+    # Batch fetch Spotify track data
+    track_ids = [vote.song.song_id for vote in votes]
+    tracks = sp_client.tracks(track_ids)['tracks']
+    # Create SpotifySong objects
+    spotify_songs = [SpotifySong(track) for track in tracks]
+    # Serialize and return the data
     serializer = SpotifySongSerializer(spotify_songs, many=True)
     return Response({'songs': serializer.data}, status=status.HTTP_200_OK)
         
-
 
 @api_view(['POST', 'PUT'])
 def submit_votes(request):
@@ -73,18 +63,18 @@ def submit_votes(request):
     new_song_ids = set()
     new_votes = []
     for spotify_song in spotify_songs:
-        new_song_ids.add(spotify_song.song_id)
+        print(spotify_song)
+        new_song_ids.add(spotify_song["song_id"])
         # Check if the song is already in the database
         song, _ = Song.objects.get_or_create(
-            song_id=spotify_song.song_id,
+            song_id=spotify_song["song_id"],
             defaults={
-                'name': spotify_song.name,
-                'artists': spotify_song.artist_ids,
-                'release': spotify_song.release_date,
-                'img_url': spotify_song.img_url,
+                'name': spotify_song["name"],
+                'artists': spotify_song["artist_ids"],
+                'release': spotify_song["release_date"],
             }
         )
-        if spotify_song.song_id not in current_votes:
+        if spotify_song["song_id"] not in current_votes:
             new_votes.append(Vote(username=user, song=song))
     if new_votes:
         Vote.objects.bulk_create(new_votes)
@@ -92,9 +82,6 @@ def submit_votes(request):
     removed_votes = current_votes - new_song_ids
     if removed_votes:
         Vote.objects.filter(username=user.username, song_id__in=removed_votes).delete()
-    if user.has_voted == False:
-        user.has_voted = True
-        user.save()
     return Response({'message': 'Votes submitted successfully to database!'}, status=status.HTTP_200_OK)
 
 

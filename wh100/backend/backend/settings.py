@@ -78,22 +78,21 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000',
-]
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-]
-CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:3000',
-]
-SESSION_COOKIE_DOMAIN = '.localhost'
-CSRF_COOKIE_DOMAIN = '.localhost'
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
-SESSION_COOKIE_HTTPONLY = False
-CSRF_COOKIE_HTTPONLY = False
-
+# CORS_ORIGIN_WHITELIST = [
+#     'http://localhost:3000',
+# ]
+# CORS_ALLOWED_ORIGINS = [
+#     'http://localhost:3000',
+# ]
+# CSRF_TRUSTED_ORIGINS = [
+#     'http://localhost:3000',
+# ]
+# SESSION_COOKIE_DOMAIN = '.localhost'
+# CSRF_COOKIE_DOMAIN = '.localhost'
+# SESSION_COOKIE_SECURE = False
+# CSRF_COOKIE_SECURE = False
+# SESSION_COOKIE_HTTPONLY = False
+# CSRF_COOKIE_HTTPONLY = False
 
 
 ROOT_URLCONF = 'backend.urls'

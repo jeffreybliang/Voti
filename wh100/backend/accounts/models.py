@@ -40,7 +40,6 @@ class User(AbstractUser):
         }
     )
     email = models.EmailField(unique=True, blank=False)
-    has_voted = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
