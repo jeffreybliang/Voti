@@ -96,22 +96,31 @@ const saveVotes = async () => { // update user's votes in database using the `vo
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to submit votes: ${response.statusText}`);
+      const errorData = await response.json(); // Parse the error response body
+      throw { status: response.status, data: errorData }; // Throw an object with error details
     }
-
+  
     const responseData = await response.json();
     console.log("Votes submitted successfully:", responseData);
     setTemporaryMessage("Votes submitted successfully");
     setShowTemporaryAlert(true);
     setAlertKey((prevKey) => prevKey + 1);
-
-  } catch (error) {
-    console.error("Error submitting votes:", error);
-    setAlertMessage("Error submitting votes");
-    setShowAlert(true);
-    setVotes(null); // Reset votes in case of error
-  }
-};
+    } catch (error) {
+      console.log(error)
+      if (
+        error.status === 400 &&
+        error.data?.error === "You can only select up to 10 songs."
+        ) {
+        setAlertMessage("You can only select up to 10 songs.");
+        setVotes((prevVotes) => prevVotes.slice(0, 10)); // Set to the first 10 entries
+      } else {
+        setAlertMessage("Error submitting votes.");
+        setVotes((prevVotes) => prevVotes.length > 10 ? prevVotes.slice(0, 10) : prevVotes); // Clamp to 10 if needed
+      }
+    
+      setShowAlert(true);
+    }
+    };
 
 
   const showVotes = async (event) => {
@@ -157,12 +166,13 @@ const saveVotes = async () => { // update user's votes in database using the `vo
   }, []); // Empty dependency array ensures it runs only once when the component mounts
 
   return (
-    <div>
-      <div className = "relative">
+    <div className="justify-center">
+      <div className = "relative justify-center text-center">
         <h1>Dashboard</h1>
         <p>Welcome user {user.display}!</p>
-        {/* TemporaryAlert */}
-        {showTemporaryAlert && (
+      </div>
+      {/* TemporaryAlert */}
+      {showTemporaryAlert && (
           <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-full max-w-lg z-10">
             <TemporaryAlert message={temporaryMessage} duration={5000} key={alertKey} />
           </div>
@@ -174,10 +184,10 @@ const saveVotes = async () => { // update user's votes in database using the `vo
             <CustomAlert message={alertMessage} onClose={closeAlert} />
           </div>
         )}
-        <form className="max-w-md mx-auto" onSubmit={handleSearch}>
+        <form className="max-w-md mx-auto justify-center items-center" onSubmit={handleSearch}>
           <label
             htmlFor="default-search"
-            className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
+            className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white "
           >
             Search
           </label>
@@ -216,10 +226,9 @@ const saveVotes = async () => { // update user's votes in database using the `vo
             </button>
           </div>
         </form>
-      </div>
       {/* Render search results */}
       {results && (
-        <div className="mx-auto">
+        <div className="mx-auto justify-center items-center h-full">
           <ResultsTable 
             songs={results} 
             handleAdd={handleAdd} 
@@ -229,11 +238,19 @@ const saveVotes = async () => { // update user's votes in database using the `vo
         </div>
       )}
       {votes && (
-        <div className="items-center justify-center">
+        <div>
           <SongTable songs={votes} handleDelete={handleDelete} />
         </div>
       )}
-      <button onClick = {saveVotes} type="button" class="items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Save votes</button>
+      <div className="flex justify-center mx-auto">
+        <button 
+          onClick={saveVotes} 
+          type="button" 
+          className="text-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+        >
+          Save votes
+        </button>
+      </div>
     </div>
   );
 }
