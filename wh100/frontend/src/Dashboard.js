@@ -4,6 +4,7 @@ import SongTable from "./SongTable";
 import ResultsTable from "./ResultsTable";
 import CustomAlert from "./CustomAlert";
 import TemporaryAlert from "./TemporaryAlert";
+import Spinner from "./Spinner";
 
 export default function Dashboard() {
   const user = useUser();
@@ -11,6 +12,7 @@ export default function Dashboard() {
   const [results, setResults] = useState(null);
   const [votes, setVotes] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
+  const [showSpinner, setShowSpinner] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [temporaryMessage, setTemporaryMessage] = useState('');
   const [showTemporaryAlert, setShowTemporaryAlert] = useState('');
@@ -86,6 +88,7 @@ const saveVotes = async () => { // update user's votes in database using the `vo
     }));
 
     // Send the data to the backend
+    setShowSpinner(true)
     const response = await fetch(submitVotesUrl, {
       method: "POST",
       headers: {
@@ -99,6 +102,7 @@ const saveVotes = async () => { // update user's votes in database using the `vo
       const errorData = await response.json(); // Parse the error response body
       throw { status: response.status, data: errorData }; // Throw an object with error details
     }
+   setShowSpinner(false);
   
     const responseData = await response.json();
     console.log("Votes submitted successfully:", responseData);
@@ -122,12 +126,20 @@ const saveVotes = async () => { // update user's votes in database using the `vo
     }
     };
 
+  useEffect(() => {
+    if (showSpinner) {
+      console.log('Spinner is now visible:', showSpinner);
+    }
+  }, [showSpinner]); // This effect runs whenever `showSpinner` changes
 
   const showVotes = async (event) => {
     try {
       const getsongsurl = `http://localhost/api/user-votes/`;
       console.log(getsongsurl)
+      setShowSpinner(true);
+      console.log("showSpinner: " + showSpinner);
       const votes = await fetch(getsongsurl);
+      setShowSpinner(false);
       if (votes.ok) {
         const data = await votes.json();
         setVotes(data.songs);
@@ -147,7 +159,9 @@ const saveVotes = async () => { // update user's votes in database using the `vo
       const params = new URLSearchParams({ query: query });
       const endpoint_url = `http://localhost/api/search/?query=${encodeURIComponent(query)}`;
       console.log(endpoint_url)
+      setShowSpinner(true)
       const response = await fetch(endpoint_url);
+      setShowSpinner(false)
       if (response.ok) {
         const data = await response.json();
         setResults(data);
@@ -227,6 +241,7 @@ const saveVotes = async () => { // update user's votes in database using the `vo
           </div>
         </form>
       {/* Render search results */}
+      {showSpinner && <div className = "flex justify-center mx-auto p-4" ><Spinner /></div>}
       {results && (
         <div className="mx-auto justify-center items-center h-full">
           <ResultsTable 
@@ -237,16 +252,16 @@ const saveVotes = async () => { // update user's votes in database using the `vo
             />
         </div>
       )}
-      {votes && (
+      {(votes && (
         <div>
           <SongTable songs={votes} handleDelete={handleDelete} />
         </div>
-      )}
-      <div className="flex justify-center mx-auto">
+      ))}
+      <div className="bottom-0 flex justify-center w-full p-4">
         <button 
           onClick={saveVotes} 
           type="button" 
-          className="text-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+          className="flex justify-center text-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
         >
           Save votes
         </button>
