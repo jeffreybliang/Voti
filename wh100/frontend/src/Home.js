@@ -3,7 +3,7 @@ export default function Home () {
     <div>
       <h1>Welcome</h1>
 
-      <p>Welcome to the React ❤️ django-allauth.</p>
+      <p>Welcome to Woroni's Hottest 100.</p>
     </div>
   )
 }
