@@ -1,5 +1,5 @@
 import { useUser } from "./auth";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import SongTable from "./SongTable";
 import ResultsTable from "./ResultsTable";
 import CustomAlert from "./CustomAlert";
@@ -51,14 +51,6 @@ const handleDelete = (song) => {
 };
 
 
-// function returns component that displays the results
-function displayResults(results) {
-
- return 
-
-}
-
-
 function getCookie(name) {
   let cookieValue = null;
   if (document.cookie && document.cookie !== "") {
@@ -102,6 +94,7 @@ const saveVotes = async () => { // update user's votes in database using the `vo
       const errorData = await response.json(); // Parse the error response body
       throw { status: response.status, data: errorData }; // Throw an object with error details
     }
+    
    setShowSpinner(false);
   
     const responseData = await response.json();
@@ -124,7 +117,9 @@ const saveVotes = async () => { // update user's votes in database using the `vo
     
       setShowAlert(true);
     }
-    };
+};
+
+  
 
   useEffect(() => {
     if (showSpinner) {
@@ -132,12 +127,11 @@ const saveVotes = async () => { // update user's votes in database using the `vo
     }
   }, [showSpinner]); // This effect runs whenever `showSpinner` changes
 
-  const showVotes = async (event) => {
+  const showVotes = useCallback(async (event) => {
     try {
       const getsongsurl = `http://localhost/api/user-votes/`;
       console.log(getsongsurl)
       setShowSpinner(true);
-      console.log("showSpinner: " + showSpinner);
       const votes = await fetch(getsongsurl);
       setShowSpinner(false);
       if (votes.ok) {
@@ -145,40 +139,81 @@ const saveVotes = async () => { // update user's votes in database using the `vo
         setVotes(data.songs);
       } else {
         console.error('Error fetching search results:', votes.statusText);
-        setVotes(null);
+        setVotes([]);
       }
     } catch (error) {
       console.error('Error fetching search results:', error);
-      setVotes(null);
+      setVotes([]);  // Reset state on error
+      setShowSpinner(false);  // Ensure the spinner is turned off on error
     }
-  };
+  }, []); // No need to include showSpinner in dependencies
+  
+  useEffect(() => {
+    showVotes();  // Call showVotes once on mount
+  }, [showVotes]); // Only call showVotes once or when showVotes changes
+  
 
-  const handleSearch = async (event) => {
-    event.preventDefault(); // Prevent default form submission behavior
+  function useDebounce(value, delay) {
+    const [debouncedValue, setDebouncedValue] = useState(value);
+  
+    useEffect(() => {
+      const handler = setTimeout(() => setDebouncedValue(value), delay);
+      return () => clearTimeout(handler);
+    }, [value, delay]);
+  
+    return debouncedValue;
+  }  
+  
+  const debouncedQuery = useDebounce(query, 500);
+  
+  const abortControllerRef = useRef();
+
+  const handleSearch = useCallback(async (searchQuery) => {
+    if (!searchQuery) {
+      setResults(null);
+      return;
+    }
+
     try {
-      const params = new URLSearchParams({ query: query });
-      const endpoint_url = `http://localhost/api/search/?query=${encodeURIComponent(query)}`;
-      console.log(endpoint_url)
-      setShowSpinner(true)
-      const response = await fetch(endpoint_url);
-      setShowSpinner(false)
+      const endpoint_url = `http://localhost/api/search/?query=${encodeURIComponent(searchQuery)}`;
+      console.log(endpoint_url);
+      setShowSpinner(true);
+
+      const response = await fetch(endpoint_url, {
+        signal: abortControllerRef.current.signal, // Use the signal from the current abortController
+      });
+
+      // Only proceed if this request is still active (not aborted)
+      if (abortControllerRef.current.signal.aborted) return;
+      setShowSpinner(false);
+
       if (response.ok) {
         const data = await response.json();
         setResults(data);
       } else {
-        console.error('Error fetching search results:', response.statusText);
+        console.error("Error fetching search results:", response.statusText);
         setResults(null);
       }
     } catch (error) {
-      console.error('Error fetching search results:', error);
+      console.error("Error fetching search results:", error);
       setResults(null);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    showVotes();
-  }, []); // Empty dependency array ensures it runs only once when the component mounts
+    // Create a new AbortController for each search query change
+    abortControllerRef.current = new AbortController();
 
+    if (debouncedQuery) {
+      setResults(null); // Clear previous results as soon as a new search starts
+      handleSearch(debouncedQuery); // Perform the search with the new query
+    }
+
+    // Cleanup: Abort ongoing request if the query changes
+    return () => abortControllerRef.current.abort();
+  }, [debouncedQuery, handleSearch]);
+
+  
   return (
     <div className="justify-center">
       <div className = "relative justify-center text-center">
@@ -198,7 +233,7 @@ const saveVotes = async () => { // update user's votes in database using the `vo
             <CustomAlert message={alertMessage} onClose={closeAlert} />
           </div>
         )}
-        <form className="max-w-md mx-auto justify-center items-center" onSubmit={handleSearch}>
+        <form className="max-w-md mx-auto justify-center items-center" onSubmit={(e) => e.preventDefault()}>
           <label
             htmlFor="default-search"
             className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white "
@@ -241,15 +276,18 @@ const saveVotes = async () => { // update user's votes in database using the `vo
           </div>
         </form>
       {/* Render search results */}
-      {showSpinner && <div className = "flex justify-center mx-auto p-4" ><Spinner /></div>}
-      {results && (
+      {showSpinner ? (
+        <div className="flex justify-center mx-auto p-4">
+          <Spinner />
+        </div>
+      ) : (
         <div className="mx-auto justify-center items-center h-full">
           <ResultsTable 
             songs={results} 
             handleAdd={handleAdd} 
             handleDelete={handleDelete} 
             votes={votes}
-            />
+          />
         </div>
       )}
       {(votes && (

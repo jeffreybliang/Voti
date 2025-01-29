@@ -1,6 +1,13 @@
 import React from "react";
 
 const ResultsTable = ({ songs, handleAdd, handleDelete, votes }) => {
+  if (songs === null) return null;
+
+  // If the search was performed but no results were found, show a message
+  if (songs.length === 0) {
+    return <p className="text-center text-gray-500 mt-4">No results found.</p>;
+  }
+
   return (
     <div className="flex flex-col items-center">
       <div className="overflow-x-auto pb-4">
