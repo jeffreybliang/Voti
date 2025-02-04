@@ -205,6 +205,9 @@ export default function Dashboard() {
 
   return (
     <div className="justify-center">
+      <div className="justify-center fixed w-full top-0 z-10">
+        <h1 className = "text-center bg-red-50">TIME REMAINING</h1>
+      </div>
       <div className="relative justify-center text-center">
         <h1>Dashboard</h1>
         <p>Welcome user {user.display}!</p>
