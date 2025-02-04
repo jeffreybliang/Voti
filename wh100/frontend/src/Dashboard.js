@@ -6,6 +6,7 @@ import CustomAlert from "./CustomAlert";
 import TemporaryAlert from "./TemporaryAlert";
 import Spinner from "./Spinner";
 import InlineCountdownTimer from "./InlineCountdown";
+import "./index.css";
 
 export default function Dashboard() {
   const user = useUser();
@@ -213,7 +214,7 @@ export default function Dashboard() {
       </div>
       <div className="relative justify-center text-center">
         <h1>Dashboard</h1>
-        <p>Welcome user {user.display}!</p>
+        <p> Welcome user {user.display}!</p>
       </div>
 
       {showTemporaryAlert && (

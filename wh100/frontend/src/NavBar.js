@@ -50,11 +50,11 @@ export default function NavBar() {
     <nav className="bg-gray-900 shadow fixed top-0 w-full z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center">
+          <h1 className="flex items-center">
             <Link to="/" className="text-white font-bold text-lg">
               Woroni's Hottest 100
             </Link>
-          </div>
+          </h1>
           <div className="flex items-center">
             <button
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none"

@@ -12,6 +12,11 @@ code {
     monospace;
 }
 
+@font-face {
+  font-family: "AdamCG";
+  src: url('./fonts/adam-cg-pro.regular.otf') format("opentype");
+}
+
 input[type="search"]::-webkit-search-cancel-button {
   appearance: none;
 }
