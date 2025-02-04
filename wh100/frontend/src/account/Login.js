@@ -1,9 +1,9 @@
 import { useState } from 'react'
+
 import FormErrors from '../components/FormErrors'
 import { login } from '../lib/allauth'
 import { Link } from 'react-router-dom'
 import { useConfig } from '../auth'
-import Button from '../components/Button'
 
 export default function Login () {
   const [username, setUsername] = useState('')
@@ -22,27 +22,58 @@ export default function Login () {
       setResponse((r) => { return { ...r, fetching: false } })
     })
   }
-  return (
-    <div>
-      <h1>Login</h1>
-      <p>
-        No account? <Link to='/account/signup'>Sign up here.</Link>
-      </p>
 
-      <FormErrors errors={response.content?.errors} />
-
+ return (
+   <div className="flex justify-center items-center w-screen h-screen bg-gray-100 overflow-hidden fixed top-0 left-0">
+    <div className="w-full max-w-md p-6 shadow-lg bg-white rounded-2xl">
       <div>
-        <label>Username <input value={username} onChange={(e) => setUsername(e.target.value)} type='text' required /></label>
-        <FormErrors param='username' errors={response.content?.errors} />
+        <h1 className="text-2xl font-bold text-center mb-4">Login</h1>
+        <p className="text-center text-gray-600 mb-4">
+          No account? <Link to='/account/signup' className='text-blue-600 hover:underline'>Sign up here.</Link>
+        </p>
+        <div className="text-red-500 text-sm mb-2">{response.content?.errors && response.content.errors.map(err => <div key={err}>{err}</div>)}</div>
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-1">
+            Username
+            <input
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              type='text'
+              required
+              className="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </label>
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-1">
+            Password
+            <input
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              type='password'
+              required
+              className="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </label>
+          <Link to='/account/password/reset' className='text-sm text-blue-600 hover:underline'>Forgot your password?</Link>
+        </div>
+        <button
+          disabled={response.fetching}
+          onClick={() => submit()}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg disabled:opacity-50"
+        >
+          Login
+        </button>
+        {config.data.account.login_by_code_enabled && (
+          <Link
+            className='block text-center mt-4 text-blue-600 hover:underline'
+            to='/account/login/code'
+          >
+            Mail me a sign-in code
+          </Link>
+        )}
       </div>
-      <div><label>Password: <input value={password} onChange={(e) => setPassword(e.target.value)} type='password' required /></label>
-        <Link to='/account/password/reset'>Forgot your password?</Link>
-        <FormErrors param='password' errors={response.content?.errors} />
-      </div>
-      <Button disabled={response.fetching} onClick={() => submit()}>Login</Button>
-      {config.data.account.login_by_code_enabled
-        ? <Link className='btn btn-secondary' to='/account/login/code'>Mail me a sign-in code</Link>
-        : null}
     </div>
-  )
+  </div>
+  );
 }
