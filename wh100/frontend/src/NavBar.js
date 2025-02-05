@@ -1,24 +1,26 @@
 import { useUser, useConfig } from './auth';
 import { useLocation, Link } from 'react-router-dom';
+import { logout } from './lib/allauth'; // Import the logout function
 
-function NavBarItem(props) {
+function NavBarItem({ href, to, icon, name, onClick }) {
   const location = useLocation();
   const isActive =
-    (props.href && location.pathname.startsWith(props.href)) ||
-    (props.to && location.pathname.startsWith(props.to));
+    (href && location.pathname.startsWith(href)) ||
+    (to && location.pathname.startsWith(to));
+
   const cls = isActive
     ? 'text-white bg-gray-800 px-3 py-2 rounded-md text-sm font-medium'
     : 'text-gray-300 hover:text-white hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium';
 
   return (
     <li>
-      {props.href ? (
-        <a className={cls} href={props.href}>
-          {props.icon} {props.name}
+      {href ? (
+        <a className={cls} href={href}>
+          {icon} {name}
         </a>
       ) : (
-        <Link className={cls} to={props.to}>
-          {props.icon} {props.name}
+        <Link className={cls} to={to} onClick={onClick}>
+          {icon} {name}
         </Link>
       )}
     </li>
@@ -28,6 +30,17 @@ function NavBarItem(props) {
 export default function NavBar() {
   const user = useUser();
   const config = useConfig();
+
+  function handleLogout(event) {
+    event.preventDefault(); // Prevent navigation
+    logout().then(() => {
+      // window.location.href = '/'; // Redirect to home after logout
+    }).catch((e) => {
+      console.error(e);
+      window.alert('Logout failed');
+    });
+  }
+
   const anonNav = (
     <>
       <NavBarItem to="/account/login" icon="🔑" name="Login" />
@@ -35,14 +48,13 @@ export default function NavBar() {
       <NavBarItem to="/account/password/reset" icon="🔓" name="Reset password" />
     </>
   );
+
   const authNav = (
     <>
-      <NavBarItem to="/account/email" icon="📬" name="Change Email" />
-      <NavBarItem to="/account/password/change" icon="🔒" name="Change Password" />
       {config.data.usersessions ? (
         <NavBarItem to="/account/sessions" icon="🚀" name="Sessions" />
       ) : null}
-      <NavBarItem to="/account/logout" icon="👋" name="Logout" />
+      <NavBarItem to="/" icon="👋" name="Logout" onClick={handleLogout} />
     </>
   );
 
