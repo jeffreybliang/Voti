@@ -17,9 +17,20 @@ code {
   src: url('./fonts/adam-cg-pro.regular.otf') format("opentype");
 }
 
+@font-face {
+  font-family: "FuturaNowBold";
+  src: url('./fonts/FuturaNowHeadlineBold.ttf') format("truetype");
+}
+@font-face {
+  font-family: "FuturaNowRegular";
+  src: url('./fonts/FuturaNowHeadline.ttf') format("truetype");
+}
+
+
 input[type="search"]::-webkit-search-cancel-button {
   appearance: none;
 }
+
 
 
 @tailwind base;

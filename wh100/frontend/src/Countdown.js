@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
 const CountdownTimer = ({ targetDateTime }) => {
-  // Validate the date format and create Date object
-  const targetDate = new Date(targetDateTime);
+  // Memoize targetDate to avoid it changing on every render
+  const targetDate = useMemo(() => new Date(targetDateTime), [targetDateTime]);
   
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -43,7 +43,8 @@ const CountdownTimer = ({ targetDateTime }) => {
 
     return () => clearInterval(timer);
   }, [targetDate]); // Added targetDate as dependency
-return (
+
+  return (
     <div className="grid grid-flow-col gap-10 text-center auto-cols-max">
       <div className="flex flex-col p-5 bg-neutral rounded-box text-neutral-content">
         <span className="dui-countdown font-mono text-9xl">

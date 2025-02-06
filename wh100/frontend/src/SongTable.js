@@ -9,9 +9,9 @@ const SongTable = ({ songs, handleDelete }) => {
             <table className="table-auto min-w-full rounded-xl">
               <thead>
                 <tr className="bg-gray-50">
-                  <th className="p-2 text-center whitespace-nowrap text-base leading-6 font-semibold text-gray-900"></th>
-                  <th className="p-3 text-center whitespace-nowrap text-base leading-6 font-semibold text-gray-900">Song</th>
-                  <th className="px-5 text-center whitespace-nowrap text-base leading-6 font-semibold text-gray-900">Action</th>
+                  <th className="p-2 w-12 text-center whitespace-nowrap text-base leading-6 font-semibold text-gray-900"></th>
+                  <th className="p-3 w-80 text-center whitespace-nowrap text-base leading-6 font-semibold text-gray-900">Song</th>
+                  <th className="px-5 w-24 text-center whitespace-nowrap text-base leading-6 font-semibold text-gray-900">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-300">

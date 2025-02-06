@@ -207,14 +207,9 @@ export default function Dashboard() {
 
   return (
     <div className="justify-center">
-      <div className="justify-center fixed w-full top-0 z-10">
-        <h1 className = "text-center bg-red-600"> <InlineCountdownTimer targetDateTime="2025-02-28T00:00:00+11:00" />
-        </h1> 
-        
-      </div>
-      <div className="relative justify-center text-center">
-        <h1>Dashboard</h1>
-        <p> Welcome user {user.display}!</p>
+      <div className="justify-center sticky mt-8 w-full">
+        <h1 className = "text-center bg-white text-red-600"> <InlineCountdownTimer targetDateTime="2025-02-28T00:00:00+11:00" />
+        </h1>         
       </div>
 
       {showTemporaryAlert && (
