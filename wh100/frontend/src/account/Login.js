@@ -25,7 +25,7 @@ export default function Login () {
 
  return (
    <div className="flex justify-center items-center w-screen h-screen bg-gray-100 overflow-hidden fixed top-0 left-0">
-    <div className="w-full max-w-md p-6 shadow-lg bg-white rounded-2xl">
+    <div className="sm:w-full max-w-md p-6 shadow-lg bg-white rounded-2xl">
       <div>
         <h1 className="text-2xl font-bold text-center mb-4">Login</h1>
         <p className="text-center text-gray-600 mb-4">

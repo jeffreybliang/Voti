@@ -224,67 +224,71 @@ export default function Dashboard() {
         </div>
       )}
 
-      <form className="max-w-md mx-auto justify-center items-center" onSubmit={(e) => e.preventDefault()}>
-        <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
-          Search
-        </label>
-        <div className="relative">
-          <input
-            type="search"
-            id="default-search"
-            className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Search songs by title, artist, album..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            required
+<div className="px-4 sm:px-0"> {/* Add padding on small screens */}
+  <form className="max-w-md mx-auto justify-center items-center" onSubmit={(e) => e.preventDefault()}>
+    <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
+      Search
+    </label>
+    <div className="relative">
+      <input
+        type="search"
+        id="default-search"
+        className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        placeholder="Search songs by title, artist, album..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        required
+      />
+      <button
+        type="button"
+        onClick={() => {
+          setQuery('');
+          setResults(null);
+        }}
+        className="text-white absolute end-2.5 bottom-2.5 bg-transparent hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-2 dark:bg-transparent dark:hover:bg-gray-600 dark:focus:ring-blue-800"
+      >
+        <svg
+          className="w-4 h-4 text-gray-500 dark:text-gray-400 justify-center items-center"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M6 18L18 6M6 6l12 12"
           />
-          <button
-            type="button"
-            onClick={() => {
-              setQuery('');
-              setResults(null);
-            }}
-            className="text-white absolute end-2.5 bottom-2.5 bg-transparent hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-2 dark:bg-transparent dark:hover:bg-gray-600 dark:focus:ring-blue-800"
-          >
-            <svg
-              className="w-4 h-4 text-gray-500 dark:text-gray-400 justify-center items-center"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-      </form>
+        </svg>
+      </button>
+    </div>
+  </form>
+</div>
 
-      {showResultsTableSpinner ? (
-        <div className="flex justify-center mx-auto p-4">
-          <Spinner />
-        </div>
-      ) : (
-        <div className="mx-auto justify-center items-center h-full">
-          <ResultsTable songs={results} handleAdd={handleAdd} handleDelete={handleDelete} votes={votes} />
-        </div>
-      )}
+  <div className="relative">
+    {showResultsTableSpinner ? (
+      <div className="absolute inset-0 flex justify-center z-10 mt-3">
+        <Spinner />
+      </div>
+    ) : (
+      <div className="absolute inset-0 z-0">
+        <ResultsTable songs={results} handleAdd={handleAdd} handleDelete={handleDelete} votes={votes} />
+      </div>
+    )}
 
-      {showSongTableSpinner ? (
+    {showSongTableSpinner ? (
         <div className="flex justify-center mx-auto p-4">
-          <Spinner />
+        <Spinner />
+      </div>
+    ) : (
+      votes && (
+        <div className="p-2">
+          <SongTable songs={votes} handleDelete={handleDelete} />
         </div>
-      ) : (
-        votes && (
-          <div>
-            <SongTable songs={votes} handleDelete={handleDelete} />
-          </div>
-        )
-      )}
+      )
+    )}
+  </div>
 
       <div className="bottom-0 flex justify-center w-full p-4">
         <button onClick={saveVotes} type="button" className="flex justify-center text-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
