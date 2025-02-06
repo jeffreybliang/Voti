@@ -32,7 +32,7 @@ export default function VerifyEmail() {
   }
 
   if ([200, 401].includes(response.content?.status)) {
-    return <Navigate to='/account/email' />;
+    return <Navigate to='/dashboard' />;
   }
 
   let body = null;
