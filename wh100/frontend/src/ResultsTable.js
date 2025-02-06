@@ -1,23 +1,37 @@
 import React from "react";
+import Spinner
+ from "./Spinner";
+const ResultsTable = React.memo(({ showResultsTableSpinner, songs, handleAdd, handleDelete, votes=[] }) => {
 
-const ResultsTable = React.memo(({ songs, handleAdd, handleDelete, votes }) => {
-  if (songs === null) return null;
+  if (!showResultsTableSpinner) {
+    if (songs === null) return null;
 
-  // If the search was performed but no results were found, show a message
-  if (songs.length === 0) {
-    return <p className="text-center text-gray-500 mt-4">No results found.</p>;
+    // If the search was performed but no results were found, show a message
+    if (songs.length === 0) {
+      return <p className="text-center text-gray-500 mt-4">No results found.</p>;
+    }  
   }
 
   return (
-    <div className="flex flex-col items-center w-full">
-      <div className="max-w-screen-md mx-auto overflow-x-auto px-2">
+    <div className="flex flex-col items-center">
+      <div className="overflow-x-auto px-2">
         <div className="min-w-full inline-block align-middle">
           <div className="overflow-hidden border rounded-lg border-gray-300">
             <div className="max-h-48 overflow-y-auto">
-              <table className="table-auto w-full rounded-xl">
+            <table className="table-auto w-[90vw] md:w-[50vw] lg:w-[50vw] xl:w-[30vw] rounded-xl bg-white">
                 
                 <tbody className="divide-y divide-gray-300">
-                  {songs.map((song, index) => {
+
+                {showResultsTableSpinner ? (
+                  <tr>
+                    <td colSpan="100%" className="py-4 text-center bg-white">
+                      <Spinner />
+                    </td>
+                  </tr>
+                ) : (
+
+                  
+                  songs.map((song, index) => {
                     const isVoted = votes.some(
                       (vote) => vote.song_id === song.song_id
                     );
@@ -39,7 +53,7 @@ const ResultsTable = React.memo(({ songs, handleAdd, handleDelete, votes }) => {
                               alt={song.name}
                             />
                             <div className="data">
-                            <p className="font-normal text-sm sm:text-base text-gray-900 line-clamp-2">
+                            <p className="font-normal text-sm sm:text-base text-gray-900 line-clamp-1">
                                 {song.name}
                               </p>
                               <p className="font-normal text-xs sm:text-sm text-gray-400 line-clamp-1">
@@ -96,7 +110,7 @@ const ResultsTable = React.memo(({ songs, handleAdd, handleDelete, votes }) => {
                         </td>
                       </tr>
                     );
-                  })}
+                  }))}
                 </tbody>
               </table>
             </div>
