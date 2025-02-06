@@ -9,17 +9,28 @@ const SongTable = (({ songs, handleDelete }) => {
             <table className="table-auto w-[90vw] md:w-[50vw] lg:w-[50vw] xl:w-[30vw] rounded-xl bg-white">
               <thead>
                 <tr className="bg-gray-50">
-                  <th className="p-4 w-8 text-center whitespace-nowrap text-sm sm:text-base font-semibold text-gray-900"></th>
-                  <th className="p-3 text-left whitespace-nowrap text-sm sm:text-base font-semibold text-gray-900">
+                  <th className="p-1 w-8 text-center whitespace-nowrap text-sm sm:text-base font-semibold text-gray-900"></th>
+                  <th className="p-1 text-left whitespace-nowrap text-sm sm:text-base font-semibold text-gray-900">
                     Song
                   </th>
-                  <th className="px-5 w-24 text-center whitespace-nowrap text-sm sm:text-base font-semibold text-gray-900">
+                  <th className="px-2 w-24 text-center whitespace-nowrap text-sm sm:text-base font-semibold text-gray-900"> 
                     Action
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-300">
-                {songs.map((song, index) => (
+            
+              {songs.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan="100%"
+                      className="py-4 text-center"
+                    >
+                      <p className="text-sm">Vote for your first track to get started!</p>
+                    </td>
+                  </tr>
+                ) : (
+                songs.map((song, index) => (
                   <tr
                     key={song.id}
                     className="bg-white transition-all duration-500 hover:bg-gray-50"
@@ -54,7 +65,7 @@ const SongTable = (({ songs, handleDelete }) => {
                         </button>                      
                       </td>
                   </tr>
-                ))}
+                )))}
               </tbody>
             </table>
           </div>

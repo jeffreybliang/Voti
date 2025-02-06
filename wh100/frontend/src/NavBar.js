@@ -12,7 +12,7 @@ function NavBarItem({ href, to, icon, name, onClick }) {
 
   const cls = isActive
     ? "text-white font-extrabold bg-red-800 h-full w-20 flex items-center justify-center text-sm font-medium"
-    : "text-white bg-red-600 h-full w-20 flex items-center justify-center text-sm font-medium";
+    : "text-white bg-red-600 h-full w-20 flex items-center justify-center text-sm font-medium hover:bg-red-800";
 
   const stylFutura = isActive
     ? {
@@ -81,7 +81,7 @@ export default function NavBar() {
   
   const authHamburger = (    
     <div className="flex items-center absolute right-3">
-      {user && <span className="text-white mr-3">{user.display}</span> }
+      {user && <span className="text-white mr-3 text-sm">{user.display}</span> }
   
         <div
           className={classNames("tham tham-e-squeeze tham-w-6", {

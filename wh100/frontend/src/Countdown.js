@@ -50,25 +50,25 @@ const CountdownTimer = ({ targetDateTime }) => {
         <span className="dui-countdown font-mono text-4xl lg:text-9xl md:text-7xl sm:text-7xl px-1">
           <span style={{ "--value": timeLeft.days }}></span>
         </span>
-        days
+        <span className="text-xs sm:text-sm md:text-lg lg:text-xl" >days</span>
       </div>
       <div className="flex flex-col p-4 bg-neutral rounded-box text-neutral-content">
         <span className="dui-countdown font-mono text-4xl lg:text-9xl md:text-7xl sm:text-7xl px-1">
           <span style={{ "--value": timeLeft.hours }}></span>
         </span>
-        hours
+        <span className="text-xs sm:text-sm md:text-lg lg:text-xl">hours</span>
       </div>
       <div className="flex flex-col p-4 bg-neutral rounded-box text-neutral-content">
         <span className="dui-countdown font-mono text-4xl lg:text-9xl md:text-7xl sm:text-7xl px-1">
           <span style={{ "--value": timeLeft.minutes }}></span>
         </span>
-        min
+        <span className="text-xs sm:text-sm md:text-lg lg:text-xl">minutes</span>
       </div>
       <div className="flex flex-col p-4 bg-neutral rounded-box text-neutral-content">
         <span className="dui-countdown font-mono text-4xl lg:text-9xl md:text-7xl sm:text-7xl px-1">
           <span style={{ "--value": timeLeft.seconds }}></span>
         </span>
-        sec
+        <span className="text-xs sm:text-sm md:text-lg lg:text-xl">seconds</span>
       </div>
     </div>
   );
