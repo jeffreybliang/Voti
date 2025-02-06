@@ -9,7 +9,7 @@ export default function Home() {
     <div className="flex justify-center w-screen h-screen bg-gray-100 overflow-hidden fixed top-0 left-0">
       <div className="justify-center">
         <h2
-          className="text-2xl/7 text-center p-4 font-bold sm:truncate sm:text-5xl sm:tracking-tight mt-40 mb-4"
+          className="text-4xl/7 text-center p-4 font-bold sm:truncate sm:text-5xl sm:tracking-tight mt-48 sm:mt-40 mb-4"
           style={{ fontFamily: "FuturaNowBold" }}
         >
           VOTING ENDS IN
