@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useUser, useConfig } from "./auth";
 import { useLocation, Link } from "react-router-dom";
 import { logout } from "./lib/allauth"; // Import the logout function
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import classNames from "classnames";
 
 function NavBarItem({ href, to, icon, name, onClick }) {

@@ -45,27 +45,27 @@ const CountdownTimer = ({ targetDateTime }) => {
   }, [targetDate]); // Added targetDate as dependency
 
   return (
-    <div className="grid grid-flow-col gap-10 text-center auto-cols-max">
-      <div className="flex flex-col p-5 bg-neutral rounded-box text-neutral-content">
-        <span className="dui-countdown font-mono text-9xl">
+    <div className="grid grid-flow-col gap-2 sm:gap-5 md:gap-5 text-center auto-cols-max">
+      <div className="flex flex-col p-4 bg-neutral rounded-box text-neutral-content">
+        <span className="dui-countdown font-mono text-4xl lg:text-9xl md:text-7xl sm:text-7xl px-1">
           <span style={{ "--value": timeLeft.days }}></span>
         </span>
         days
       </div>
-      <div className="flex flex-col p-5 bg-neutral rounded-box text-neutral-content">
-        <span className="dui-countdown font-mono text-9xl">
+      <div className="flex flex-col p-4 bg-neutral rounded-box text-neutral-content">
+        <span className="dui-countdown font-mono text-4xl lg:text-9xl md:text-7xl sm:text-7xl px-1">
           <span style={{ "--value": timeLeft.hours }}></span>
         </span>
         hours
       </div>
-      <div className="flex flex-col p-5 bg-neutral rounded-box text-neutral-content">
-        <span className="dui-countdown font-mono text-9xl">
+      <div className="flex flex-col p-4 bg-neutral rounded-box text-neutral-content">
+        <span className="dui-countdown font-mono text-4xl lg:text-9xl md:text-7xl sm:text-7xl px-1">
           <span style={{ "--value": timeLeft.minutes }}></span>
         </span>
         min
       </div>
-      <div className="flex flex-col p-5 bg-neutral rounded-box text-neutral-content">
-        <span className="dui-countdown font-mono text-9xl">
+      <div className="flex flex-col p-4 bg-neutral rounded-box text-neutral-content">
+        <span className="dui-countdown font-mono text-4xl lg:text-9xl md:text-7xl sm:text-7xl px-1">
           <span style={{ "--value": timeLeft.seconds }}></span>
         </span>
         sec
