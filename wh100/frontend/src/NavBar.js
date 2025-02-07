@@ -105,7 +105,7 @@ export default function NavBar() {
 
   const authHamburger = (
     <div className="flex items-center absolute right-3">
-      {user && <span className="text-white mr-3 text-sm">{user.display}</span>}
+      {user && <span className="text-white mr-2 text-xs sm:text-sm">{user.display}</span>}
 
       <div
         className={classNames("tham tham-e-squeeze tham-w-6", {
