@@ -5,7 +5,7 @@ const CustomAlert = ({ message, onClose }) => {
     <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative max-w-lg mx-auto" role="alert">
       <div className="flex justify-between items-center">
         <div>
-          <strong className="font-bold">Error</strong>
+          <strong className="font-bold">Error &ensp;</strong>
           <span className="block sm:inline">{message}</span>
         </div>
         <button onClick={onClose} className="text-red-500 hover:text-red-700">

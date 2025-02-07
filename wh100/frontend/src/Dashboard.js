@@ -107,9 +107,9 @@ export default function Dashboard() {
       setShowSubmitVotesSpinner(false);
       if (
         error.status === 400 &&
-        error.data?.error === "You can only select up to 10 songs."
+        error.data?.error === " You can only select up to 10 songs."
       ) {
-        setAlertMessage("You can only select up to 10 songs.");
+        setAlertMessage(" You can only select up to 10 songs.");
         setVotes((prevVotes) => prevVotes.slice(0, 10));
       } else {
         setAlertMessage("Error submitting votes.");
@@ -285,53 +285,53 @@ return (
             className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
           >
             Search
-          </label>
-          <div className="relative">
-            <input
-              type="search"
-              id="default-search"
-              className="block w-full p-3 ps-6 text-base sm:text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Search songs by title, artist, album..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onFocus={() => {
-                // When the input regains focus and there are results, show them.
-                if (results) setShowResults(true);
-              }}
-            />
-            <button
-              type="button"
-              onClick={() => {
-                setQuery("");
-                setResults(null);
-                setShowResults(false);
-              }}
-              className="text-white absolute end-3 bottom-1.5 bg-transparent hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-2 dark:bg-transparent dark:hover:bg-gray-600 dark:focus:ring-blue-800"
-            >
-              <svg
-                className="w-5 h-5 text-gray-500 dark:text-gray-400 justify-center items-center"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
+          </label><div className="relative">
+  <input
+    type="search"
+    id="default-search"
+    className="block w-full p-3 pr-10 ps-6 text-base sm:text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+    placeholder="Search songs by title, artist, album..."
+    value={query}
+    onChange={(e) => setQuery(e.target.value)}
+    onFocus={() => {
+      // When the input regains focus and there are results, show them.
+      if (results) setShowResults(true);
+    }}
+  />
+  <button
+    type="button"
+    onClick={() => {
+      setQuery("");
+      setResults(null);
+      setShowResults(false);
+    }}
+    className="absolute inset-y-2 right-2 flex items-center p-1 mr-6 text-white bg-transparent hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm dark:bg-transparent dark:hover:bg-gray-600 dark:focus:ring-blue-800"
+  >
+    <svg
+      className="w-6 h-6 text-gray-500 dark:text-gray-400"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        d="M6 18L18 6M6 6l12 12"
+      />
+    </svg>
+  </button>
+</div>
+
         </form>
       </div>
 
       <div className="relative">
         {/* Results table overlay */}
         {(showResultsTableSpinner || (results && showResults)) && (
-        <div className="absolute top-0 left-0 right-0 z-10 pointer-events-none flex justify-center">
-        <div ref={resultsRef} className="mx-auto pointer-events-auto max-w-screen-md">
+        <div className="absolute top-0 left-0 right-0 z-10 flex justify-center">
+        <div ref={resultsRef} className="mx-auto  max-w-screen-md">
             <ResultsTable
               showResultsTableSpinner={showResultsTableSpinner}
               songs={results}
