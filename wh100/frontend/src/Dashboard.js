@@ -7,6 +7,7 @@ import TemporaryAlert from "./TemporaryAlert";
 import Spinner from "./Spinner";
 import InlineCountdownTimer from "./InlineCountdown";
 import "./index.css";
+import { deadline } from './Home';
 
 export default function Dashboard() {
   const user = useUser();
@@ -219,38 +220,38 @@ export default function Dashboard() {
     return () => abortControllerRef.current.abort();
   }, [debouncedQuery, handleSearch]);
 
-// ... inside your Dashboard component
+  // ... inside your Dashboard component
 
-// Ref for the results container.
-const resultsRef = useRef(null);
+  // Ref for the results container.
+  const resultsRef = useRef(null);
 
-// A ref to always have the current value of showResults.
-const showResultsRef = useRef(showResults);
-useEffect(() => {
-  showResultsRef.current = showResults;
-}, [showResults]);
+  // A ref to always have the current value of showResults.
+  const showResultsRef = useRef(showResults);
+  useEffect(() => {
+    showResultsRef.current = showResults;
+  }, [showResults]);
 
-// Outside click listener added once.
-useEffect(() => {
-  const handleClickOutside = (event) => {
-    // If results container exists and the click target is not inside it...
-    if (resultsRef.current && !resultsRef.current.contains(event.target)) {
-      // ...and if the results are currently shown, then hide them.
-      if (showResultsRef.current) {
-        setShowResults(false);
+  // Outside click listener added once.
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // If results container exists and the click target is not inside it...
+      if (resultsRef.current && !resultsRef.current.contains(event.target)) {
+        // ...and if the results are currently shown, then hide them.
+        if (showResultsRef.current) {
+          setShowResults(false);
+        }
       }
-    }
-  };
+    };
 
-  document.addEventListener("mousedown", handleClickOutside);
-  return () => document.removeEventListener("mousedown", handleClickOutside);
-}, []);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
-return (
+  return (
     <div className="justify-center">
       <div className="justify-center sticky mt-8 w-full">
         <h1 className="text-center bg-white text-red-600">
-          <InlineCountdownTimer targetDateTime="2025-02-28T00:00:00+11:00" />
+          <InlineCountdownTimer targetDateTime={deadline} />
         </h1>
       </div>
 
@@ -271,10 +272,17 @@ return (
       )}
 
       <div className="justify-center mt-5 px-1 text-center">
-        <h1 className="text-center text-2xl" style={{fontFamily: "AdamCG"}}> Find your faves! 🔍 </h1>
-        <p className="text-lg" style={{fontFamily: "FuturaNowRegular"}} >  Type in a song, artist, or album to add your top tracks to the list. <br/> Who's making your Hottest 100? </p>
+        <h1 className="text-center text-2xl" style={{ fontFamily: "AdamCG" }}>
+          {" "}
+          Find your faves! 🔍{" "}
+        </h1>
+        <p className="text-lg" style={{ fontFamily: "FuturaNowRegular" }}>
+          {" "}
+          Type in a song, artist, or album to add your top tracks to the list.{" "}
+          <br /> Who's making your Hottest 100?{" "}
+        </p>
       </div>
-    
+
       <div className="mx-auto w-[90vw] md:w-[50vw] lg:w-[50vw] xl:w-[30vw] mt-3">
         <form
           className="mx-auto justify-center items-center"
@@ -285,70 +293,81 @@ return (
             className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
           >
             Search
-          </label><div className="relative">
-  <input
-    type="search"
-    id="default-search"
-    className="block w-full p-3 pr-10 ps-6 text-base sm:text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-    placeholder="Search songs by title, artist, album..."
-    value={query}
-    onChange={(e) => setQuery(e.target.value)}
-    onFocus={() => {
-      // When the input regains focus and there are results, show them.
-      if (results) setShowResults(true);
-    }}
-  />
-  <button
-    type="button"
-    onClick={() => {
-      setQuery("");
-      setResults(null);
-      setShowResults(false);
-    }}
-    className="absolute inset-y-2 right-2 flex items-center p-1 mr-6 text-white bg-transparent hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm dark:bg-transparent dark:hover:bg-gray-600 dark:focus:ring-blue-800"
-  >
-    <svg
-      className="w-6 h-6 text-gray-500 dark:text-gray-400"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <path
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        d="M6 18L18 6M6 6l12 12"
-      />
-    </svg>
-  </button>
-</div>
-
+          </label>
+          <div className="relative">
+            <input
+              type="search"
+              id="default-search"
+              className="block w-full p-3 pr-10 ps-6 text-base sm:text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Search songs by title, artist, album..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onFocus={() => {
+                // When the input regains focus and there are results, show them.
+                if (results) setShowResults(true);
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => {
+                setQuery("");
+                setResults(null);
+                setShowResults(false);
+              }}
+              className="absolute inset-y-2 right-2 flex items-center p-1 mr-6 text-white bg-transparent hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm dark:bg-transparent dark:hover:bg-gray-600 dark:focus:ring-blue-800"
+            >
+              <svg
+                className="w-6 h-6 text-gray-500 dark:text-gray-400"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
         </form>
       </div>
 
       <div className="relative">
         {/* Results table overlay */}
         {(showResultsTableSpinner || (results && showResults)) && (
-        <div className="absolute top-0 left-0 right-0 z-10 flex justify-center">
-        <div ref={resultsRef} className="mx-auto  max-w-screen-md">
-            <ResultsTable
-              showResultsTableSpinner={showResultsTableSpinner}
-              songs={results}
-              handleAdd={handleAdd}
-              handleDelete={handleDelete}
-              votes={votes}
-            />
+          <div className="absolute top-0 left-0 right-0 z-10 flex justify-center">
+            <div ref={resultsRef} className="mx-auto  max-w-screen-md">
+              <ResultsTable
+                showResultsTableSpinner={showResultsTableSpinner}
+                songs={results}
+                handleAdd={handleAdd}
+                handleDelete={handleDelete}
+                votes={votes}
+              />
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      <div className="justify-center pt-10 px-2  text-center">
-        <h1 className="text-center text-2xl" style={{fontFamily: "AdamCG"}}>  Your votes. Your soundtrack. 🎧 </h1>
-        <p  className="text-lg" style={{fontFamily: "FuturaNowRegular"}} > Vote for up to 10 songs. <br/>  Add or remove anytime before the deadline. <br/> Order doesn’t matter — just back your favorites and save! </p>
-        <h2 className="pt-5 text-xl" style={{fontFamily: "FuturaNowBold"}}> YOUR VOTES SO FAR</h2>
-      </div>
-      
+        <div className="justify-center pt-10 px-2  text-center">
+          <h1 className="text-center text-2xl" style={{ fontFamily: "AdamCG" }}>
+            {" "}
+            Your votes. Your soundtrack. 🎧{" "}
+          </h1>
+          <p className="text-lg" style={{ fontFamily: "FuturaNowRegular" }}>
+            {" "}
+            Vote for up to 10 songs. <br /> Add or remove anytime before the
+            deadline. <br /> Order doesn’t matter — just back your favorites and
+            save!{" "}
+          </p>
+          <h2 className="pt-5 text-xl" style={{ fontFamily: "FuturaNowBold" }}>
+            {" "}
+            YOUR VOTES SO FAR
+          </h2>
+        </div>
+
         {/* SongTable section */}
         {showSongTableSpinner ? (
           <div className="flex justify-center mx-auto p-4">

@@ -2,21 +2,25 @@ import Countdown from "./Countdown";
 import { useUser } from "./auth";
 import { Link } from "react-router-dom";
 
+export const deadline = "2025-03-14T12:00:00+11:00";
+
 export default function Home() {
   const user = useUser();
 
   return (
     <div className="flex justify-center w-screen h-screen bg-gray-100 overflow-hidden fixed top-0 left-0">
       <div className="justify-center">
+
         <h2
-          className="text-4xl/7 text-center p-4 font-bold sm:truncate sm:text-5xl sm:tracking-tight mt-48 sm:mt-40 mb-4"
+          className="text-4xl/7 text-center p-4 font-bold sm:truncate sm:text-5xl sm:tracking-tight mt-48 sm:mt-56 mb-4"
           style={{ fontFamily: "FuturaNowBold" }}
         >
           VOTING ENDS IN
         </h2>
         <div className="flex justify-center">
-          <Countdown targetDateTime="2025-02-28T00:00:00+11:00" />
+          <Countdown targetDateTime={deadline} />
         </div>
+
         {user ? (
           <div className="flex justify-center pt-10">
             <button

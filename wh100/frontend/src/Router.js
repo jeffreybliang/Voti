@@ -21,6 +21,7 @@ import ResetPassword, { loader as resetPasswordLoader } from './account/ResetPas
 import Reauthenticate from './account/Reauthenticate'
 import Root from './Root'
 import { useConfig } from './auth/hooks'
+import Rules from './Rules'
 
 function createRouter (config) {
   return createBrowserRouter([
@@ -35,6 +36,10 @@ function createRouter (config) {
         {
           path: '/dashboard',
           element: <AuthenticatedRoute><Dashboard /></AuthenticatedRoute>
+        },
+        {
+          path: '/rules',
+          element: <AuthenticatedRoute><Rules /></AuthenticatedRoute>
         },
         {
           path: '/account/login',
