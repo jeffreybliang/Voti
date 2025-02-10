@@ -25,4 +25,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path("_allauth/", include("allauth.headless.urls")),
     path('api/', include('api.urls')),  # Include API URLs
+
+    # The catch-all pattern:
+    re_path(r'^.*$', TemplateView.as_view(template_name='index.html')),
 ]
