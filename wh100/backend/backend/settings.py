@@ -82,21 +82,29 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
-# CORS_ORIGIN_WHITELIST = [
-#     'http://localhost:3000',
-# ]
-# CORS_ALLOWED_ORIGINS = [
-#     'http://localhost:3000',
-# ]
-# CSRF_TRUSTED_ORIGINS = [
-#     'http://localhost:3000',
-# ]
-# SESSION_COOKIE_DOMAIN = '.localhost'
-# CSRF_COOKIE_DOMAIN = '.localhost'
-# SESSION_COOKIE_SECURE = False
-# CSRF_COOKIE_SECURE = False
-# SESSION_COOKIE_HTTPONLY = False
-# CSRF_COOKIE_HTTPONLY = False
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',
+]
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    'http://localhost:36893',
+]
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:3000',
+    'http://localhost:36893',
+]
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'x-csrftoken',
+    # any other custom headers you need
+]
+
+SESSION_COOKIE_DOMAIN = '.localhost'
+CSRF_COOKIE_DOMAIN = '.localhost'
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_HTTPONLY = False
+CSRF_COOKIE_HTTPONLY = False
 
 
 ROOT_URLCONF = 'backend.urls'
@@ -114,6 +122,15 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
 
             ],
+        },
+    },
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        # Add the build folder itself to 'DIRS'
+        'DIRS': [BASE_DIR / 'build'],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            # ...
         },
     },
 ]
@@ -187,8 +204,9 @@ STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Development-only folders containing your custom static files
+# Tells Django where to look for additional static files besides each app's "static" folder
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "build"),
+    BASE_DIR / 'build' / 'static',   # <--- This points Django to the React static files
 ]
 
 # Default primary key field type
