@@ -188,7 +188,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Development-only folders containing your custom static files
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, "build"),
 ]
 
 # Default primary key field type
