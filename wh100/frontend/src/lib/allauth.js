@@ -96,15 +96,17 @@ const tokenStorage = window.sessionStorage
 async function request (method, path, data, headers) {
   const options = {
     method,
+    credentials: 'include',
     headers: {
       ...ACCEPT_JSON,
-      ...headers
+      ...headers,
+      "X-Csrftoken": getCSRFToken(),
     }
   }
   // Don't pass along authentication related headers to the config endpoint.
   if (path !== URLs.CONFIG) {
     if (CLIENT === Client.BROWSER) {
-      options.headers['X-CSRFToken'] = getCSRFToken()
+      options.headers['X-Csrftoken'] = getCSRFToken()
     } else if (CLIENT === Client.APP) {
       // IMPORTANT!: Do NOT use `Client.APP` in a browser context, as you will
       // be vulnerable to CSRF attacks. This logic is only here for
@@ -113,6 +115,7 @@ async function request (method, path, data, headers) {
       const sessionToken = tokenStorage.getItem('sessionToken')
       if (sessionToken) {
         options.headers['X-Session-Token'] = sessionToken
+        options.headers['X-Csrftoken'] = getCSRFToken()
       }
     }
   }
