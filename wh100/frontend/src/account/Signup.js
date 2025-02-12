@@ -2,7 +2,6 @@ import { useState } from 'react';
 import FormErrors from '../components/FormErrors';
 import { signUp } from '../lib/allauth';
 import { Link } from 'react-router-dom';
-import Button from '../components/Button';
 
 export default function Signup() {
   const [username, setUsername] = useState('');
@@ -73,6 +72,7 @@ export default function Signup() {
         </div>
         
         <button
+          type='submit'
           disabled={response.fetching}
           onClick={() => submit()}
           className="w-full bg-blue-600 text-white py-2 mt-4 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"

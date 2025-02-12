@@ -58,6 +58,7 @@ export default function Login () {
           <Link to='/account/password/reset' className='text-sm text-blue-600 hover:underline'>Forgot your password?</Link>
         </div>
         <button
+          type='submit'
           disabled={response.fetching}
           onClick={() => submit()}
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg disabled:opacity-50"

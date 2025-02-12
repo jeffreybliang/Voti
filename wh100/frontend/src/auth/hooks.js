@@ -102,3 +102,4 @@ export function useAuthStatus () {
   const auth = useAuth()
   return [auth, authInfo(auth)]
 }
+

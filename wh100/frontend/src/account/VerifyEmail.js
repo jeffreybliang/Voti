@@ -1,10 +1,8 @@
-import { useState } from 'react';
-import {
-  useLoaderData,
-  Navigate
-} from 'react-router-dom';
+import { useEffect, useState, useRef, useCallback } from 'react'; // Added useRef
+import { useLoaderData, Navigate } from 'react-router-dom';
 import { getEmailVerification, verifyEmail } from '../lib/allauth';
 import Button from '../components/Button';
+import { useOutletContext } from 'react-router-dom';
 
 export async function loader({ params }) {
   const key = params.key;
@@ -15,18 +13,63 @@ export async function loader({ params }) {
 export default function VerifyEmail() {
   const { key, verification } = useLoaderData();
   const [response, setResponse] = useState({ fetching: false, content: null });
+  const { emailAddresses, setEmailAddresses } = useOutletContext(); // Use the context for emailAddresses
+  
+  // Use a ref to track verification status
+  const isVerifiedRef = useRef(false);
+
+  // Temporarily mark all emails as verified
+  const temporarilyVerifyEmails = useCallback(() => {
+    const updatedEmails = emailAddresses.map(email => ({ ...email, verified: true }));
+    setEmailAddresses(updatedEmails); // Update the context state directly
+    localStorage.setItem("emailAddresses", JSON.stringify(updatedEmails)); // Also update localStorage
+    window.dispatchEvent(new Event("storage")); // Trigger storage event
+  },[emailAddresses, setEmailAddresses]);
+
+  // Revert verification status to false
+  const revertEmailVerification = useCallback(() => {
+    const originalEmails = emailAddresses.map(email => ({ ...email, verified: false }));
+    setEmailAddresses(originalEmails); // Revert context state directly
+    localStorage.setItem("emailAddresses", JSON.stringify(originalEmails)); // Update localStorage
+    window.dispatchEvent(new Event("storage")); // Trigger storage event
+  },[emailAddresses, setEmailAddresses]);
+
+  // Handle initial verification and cleanup
+  useEffect(() => {
+    temporarilyVerifyEmails(); // Mark all emails as verified
+
+    const handleBeforeUnload = () => {
+      if (!isVerifiedRef.current) {
+        revertEmailVerification(); // Revert if not verified
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      if (!isVerifiedRef.current) {
+        revertEmailVerification(); // Cleanup on component unmount
+      }
+    };
+  }, [emailAddresses, setEmailAddresses, temporarilyVerifyEmails, revertEmailVerification]); // Dependencies updated to include context state
+
 
   function submit() {
     setResponse({ ...response, fetching: true });
     verifyEmail(key)
       .then((content) => {
         setResponse((r) => ({ ...r, content }));
+        if ([200, 401].includes(content.status)) {
+          isVerifiedRef.current = true; // Mark as verified
+        }
       })
       .catch((e) => {
         console.error(e);
         window.alert(e);
+        revertEmailVerification(); // Revert on API failure
       })
-      .then(() => {
+      .finally(() => {
         setResponse((r) => ({ ...r, fetching: false }));
       });
   }
@@ -35,6 +78,8 @@ export default function VerifyEmail() {
     return <Navigate to='/dashboard' />;
   }
 
+
+  // Rest of your component remains the same...
   let body = null;
   if (verification.status === 200) {
     body = (
@@ -52,7 +97,7 @@ export default function VerifyEmail() {
   }
   
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
+    <div className="flex justify-center items-center w-screen h-screen bg-gray-100 overflow-hidden fixed top-0 left-0">
       <div className="max-w-md w-full bg-white p-6 rounded-2xl shadow-lg border border-gray-200 text-center">
         <h1 className="text-2xl font-semibold text-gray-800 mb-4">Confirm Email Address</h1>
         {body}

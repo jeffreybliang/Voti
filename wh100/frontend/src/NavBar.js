@@ -42,35 +42,12 @@ function NavBarItem({ href, to, icon, name, onClick }) {
   );
 }
 
-export default function NavBar() {
+
+export default function NavBar({ emailAddresses, setEmailAddresses }) {
   const user = useUser();
   const config = useConfig();
   const [opened, setOpened] = useState(false);
-  const [emailAddresses, setEmailAddresses] = useState(() => {
-    // Try to load from localStorage; otherwise, default to an empty array
-    return JSON.parse(localStorage.getItem("emailAddresses")) || [];
-  });
 
-  useEffect(() => {
-    console.log("User object:", user);
-  }, []); // Log user whenever it changes
-
-  useEffect(() => {
-    // Only fetch if localStorage does not already have emails
-    if (emailAddresses.length === 0) {
-      allauth
-        .getEmailAddresses()
-        .then((resp) => {
-          if (resp.status === 200) {
-            setEmailAddresses(resp.data);
-            localStorage.setItem("emailAddresses", JSON.stringify(resp.data)); // Save to localStorage
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching email addresses:", error);
-        });
-    }
-  }, [emailAddresses]); // Dependency ensures effect runs only if emails are not already set
 
   function handleLogout(event) {
     event.preventDefault(); // Prevent navigation
@@ -101,7 +78,26 @@ export default function NavBar() {
     </>
   );
 
-  const anonHamburger = <></>;
+  useEffect(() => {
+    // Listen for the "storage" event to handle cross-tab or window updates
+    const handleStorageChange = (event) => {
+      if (event.key === "emailAddresses") {
+        try {
+          const updatedEmails = JSON.parse(event.newValue);
+          setEmailAddresses(updatedEmails); // Update the state when localStorage is modified
+        } catch (error) {
+          console.error("Error parsing localStorage data", error);
+        }
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    // Cleanup the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  },); // Empty dependency to set up listener once
 
   const authHamburger = (
     <div className="flex items-center absolute right-3">
@@ -123,7 +119,7 @@ export default function NavBar() {
           id="dropdown"
           className="absolute z-50 right-0 top-8 bg-red-100 divide-y divide-gray-100 rounded-lg shadow-sm w-28 dark:bg-gray-700 mt-2"
         >
-          <ul className="py-2 text-center text-sm text-gray-700 dark:text-gray-200">
+          <ul className="text-center text-sm text-gray-700 dark:text-gray-200">
             <li>
               <Link
                 to="/"
@@ -143,20 +139,14 @@ export default function NavBar() {
     <div>
       <nav className="bg-white shadow fixed top-0 w-full z-50">
         <div className="max-w-full mx-auto">
-          <div className="flex items-center justify-between h-16">
-            <h1 className="relative flex items-center bg-white w-screen text-center justify-center">
+          <div className="flex items-center justify-between">
+            <h1 className="relative flex items-center bg-red-600 w-screen justify-center">
               <Link
                 to="/"
                 style={{ fontFamily: "FuturaNowBold" }}
-                className="relative text-red-600 font-bold text-5xl text-center pt-8"
+                className="relative text-white font-bold text-4xl mt-2 "
               >
                 W
-                <h1
-                  style={{ fontFamily: "FuturaNowRegular" }}
-                  className="relative text-black text-lg whitespace-nowrap tracking-widest"
-                >
-                  HOTTEST 100
-                </h1>
               </Link>
             </h1>
           </div>
@@ -165,7 +155,7 @@ export default function NavBar() {
 
           <div
             id="navbar"
-            className="relative bg-red-600 flex justify-center items-center mt-6"
+            className="relative bg-red-600 flex justify-center items-center"
           >
             <ul className="flex h-10 ">
               <NavBarItem to="/dashboard" name="VOTE" />
@@ -190,7 +180,7 @@ export default function NavBar() {
               (emailObj, index) =>
                 !emailObj.verified && (
                   <div
-                    class="bg-red-100/90 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md"
+                    class="bg-red-100/95 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md"
                     role="alert"
                   >
                     <div class="flex">

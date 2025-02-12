@@ -44,34 +44,39 @@ const CountdownTimer = ({ targetDateTime }) => {
     return () => clearInterval(timer);
   }, [targetDate]); // Added targetDate as dependency
 
-  return (
-    <div className="grid grid-flow-col gap-1 sm:gap-5 md:gap-5 text-center auto-cols-max">
-      <div className="flex flex-col p-3 bg-neutral rounded-box text-neutral-content">
-        <span className="dui-countdown font-mono text-5xl lg:text-9xl md:text-7xl sm:text-7xl px-1">
-          <span style={{ "--value": timeLeft.days }}></span>
-        </span>
-        <span className="text-xs sm:text-sm md:text-lg lg:text-xl" >days</span>
-      </div>
-      <div className="flex flex-col p-3 bg-neutral rounded-box text-neutral-content">
-        <span className="dui-countdown font-mono text-5xl lg:text-9xl md:text-7xl sm:text-7xl px-1">
-          <span style={{ "--value": timeLeft.hours }}></span>
-        </span>
-        <span className="text-xs sm:text-sm md:text-lg lg:text-xl">hours</span>
-      </div>
-      <div className="flex flex-col p-3 bg-neutral rounded-box text-neutral-content">
-        <span className="dui-countdown font-mono text-5xl lg:text-9xl md:text-7xl sm:text-7xl px-1">
-          <span style={{ "--value": timeLeft.minutes }}></span>
-        </span>
-        <span className="text-xs sm:text-sm md:text-lg lg:text-xl">minutes</span>
-      </div>
-      <div className="flex flex-col p-3 bg-neutral rounded-box text-neutral-content">
-        <span className="dui-countdown font-mono text-5xl lg:text-9xl md:text-7xl sm:text-7xl px-1">
-          <span style={{ "--value": timeLeft.seconds }}></span>
-        </span>
-        <span className="text-xs sm:text-sm md:text-lg lg:text-xl">seconds</span>
-      </div>
+// Define common class names
+const containerClass = "flex flex-col p-3 bg-red-600/95 rounded-box text-white";
+const countdownTextClass = "dui-countdown font-mono text-5xl lg:text-7xl md:text-7xl sm:text-7xl px-1";
+const timeLabelClass = "text-xs sm:text-sm md:text-sm lg:text-base";
+
+return (
+  <div className="grid grid-flow-col gap-1 sm:gap-3 md:gap-3 text-center auto-cols-max">
+    <div className={containerClass}>
+      <span className={countdownTextClass}>
+        <span style={{ "--value": timeLeft.days }}></span>
+      </span>
+      <span className={timeLabelClass}>days</span>
     </div>
-  );
+    <div className={containerClass}>
+      <span className={countdownTextClass}>
+        <span style={{ "--value": timeLeft.hours }}></span>
+      </span>
+      <span className={timeLabelClass}>hours</span>
+    </div>
+    <div className={containerClass}>
+      <span className={countdownTextClass}>
+        <span style={{ "--value": timeLeft.minutes }}></span>
+      </span>
+      <span className={timeLabelClass}>minutes</span>
+    </div>
+    <div className={containerClass}>
+      <span className={countdownTextClass}>
+        <span style={{ "--value": timeLeft.seconds }}></span>
+      </span>
+      <span className={timeLabelClass}>seconds</span>
+    </div>
+  </div>
+);
 };
 
 export default CountdownTimer;
