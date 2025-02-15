@@ -39,7 +39,7 @@ function createRouter (config) {
         },
         {
           path: '/rules',
-          element: <AuthenticatedRoute><Rules /></AuthenticatedRoute>
+          element: <Rules />
         },
         {
           path: '/account/login',

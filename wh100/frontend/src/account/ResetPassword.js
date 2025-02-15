@@ -45,32 +45,35 @@ export default function ResetPassword () {
     body = <FormErrors param='key' errors={response.content?.errors} />
   }
   return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
-      <div className="max-w-md w-full bg-white p-6 rounded-2xl shadow-lg border border-gray-200 text-center">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-4">Reset Password</h1>
+    <>
+      <div className="fixed top-0 left-0 w-full h-full bg-[url('media/best400.png')] dark:bg-[url('media/darkbest.png')] bg-[length:100%_100%] bg-no-repeat bg-fixed -z-10" />
 
-        <div className="space-y-4 text-left">
+        <div className="flex items-center justify-center min-h-screen px-4">
+      <div className="max-w-md w-full p-6 bg-white dark:bg-gray-700 rounded-2xl shadow-lg border border-gray-200 text-center">
+        <h1 className="text-2xl font-semibold text-gray-800 mb-4 dark:text-gray-200">Reset Password</h1>
+
+        <div className="space-y-4 text-left dark:text-gray-200">
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Password</label>
+            <label className="block text-gray-700 dark:text-gray-200 font-medium mb-1">Password</label>
             <input
               autoComplete="new-password"
               value={password1}
               onChange={(e) => setPassword1(e.target.value)}
               type="password"
               required
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="w-full px-4 py-2 border rounded-lg dark:text-gray-200 dark:bg-slate-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
             <FormErrors param="password" errors={response.content?.errors} />
           </div>
 
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Password (again)</label>
+            <label className="block text-gray-700  dark:text-gray-200 font-medium mb-1">Password (again)</label>
             <input
               value={password2}
               onChange={(e) => setPassword2(e.target.value)}
               type="password"
               required
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="w-full px-4 py-2 border rounded-lg dark:text-gray-200  dark:bg-slate-600  focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
             <FormErrors param="password2" errors={password2Errors} />
           </div>
@@ -85,5 +88,6 @@ export default function ResetPassword () {
         </button>
       </div>
     </div>
+    </>
   )
 }

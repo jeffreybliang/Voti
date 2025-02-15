@@ -45,12 +45,12 @@ const CountdownTimer = ({ targetDateTime }) => {
   }, [targetDate]); // Added targetDate as dependency
 
 // Define common class names
-const containerClass = "flex flex-col p-3 bg-red-600/95 rounded-box text-white";
-const countdownTextClass = "dui-countdown font-mono text-5xl lg:text-7xl md:text-7xl sm:text-7xl px-1";
+const containerClass = "flex flex-col p-3 bg-red-600/95 dark:bg-red-700/95 rounded-box text-white";
+const countdownTextClass = "dui-countdown text-[2.6rem] lg:text-7xl md:text-7xl sm:text-5xl px-1";
 const timeLabelClass = "text-xs sm:text-sm md:text-sm lg:text-base";
 
 return (
-  <div className="grid grid-flow-col gap-1 sm:gap-3 md:gap-3 text-center auto-cols-max">
+  <div className="grid grid-flow-col gap-1 sm:gap-3 md:gap-3 text-center auto-cols-max" >
     <div className={containerClass}>
       <span className={countdownTextClass}>
         <span style={{ "--value": timeLeft.days }}></span>

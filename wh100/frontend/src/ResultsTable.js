@@ -14,7 +14,7 @@ const ResultsTable = React.memo(
           <div className="min-w-full inline-block align-middle">
             <div className="overflow-hidden border rounded-lg border-gray-300">
               <div className="max-h-48 overflow-y-auto">
-                <table className="table-auto w-[90vw] md:w-[50vw] lg:w-[50vw] xl:w-[30vw] rounded-xl bg-red-50">
+                <table className="table-auto  w-[73vw] md:w-[50vw] lg:w-[50vw] xl:w-[30vw] rounded-xl bg-red-50">
                   <tbody className="divide-y divide-gray-300">
                     {showResultsTableSpinner ? (
                       <tr>
@@ -43,13 +43,13 @@ const ResultsTable = React.memo(
                         return (
                           <tr
                             key={song.id}
-                            className="bg-red-50 transition-all duration-500 hover:bg-red-70 dark:hover:bg-red-100"
+                            className="bg-red-50 transition-all duration-500 hover:bg-red-100 dark:hover:bg-red-100"
                           >
                             {/* <td className="px-4 w-12 text-sm sm:text-base text-center font-medium text-gray-900">
                           {index + 1}
                         </td> */}
 
-                            <td className="px-3 py-2 w-[79%]">
+                            <td className="px-3 py-2 w-[90%] sm:w-[80%]">
                               <div className="flex items-center gap-3">
                                 <img
                                   src={song.image_url}
@@ -68,7 +68,7 @@ const ResultsTable = React.memo(
                               </div>
                             </td>
 
-                            <td className="w-24 align-middle">
+                            <td className="pr-3 sm:pr-1 align-middle">
                               <div className="flex items-center justify-center h-full">
                                 <button
                                   onClick={() =>

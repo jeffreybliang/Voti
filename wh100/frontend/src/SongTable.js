@@ -6,23 +6,21 @@ const SongTable = ({ songs, handleDelete }) => {
       <div className="max-w-screen-md mx-auto overflow-x-auto px-2">
         <div className="inline-block min-w-full align-middle">
           <div className="overflow-hidden rounded-lg">
-            <table className="table-auto w-[90vw] md:w-[50vw] lg:w-[50vw] xl:w-[30vw] rounded-xl bg-white">
+          <table className="table-auto w-[73vw] md:w-[50vw] lg:w-[50vw] xl:w-[30vw] rounded-xl bg-white">
               <thead>
-                <tr className="bg-gray-50">
+                <tr className="bg-gray-50 dark:bg-gray-900">
                   <th className="p-1 w-8 text-center whitespace-nowrap text-sm sm:text-base font-semibold text-gray-900"></th>
                   <th className="p-1 text-left whitespace-nowrap text-sm sm:text-base font-semibold text-gray-900">
-                    Song
                   </th>
                   <th className="px-2 w-24 text-center whitespace-nowrap text-sm sm:text-base font-semibold text-gray-900">
-                    Action
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-300">
                 {songs.length === 0 ? (
                   <tr>
-                    <td colSpan="100%" className="py-4 text-center">
-                      <p className="text-sm">
+                    <td colSpan="100%" className="py-4 text-center dark:bg-gray-800">
+                      <p className="text-xs sm:text-sm">
                         Vote for your first track to get started!
                       </p>
                     </td>
@@ -31,13 +29,13 @@ const SongTable = ({ songs, handleDelete }) => {
                   songs.map((song, index) => (
                     <tr
                       key={song.id}
-                      className="bg-white transition-all duration-500 hover:bg-gray-50"
+                      className="bg-white dark:bg-gray-800 transition-all duration-500 hover:bg-gray-50 dark:hover:bg-gray-900"
                     >
-                      <td className="px-4 w-14 text-sm sm:text-base text-center font-medium text-gray-900">
+                      <td className="sm:px-3 min-w-8 sm:min-w-12 text-xs sm:text-sm text-center font-medium text-gray-900 dark:text-gray-100">
                         {index + 1}
                       </td>
 
-                      <td className="px-0 py-2">
+                      <td className="px-0 py-2 w-[90%] sm:w-[80%] text-gray-900 dark:text-gray-100">
                         <div className="flex items-center gap-3">
                           <img
                             src={song.image_url}
@@ -45,21 +43,21 @@ const SongTable = ({ songs, handleDelete }) => {
                             alt={song.name}
                           />
                           <div>
-                            <p className="font-normal text-sm sm:text-base text-gray-900 line-clamp-2">
+                            <p className="font-normal text-sm sm:text-base  line-clamp-1">
                               {song.name}
                             </p>
-                            <p className="font-normal text-xs sm:text-sm text-gray-400 line-clamp-1">
+                            <p className="font-normal text-xs sm:text-sm line-clamp-1">
                               {song.artist_names.join(", ")}
                             </p>
                           </div>
                         </div>
                       </td>
 
-                      <td className="w-24">
+                      <td className="pr-3 sm:pr-7 align-middle">
                         <div className="flex items-center justify-center h-full">
                           <button
                             onClick={() => handleDelete(song)}
-                            className="flex p-2 rounded-full bg-white group transition-all duration-500 hover:bg-red-600"
+                            className="flex p-2 rounded-full bg-white dark:bg-gray-500 group transition-all duration-500 hover:bg-red-600"
                           >
                             <svg
                               className="flex justify-center w-5 h-5 items-center"

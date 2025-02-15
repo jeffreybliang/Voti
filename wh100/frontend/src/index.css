@@ -32,6 +32,17 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 
+.blur-box {
+  background-color: #FFF;
+  box-shadow: -10px 0 10px 5px #FFF, 10px 0 10px 5px #FFF;
+}
+
+:root {
+  --fade-color: white;
+}
+.dark {
+  --fade-color: #1f2937;
+}
 
 @tailwind base;
 @tailwind components;

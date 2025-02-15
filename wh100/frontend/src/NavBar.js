@@ -117,16 +117,16 @@ export default function NavBar({ emailAddresses, setEmailAddresses }) {
       {opened && (
         <div
           id="dropdown"
-          className="absolute z-50 right-0 top-8 bg-red-100 divide-y divide-gray-100 rounded-lg shadow-sm w-28 dark:bg-gray-700 mt-2"
+          className="absolute z-50 right-0 top-8 bg-red-100 divide-y divide-gray-100 rounded shadow-sm w-28 dark:bg-red-600 mt-2 font-medium"
         >
           <ul className="text-center text-sm text-gray-700 dark:text-gray-200">
             <li>
               <Link
                 to="/"
                 onClick={handleLogout}
-                className="block px-4 py-2 hover:bg-red-200 dark:hover:bg-gray-600 dark:hover:text-white flex items-center"
+                className="block px-4 py-2 rounded hover:bg-red-200 dark:hover:bg-gray-600 dark:hover:text-white flex items-center"
               >
-                👋 Logout
+                👋 LOGOUT
               </Link>
             </li>
           </ul>
@@ -137,14 +137,14 @@ export default function NavBar({ emailAddresses, setEmailAddresses }) {
 
   return (
     <div>
-      <nav className="bg-white shadow fixed top-0 w-full z-50">
+      <nav className="bg-red-600 shadow fixed top-0 w-full z-50">
         <div className="max-w-full mx-auto">
           <div className="flex items-center justify-between">
-            <h1 className="relative flex items-center bg-red-600 w-screen justify-center">
+            <h1 className="relative flex items-center bg-red-600 mx-auto justify-center px-40 border-b">
               <Link
                 to="/"
                 style={{ fontFamily: "FuturaNowBold" }}
-                className="relative text-white font-bold text-4xl mt-2 "
+                className="relative text-white font-bold text-4xl mt-2"
               >
                 W
               </Link>
@@ -157,7 +157,7 @@ export default function NavBar({ emailAddresses, setEmailAddresses }) {
             id="navbar"
             className="relative bg-red-600 flex justify-center items-center"
           >
-            <ul className="flex h-10 ">
+            <ul className="flex h-8 ">
               <NavBarItem to="/dashboard" name="VOTE" />
               {window.DEVELOPMENT ? (
                 <NavBarItem
@@ -209,3 +209,4 @@ export default function NavBar({ emailAddresses, setEmailAddresses }) {
     </div>
   );
 }
+

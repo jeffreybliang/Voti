@@ -28,24 +28,27 @@ export default function RequestLoginCode() {
   }
   
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
-      <div className="max-w-md w-full bg-white p-6 rounded-2xl shadow-lg border border-gray-200 text-center">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-4">Mail me a sign-in code</h1>
+    <>
+    <div className="fixed top-0 left-0 w-full h-full bg-[url('media/best400.png')] dark:bg-[url('media/darkbest.png')] bg-[length:100%_100%] bg-no-repeat bg-fixed -z-10" />
+
+    <div className="flex items-center justify-center min-h-screen px-4">
+      <div className="max-w-md w-full bg-white dark:bg-gray-700 p-6 rounded-2xl shadow-lg border border-gray-200 text-center">
+        <h1 className="text-2xl font-semibold text-gray-800 mb-4 dark:text-gray-200">Mail me a sign-in code</h1>
         
-        <p className="text-gray-600 mb-4">
+        <p className="text-gray-600 mb-4 dark:text-gray-300">
           You will receive an email containing a special code for a password-free sign-in.
         </p>
         
         <FormErrors errors={response.content?.errors} />
         
         <div className="mb-4 text-left">
-          <label className="block text-gray-700 font-medium mb-1">Email</label>
+          <label className="block text-gray-700 dark:text-gray-200 font-medium mb-1">Email</label>
           <input
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             type="email"
             required
-            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className="w-full px-4 py-2 border dark:bg-slate-600 dark:text-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
           />
           <FormErrors param='email' errors={response.content?.errors} />
         </div>
@@ -59,6 +62,7 @@ export default function RequestLoginCode() {
         </button>
       </div>
     </div>
+    </>
   );
 }
 

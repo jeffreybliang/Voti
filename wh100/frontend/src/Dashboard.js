@@ -8,6 +8,9 @@ import Spinner from "./Spinner";
 import InlineCountdownTimer from "./InlineCountdown";
 import "./index.css";
 import { deadline } from "./Home";
+import hottest100logo from './media/hottest100logo.png';
+import hottest100logosolid from './media/hottest100logosolid.png';
+import hottest100logomulti from './media/hottest100logomulti.png';
 
 export default function Dashboard() {
   const user = useUser();
@@ -251,176 +254,186 @@ export default function Dashboard() {
     // Add a fragment to include both background and content
     <>
       {/* Fixed background layer */}
-      <div className="fixed top-0 left-0 w-full h-full bg-[url('media/best400.png')] bg-[length:100%_100%] bg-no-repeat bg-fixed -z-10" />
+      <div className="fixed top-0 left-0 w-full h-full bg-[url('media/best400.png')] dark:bg-[url('media/darkbest.png')] bg-[length:100%_100%] bg-no-repeat bg-fixed -z-10" />
 
       {/* Content container without height restriction */}
       <div className="overflow-hidden flex flex-col transform translate-y-[68px]">
-        {/* Rest of your existing content */}
         <div className="flex-shrink-0">
           <div className="justify-center sticky w-full mt-5">
-            <h1 className="text-center bg-white text-red-600 border-t border-b border-gray-300">
+            <h1 className="text-center bg-white dark:bg-gray-800 text-red-600 border-t border-b border-gray-300">
               <InlineCountdownTimer targetDateTime={deadline} />
             </h1>
           </div>
         </div>
+        <div
+          className="mx-auto  w-full max-w-5xl min-h-[calc(100vh-114px)] px-12 flex-1 backdrop-blur-md bg-white/60 dark:bg-gray-900/50"
+          style={{
+            WebkitMaskImage:
+            "linear-gradient(to right, transparent, var(--fade-color) 10%, var(--fade-color) 90%, transparent)",
+          }}
+        >
+          {/* Rest of your existing content */}
 
-        <div className="flex-1 overflow-y-auto">
-          {showTemporaryAlert && (
-            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-full max-w-lg z-50">
-              <TemporaryAlert
-                message={temporaryMessage}
-                duration={5000}
-                key={alertKey}
-              />
-            </div>
-          )}
-
-          {showAlert && (
-            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-full max-w-lg z-50">
-              <CustomAlert message={alertMessage} onClose={closeAlert} />
-            </div>
-          )}
-
-          <div className="justify-center mt-5 px-1 text-center">
-            <h1
-              className="text-center text-2xl"
-              style={{ fontFamily: "AdamCG" }}
-            >
-              {" "}
-              Find your faves! 🔍{" "}
-            </h1>
-            <p className="text-lg" style={{ fontFamily: "FuturaNowRegular" }}>
-              {" "}
-              Type in a song, artist, or album to add your top tracks to the
-              list. <br /> Who's making your Hottest 100?{" "}
-            </p>
-          </div>
-
-          <div className="mx-auto w-[90vw] md:w-[50vw] lg:w-[50vw] xl:w-[30vw] mt-3">
-            <form
-              className="mx-auto justify-center items-center"
-              onSubmit={(e) => e.preventDefault()}
-            >
-              <label
-                htmlFor="default-search"
-                className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
-              >
-                Search
-              </label>
-              <div className="relative">
-                <input
-                  type="search"
-                  id="default-search"
-                  className="block w-full p-3 pr-10 ps-6 text-base sm:text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Search songs by title, artist, album..."
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  onFocus={() => {
-                    // When the input regains focus and there are results, show them.
-                    if (results) setShowResults(true);
-                  }}
+          <div className="flex-1 overflow-y-auto overflow-x-hidden">
+            {showTemporaryAlert && (
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-full max-w-lg z-50">
+                <TemporaryAlert
+                  message={temporaryMessage}
+                  duration={5000}
+                  key={alertKey}
                 />
-                <button
-                  type="button"
-                  onClick={() => {
-                    setQuery("");
-                    setResults(null);
-                    setShowResults(false);
-                  }}
-                  className="absolute inset-y-2 right-2 flex items-center p-1 mr-6 text-white bg-transparent hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm dark:bg-transparent dark:hover:bg-gray-600 dark:focus:ring-blue-800"
-                >
-                  <svg
-                    className="w-6 h-6 text-gray-500 dark:text-gray-400"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </form>
-          </div>
-
-          <div className="relative">
-            {/* Results table overlay */}
-            {(showResultsTableSpinner || (results && showResults)) && (
-              <div className="absolute top-0 left-0 right-0 z-10 flex justify-center">
-                <div ref={resultsRef} className="mx-auto  max-w-screen-md">
-                  <ResultsTable
-                    showResultsTableSpinner={showResultsTableSpinner}
-                    songs={results}
-                    handleAdd={handleAdd}
-                    handleDelete={handleDelete}
-                    votes={votes}
-                  />
-                </div>
               </div>
             )}
 
-            <div className="justify-center pt-10 px-2  text-center">
+            {showAlert && (
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-full max-w-lg z-50">
+                <CustomAlert message={alertMessage} onClose={closeAlert} />
+              </div>
+            )}
+
+            <div className="z-100">
+              <img
+                src={hottest100logo}
+                alt="Hottest 100 Logo"
+                className="mx-auto w-[60%] mt-2 sm:w-[20%] sm:mt-2"
+              />
+            </div>
+
+            <div className="justify-center mt-5 text-center dark:text-gray-100">
               <h1
-                className="text-center text-2xl"
+                className="text-center text-2xl font-bold"
                 style={{ fontFamily: "AdamCG" }}
               >
                 {" "}
-                Your votes. Your soundtrack. 🎧{" "}
+                Find your faves! 🔍{" "}
               </h1>
               <p className="text-lg" style={{ fontFamily: "FuturaNowRegular" }}>
                 {" "}
-                Vote for up to 10 songs. <br /> Add or remove anytime before the
-                deadline. <br /> Order doesn’t matter — just back your favorites
-                and save!{" "}
+                Type in a song, artist, or album to add your top tracks to the
+                list. <br /> Who's making your Hottest 100?{" "}
               </p>
-              <h2
-                className="pt-5 text-xl"
-                style={{ fontFamily: "FuturaNowBold" }}
-              >
-                {" "}
-                YOUR VOTES SO FAR
-              </h2>
             </div>
 
-            {/* SongTable section */}
-            {showSongTableSpinner ? (
-              <div className="flex justify-center mx-auto p-4">
-                <Spinner />
-              </div>
-            ) : (
-              votes && (
-                <div className="p-2 relative z-0">
-                  <SongTable songs={votes} handleDelete={handleDelete} />
+            <div className="mx-auto w-[73vw] md:w-[50vw] lg:w-[50vw] xl:w-[30vw] mt-3">
+              <form
+                className="mx-auto justify-center items-center"
+                onSubmit={(e) => e.preventDefault()}
+              >
+                <label
+                  htmlFor="default-search"
+                  className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
+                >
+                  Search
+                </label>
+                <div className="relative">
+                  <input
+                    type="search"
+                    id="default-search"
+                    className="block w-full p-3 pr-14 ps-6 text-sm sm:text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Search songs by title, artist, album..."
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    onFocus={() => {
+                      // When the input regains focus and there are results, show them.
+                      if (results) setShowResults(true);
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setQuery("");
+                      setResults(null);
+                      setShowResults(false);
+                    }}
+                    className="absolute inset-y-2 right-2 flex items-center p-1 mr-2 sm:mr-6 text-white hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm dark:bg-transparent dark:hover:bg-gray-600 dark:focus:ring-blue-800"
+                  >
+                    <svg
+                      className="w-6 h-6 text-gray-500 dark:text-gray-400"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
                 </div>
-              )
-            )}
-          </div>
-          <div className="bottom-0 flex justify-center w-full">
-            <button
-              onClick={saveVotes}
-              type="button"
-              className="flex justify-center text-center text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-base px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-blue-800"
-            >
-              SAVE VOTES
-            </button>
+              </form>
+            </div>
+
+            <div className="relative">
+              {/* Results table overlay */}
+              {(showResultsTableSpinner || (results && showResults)) && (
+                <div className="absolute top-0 left-0 right-0 z-10 flex justify-center">
+                  <div ref={resultsRef} className="mx-auto  max-w-screen-md">
+                    <ResultsTable
+                      showResultsTableSpinner={showResultsTableSpinner}
+                      songs={results}
+                      handleAdd={handleAdd}
+                      handleDelete={handleDelete}
+                      votes={votes}
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div className="justify-center pt-10 px-2  text-center dark:text-gray-100">
+                <h1
+                  className="text-center text-2xl font-bold"  
+                  style={{ fontFamily: "AdamCG" }}
+                >
+                  {" "}
+                  Your votes. Your soundtrack. 🎧{" "}
+                </h1>
+                <p
+                  className="text-lg"
+                  style={{ fontFamily: "FuturaNowRegular" }}
+                >
+                  {" "}
+                  Vote for up to 10 songs. <br /> Add or remove anytime before
+                  the deadline. <br /> Order doesn’t matter — just back your
+                  favorites and save!{" "}
+                </p>
+                <h2
+                  className="pt-5 text-xl"
+                  style={{ fontFamily: "FuturaNowBold" }}
+                >
+                  {" "}
+                  YOUR VOTES SO FAR
+                </h2>
+              </div>
+
+              {/* SongTable section */}
+              {showSongTableSpinner ? (
+                <div className="flex justify-center mx-auto p-4">
+                  <Spinner />
+                </div>
+              ) : (
+                votes && (
+                  <div className="mt-1">
+                    <SongTable songs={votes} handleDelete={handleDelete} />
+                  </div>
+                )
+              )}
+            </div>
+            <div className="bottom-0 flex justify-center w-full mt-4 mb-12">
+              <button
+                onClick={saveVotes}
+                type="button"
+                className="flex justify-center text-center text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-lg px-5 py-1 pt-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-blue-800"
+                style={{ fontFamily: "FuturaNowBold" }}
+              >
+                SAVE VOTES
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </>
-  );
-
-  return (
-    <div className=" justify-center w-screen h-screen bg-[url('media/best400.png')] bg-[length:100%_100%] bg-no-repeat bg-fixed top-0 left-0">
-      <div className="justify-center sticky w-full mt-5">
-        <h1 className="text-center bg-white text-red-600 border-t border-b border-gray-300">
-          <InlineCountdownTimer targetDateTime={deadline} />
-        </h1>
-      </div>
-    </div>
   );
 }
