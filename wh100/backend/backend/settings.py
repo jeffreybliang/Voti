@@ -37,6 +37,9 @@ SPOTIFY_CLIENT_SECRET=env('SPOTIFY_CLIENT_SECRET')
 START_DATE=env("START_DATE")
 END_DATE=env("END_DATE")
 
+# AMAZON
+AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -138,7 +141,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -223,12 +226,17 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ACCOUNT_EMAIL_VERIFICATION = "optional"
+ACCOUNT_ADAPTER = 'allauth.account.adapter.DefaultAccountAdapter'
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = False
 ACCOUNT_LOGIN_BY_CODE_ENABLED = True
 ACCOUNT_SESSION_REMEMBER = True
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'email-smtp.ap-southeast-2.amazonaws.com'
+EMAIL_BACKEND = 'django_ses.SESBackend'
 ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_USERNAME_REQUIRED = True
+DEFAULT_FROM_EMAIL = 'woronihottest100@gmail.com'
 
 ACCOUNT_FORMS = {'signup': 'accounts.forms.CustomSignupForm'}
 
