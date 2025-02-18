@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {font-family: Arial, sans-serif; text-align: center; background-color: #fef2f2; color: #333;}
+        .email-container {max-width: 600px; margin: 40px auto; background: #fff; border-top: 6px solid #dc2626; border-radius: 10px; padding: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.2);}
+        .logo img {max-width: 300px; margin-bottom: 30px;}
+        .email-header {color: #dc2626; font-size: 26px; margin-bottom: 20px;}
+        .email-body {font-size: 18px; margin-bottom: 20px;}
+        .link {color: #dc2626; font-weight: bold;}
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="logo">
+            <img src="https://www.woroni.com.au/wp-content/uploads/2019/05/WORONI-red-1200x300.png" alt="Woroni Logo">
+        </div>
+        <div class="email-header">⚠️ Account Already Exists</div>
+        <div class="email-body">
+            <p>You attempted to sign up with the email:</p>
+            <p><strong>{{ email }}</strong></p>
+            <p>An account already exists with this email.</p>
+            <p>If you've forgotten your password, reset it here:</p>
+            <p class="link">{{ password_reset_url }}</p>
+        </div>
+    </div>
+</body>
+</html>
+

@@ -186,6 +186,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+ACCOUNT_EMAIL_SUBJECT_PREFIX = "Woroni Hottest 100: "
 ACCOUNT_EMAIL_VERIFICATION = "optional"
 ACCOUNT_ADAPTER = 'allauth.account.adapter.DefaultAccountAdapter'
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"

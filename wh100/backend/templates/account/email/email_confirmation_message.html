@@ -17,11 +17,16 @@
             <div class="logo">
                 <img src="https://www.woroni.com.au/wp-content/uploads/2019/05/WORONI-red-1200x300.png" alt="Woroni Logo">
             </div>
-            <div class="email-header">🔐 Your Sign-In Code</div>
+            <div class="email-header">📧 Email Confirmation</div>
             <div class="email-body">
-                <p>Your sign-in code is:</p>
+                <p>You're receiving this email because your email address was used to register on {{ site_domain }}.</p>
+                {% if code %}
+                <p>Your email verification code is:</p>
                 <div class="code-box">{{ code }}</div>
-                <p>This code is valid for a limited time. Please do not share it with anyone.</p>
+                {% else %}
+                <p>Please click the link below to confirm your email:</p>
+                <p class="link">{{ activate_url }}</p>
+                {% endif %}
             </div>
         </div>
     </body>
