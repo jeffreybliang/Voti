@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/static/css/main.4f231530.css",
+    "main.js": "/static/js/main.17a40087.js",
+    "static/media/FuturaNowHeadlineBold.ttf": "/static/media/FuturaNowHeadlineBold.609531cacd14360b8a18.ttf",
+    "static/media/FuturaNowHeadline.ttf": "/static/media/FuturaNowHeadline.49256db2007d8859deaa.ttf",
+    "static/media/adam-cg-pro.regular.otf": "/static/media/adam-cg-pro.regular.94966bfa189a09f0a303.otf",
+    "index.html": "/index.html",
+    "main.4f231530.css.map": "/static/css/main.4f231530.css.map",
+    "main.17a40087.js.map": "/static/js/main.17a40087.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.4f231530.css",
+    "static/js/main.17a40087.js"
+  ]
+}
