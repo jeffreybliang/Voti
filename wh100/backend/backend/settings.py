@@ -80,9 +80,9 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
-# CORS_ORIGIN_WHITELIST = [
-#     'http://localhost:3000',
-# ]
+CORS_ORIGIN_WHITELIST = [
+    'https://www.woroni100.com',
+]
 CORS_ALLOWED_ORIGINS = [
     'https://woroni100.com',
 ]
