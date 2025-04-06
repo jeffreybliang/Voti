@@ -83,9 +83,9 @@ CORS_ALLOW_CREDENTIALS = True
 # CORS_ORIGIN_WHITELIST = [
 #     'http://localhost:3000',
 # ]
-# CORS_ALLOWED_ORIGINS = [
-#     'http://localhost:3000',
-# ]
+CORS_ALLOWED_ORIGINS = [
+    'https://woroni100.com',
+]
 # CSRF_TRUSTED_ORIGINS = [
 #     'http://localhost:3000',
 # ]
