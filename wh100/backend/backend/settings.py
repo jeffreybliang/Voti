@@ -98,7 +98,7 @@ MIDDLEWARE = [
     "allauth.account.middleware.AccountMiddleware",
 ]
 
-CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_CREDENTIALS = False
 CORS_ORIGIN_WHITELIST = [
     'https://www.woroni100.com',
 ]
