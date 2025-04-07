@@ -105,9 +105,9 @@ CORS_ALLOW_CREDENTIALS = False
 CORS_ORIGIN_WHITELIST = [
     'https://www.woroni100.com',
 ]
-CORS_ALLOWED_ORIGINS = [
-    'https://woroni100.com',
-]
+# CORS_ALLOWED_ORIGINS = [
+#     'https://woroni100.com',
+# ]
 
 
 CORS_ALLOW_ALL_ORIGINS = True
