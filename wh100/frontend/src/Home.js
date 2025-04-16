@@ -11,7 +11,7 @@ export default function Home() {
   const user = useUser();
 
   return (
-<div className="flex justify-center w-screen h-screen bg-[url('media/best400.png')] dark:bg-[url('media/darkbest.png')] bg-[length:100%_100%] bg-no-repeat bg-fixed fixed top-0 left-0">
+<div className="flex justify-center w-screen h-screen bg-[url('media/best400.png')] dark:bg-[url('media/darkbest.png')] bg-[length:100%_100%] bg-no-repeat bg-fixed fixed top-0 left-0 z-40">
       <div className="justify-center">
 
       <div className="z-100">

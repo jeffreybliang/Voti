@@ -44,6 +44,13 @@ input[type="search"]::-webkit-search-cancel-button {
   --fade-color: #1f2937;
 }
 
+.container-width {
+  width: 100vw; /* takes the full viewport width including the space for the scrollbar */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

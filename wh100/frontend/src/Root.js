@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import NavBar from './NavBar';
 import { Outlet } from 'react-router-dom';
 import * as allauth from './lib/allauth';
+import Footer from './Footer';
 
 export default function Root() {
   const [emailAddresses, setEmailAddresses] = useState(() => {
@@ -28,13 +29,16 @@ export default function Root() {
   }, [emailAddresses]);
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <NavBar emailAddresses={emailAddresses} setEmailAddresses={setEmailAddresses} />
-      <main className="flex-shrink-0">
+      
+      <main className="flex-grow">
         <div className="container-fluid">
           <Outlet context={{ emailAddresses, setEmailAddresses }} />
         </div>
       </main>
-    </>
+  
+      <Footer />
+    </div>
   );
-}
+  }
