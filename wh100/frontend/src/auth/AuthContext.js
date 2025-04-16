@@ -54,7 +54,6 @@ export function AuthContextProvider(props) {
       });
     getConfig()
       .then((data) => {
-        console.log("Config loaded:", data);
         setConfig(data);
       })
       .catch((e) => {
