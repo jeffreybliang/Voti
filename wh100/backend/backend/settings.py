@@ -111,9 +111,9 @@ CORS_ALLOW_CREDENTIALS = False
 
 
 CORS_ALLOW_ALL_ORIGINS = True
-# CSRF_TRUSTED_ORIGINS = [
-#     'http://localhost:3000',
-# ]
+CSRF_TRUSTED_ORIGINS = [
+    'https://woroni100.com',
+]
 # SESSION_COOKIE_DOMAIN = '.localhost'
 # CSRF_COOKIE_DOMAIN = '.localhost'
 # SESSION_COOKIE_SECURE = False
