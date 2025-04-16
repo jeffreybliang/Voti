@@ -8,7 +8,11 @@ function Loading() {
   return (
     <div>
       <div className="flex flex-col items-center justify-center min-h-screen bg-red-600 dark:bg-red-800 text-white">
-        <h1 className="text-2xl font-semibold mb-4">it's loading hold on pls</h1>
+      <h1 className="text-white font-bold text-5xl mt-2 mb-4"
+      style={{ fontFamily: "AdamCG" }}>
+                W
+          </h1>
+        <h1 className="text-2xl font-semibold mb-2">it's loading hold on pls</h1>
         <div className="flex justify-center mx-auto p-4">
         <div
       className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-red-300 motion-reduce:animate-[spin_1.5s_linear_infinite]"
