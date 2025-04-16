@@ -101,28 +101,25 @@ MIDDLEWARE = [
     "allauth.account.middleware.AccountMiddleware",
 ]
 
-CORS_ALLOW_CREDENTIALS = True
-#CORS_ORIGIN_WHITELIST = [
-#    'https://www.woroni100.com',
-#]
+CORS_ALLOW_CREDENTIALS = False
+CORS_ORIGIN_WHITELIST = [
+    'https://www.woroni100.com',
+]
 # CORS_ALLOWED_ORIGINS = [
 #     'https://woroni100.com',
 # ]
 
 
 CORS_ALLOW_ALL_ORIGINS = True
-CSRF_TRUSTED_ORIGINS = [
-    'https://woroni100.com',
-    'https://api.woroni100.com',
-    'http://api.woroni100.com',
-    'http://woroni100.com',
-]
-SESSION_COOKIE_DOMAIN = '.woroni100.com'
-CSRF_COOKIE_DOMAIN = '.woroni100.com'
+# CSRF_TRUSTED_ORIGINS = [
+#     'http://localhost:3000',
+# ]
+# SESSION_COOKIE_DOMAIN = '.localhost'
+# CSRF_COOKIE_DOMAIN = '.localhost'
 # SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = False
 # SESSION_COOKIE_HTTPONLY = False
-CSRF_COOKIE_HTTPONLY = False
+# CSRF_COOKIE_HTTPONLY = False
 
 
 ROOT_URLCONF = 'backend.urls'
