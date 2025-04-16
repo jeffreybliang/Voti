@@ -1,13 +1,12 @@
 import InlineCountdownTimer from "./InlineCountdown";
 import { deadline } from "./Home";
-import hottest100logo from './media/hottest100logo.png';
-import hottest100logosolid from './media/hottest100logosolid.png';
-import hottest100logomulti from './media/hottest100logomulti.png';
+import hottest100logo from "./media/hottest100logo.png";
+// import hottest100logosolid from './media/hottest100logosolid.png';
+// import hottest100logomulti from './media/hottest100logomulti.png';
 
 export default function Rules() {
   return (
     <>
-    
       <div className="fixed top-0 left-0 w-full h-full bg-[url('media/best400.png')] dark:bg-[url('media/darkbest.png')] bg-[length:100%_100%] bg-no-repeat bg-fixed -z-10" />
 
       <div className="overflow-hidden flex flex-col transform translate-y-[68px]">
@@ -21,27 +20,32 @@ export default function Rules() {
           className="mx-auto w-full max-w-5xl min-h-[calc(100vh-114px)] px-4 sm:px-12  flex-1 backdrop-blur-md bg-white/60 dark:bg-gray-900/50"
           style={{
             WebkitMaskImage:
-            "linear-gradient(to right, transparent, var(--fade-color) 10%, var(--fade-color) 90%, transparent)",
+              "linear-gradient(to right, transparent, var(--fade-color) 10%, var(--fade-color) 90%, transparent)",
           }}
         >
+          <div className="flex-1 overflow-y-auto overflow-x-hidden">
             <div className="z-100">
               <img
                 src={hottest100logo}
                 alt="Hottest 100 Logo"
-                className="mx-auto w-[20%] mt-2"
+                className="mx-auto w-[40%] mt-2 sm:w-[20%] sm:mt-2"
               />
             </div>
+          </div>
 
           <div className="text-center text-black dark:text-gray-100 mt-5 px-8">
             <h1 className="text-xl" style={{ fontFamily: "FuturaNowRegular" }}>
               Woroni's Hottest 100 is a poll to find ANU's favourite 100 songs
               of the year. <br /> Here's how it works.
             </h1>
-            <h1 className="text-2xl pt-8 font-bold" style={{ fontFamily: "AdamCG" }}>
+            <h1
+              className="text-2xl pt-8 font-bold"
+              style={{ fontFamily: "AdamCG" }}
+            >
               Voting Rules
             </h1>
             <div
-              className="text-lg pt-2 leading-9"
+              className="text-lg pt-2 leading-8"
               style={{ fontFamily: "FuturaNowRegular" }}
             >
               <ul className="list-disc list-inside">
@@ -56,17 +60,19 @@ export default function Rules() {
                 <li>You can vote for a maximum of 10 songs.</li>
                 <li>You cannot vote for the same song more than once.</li>
                 <li>
-                  All votes are worth equal value, regardless of your song
-                  order.
+                  Each song you vote for receives one equal vote, regardless of
+                  the order you list them.
                 </li>
                 <li>
-                  Votes must be saved to count, and only the most recently saved
-                  votes will be counted.
+                  Make sure to save your votes — only your most recently saved selections will count.
                 </li>
               </ul>
             </div>
 
-            <h1 className="text-2xl pt-8 font-bold" style={{ fontFamily: "AdamCG" }}>
+            <h1
+              className="text-2xl pt-8 font-bold"
+              style={{ fontFamily: "AdamCG" }}
+            >
               Song Eligibility
             </h1>
             <div
@@ -76,7 +82,7 @@ export default function Rules() {
               <ul className="list-disc list-inside">
                 <li>
                   Songs must have been officially released (online or
-                  commercially) between 1 December 2023 and 31 December 2024.
+                  commercially) between 1 December 2024 and 31 December 2025.
                 </li>
               </ul>
             </div>

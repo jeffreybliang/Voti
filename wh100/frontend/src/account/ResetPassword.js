@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import FormErrors from '../components/FormErrors'
 import { getPasswordReset, resetPassword } from '../lib/allauth'
-import { Navigate, Link, useLoaderData } from 'react-router-dom'
-import Button from '../components/Button'
+import { Navigate, useLoaderData } from 'react-router-dom'
 
 export async function loader ({ params }) {
   const key = params.key

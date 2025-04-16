@@ -1,4 +1,4 @@
-import { useUser } from "./auth";
+// import { useUser } from "./auth";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import SongTable from "./SongTable";
 import ResultsTable from "./ResultsTable";
@@ -9,11 +9,11 @@ import InlineCountdownTimer from "./InlineCountdown";
 import "./index.css";
 import { deadline } from "./Home";
 import hottest100logo from './media/hottest100logo.png';
-import hottest100logosolid from './media/hottest100logosolid.png';
-import hottest100logomulti from './media/hottest100logomulti.png';
+// import hottest100logosolid from './media/hottest100logosolid.png';
+// import hottest100logomulti from './media/hottest100logomulti.png';
 
 export default function Dashboard() {
-  const user = useUser();
+  // const user = useUser();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState(null);
   const [votes, setVotes] = useState(null);
@@ -31,8 +31,8 @@ export default function Dashboard() {
   // New state to track whether to show the results table
   const [showResults, setShowResults] = useState(false);
 
-  const base = process.env.REACT_APP_BACKEND_BASE_URL;
-  const search_endpoint = process.env.REACT_APP_API_SEARCH;
+  // const base = process.env.REACT_APP_BACKEND_BASE_URL;
+  // const search_endpoint = process.env.REACT_APP_API_SEARCH;
 
   const closeAlert = () => {
     setShowAlert(false);
@@ -75,6 +75,27 @@ export default function Dashboard() {
   }
 
   const saveVotes = async () => {
+
+    const now = new Date();
+    const deadlineDate = new Date(deadline);
+  
+    if (now > deadlineDate) {
+      setTemporaryMessage("Voting has closed — stay tuned for the results!");
+      setShowTemporaryAlert(true);
+      return;
+    }
+    if (!Array.isArray(votes)) {
+      setAlertMessage("Please wait for your votes to load!");
+      setShowAlert(true);
+      return;
+    }
+
+    if (votes.length === 0) {
+      setAlertMessage("No songs have been voted for yet!");
+      setShowAlert(true);
+      return;
+    }  
+
     try {
       const submitVotesUrl = `http://localhost/api/submit-votes/`;
       const songs = votes.map((vote) => ({
@@ -266,7 +287,7 @@ export default function Dashboard() {
           </div>
         </div>
         <div
-          className="mx-auto  w-full max-w-5xl min-h-[calc(100vh-114px)] px-12 flex-1 backdrop-blur-md bg-white/60 dark:bg-gray-900/50"
+          className="mx-auto w-full max-w-5xl min-h-[calc(100vh-114px)] px-4 sm:px-12  flex-1 backdrop-blur-md bg-white/60 dark:bg-gray-900/50"
           style={{
             WebkitMaskImage:
             "linear-gradient(to right, transparent, var(--fade-color) 10%, var(--fade-color) 90%, transparent)",
@@ -295,7 +316,7 @@ export default function Dashboard() {
               <img
                 src={hottest100logo}
                 alt="Hottest 100 Logo"
-                className="mx-auto w-[60%] mt-2 sm:w-[20%] sm:mt-2"
+                className="mx-auto w-[40%] mt-2 sm:w-[20%] sm:mt-2"
               />
             </div>
 
@@ -309,8 +330,7 @@ export default function Dashboard() {
               </h1>
               <p className="text-lg" style={{ fontFamily: "FuturaNowRegular" }}>
                 {" "}
-                Type in a song, artist, or album to add your top tracks to the
-                list. <br /> Who's making your Hottest 100?{" "}
+                Type in a song, artist, or album to add your top tracks to your votes. 
               </p>
             </div>
 
@@ -382,7 +402,7 @@ export default function Dashboard() {
                 </div>
               )}
 
-              <div className="justify-center pt-10 px-2  text-center dark:text-gray-100">
+              <div className="justify-center pt-8 px-2  text-center dark:text-gray-100">
                 <h1
                   className="text-center text-2xl font-bold"  
                   style={{ fontFamily: "AdamCG" }}
@@ -396,15 +416,15 @@ export default function Dashboard() {
                 >
                   {" "}
                   Vote for up to 10 songs. <br /> Add or remove anytime before
-                  the deadline. <br /> Order doesn’t matter — just back your
-                  favorites and save!{" "}
+                  the deadline. <br /> Order doesn’t matter—each song you choose gets one equal vote.  <br />  Back your
+                  faves and don't forget to save!{" "}
                 </p>
                 <h2
                   className="pt-5 text-xl"
                   style={{ fontFamily: "FuturaNowBold" }}
                 >
                   {" "}
-                  YOUR VOTES SO FAR
+                  YOUR VOTES
                 </h2>
               </div>
 

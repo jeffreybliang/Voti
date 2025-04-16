@@ -2,7 +2,7 @@ import { useState } from "react";
 import FormErrors from "../components/FormErrors";
 import { requestPasswordReset } from "../lib/allauth";
 import { Link } from "react-router-dom";
-import Button from "../components/Button";
+// import Button from "../components/Button";
 
 export default function RequestPasswordReset() {
   const [email, setEmail] = useState("");

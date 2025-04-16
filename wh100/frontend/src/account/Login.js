@@ -1,9 +1,10 @@
 import { useState } from "react";
 
-import FormErrors from "../components/FormErrors";
+// import FormErrors from "../components/FormErrors";
 import { login } from "../lib/allauth";
 import { Link } from "react-router-dom";
 import { useConfig } from "../auth";
+import Spinner from "../Spinner";
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -35,9 +36,27 @@ export default function Login() {
       <div className="fixed top-0 left-0 w-full h-full bg-[url('media/best400.png')] dark:bg-[url('media/darkbest.png')] bg-[length:100%_100%] bg-no-repeat bg-fixed -z-10" />
 
       <div className="flex justify-center items-center w-screen h-screen overflow-hidden fixed top-0 left-0">
-        <div className="sm:w-full max-w-md p-6 shadow-lg bg-white dark:bg-gray-700 rounded-2xl dark:text-gray-200">
-          <div>
-            <h1 className="text-2xl font-bold text-center mb-4 dark:text-gray-200">Login</h1>
+        <div className="relative sm:w-full max-w-md p-6 shadow-lg bg-white dark:bg-gray-700 rounded-2xl dark:text-gray-200">
+          {response.fetching && (
+            <div className="absolute inset-0 bg-white/80 dark:bg-gray-900/80 flex flex-col items-center justify-center z-10 rounded-2xl">
+              <h1 className="text-2xl font-semibold mb-2 text-center text-red-500
+">
+                lol give us a sec
+              </h1>
+              <div className="p-2">
+                <Spinner />
+              </div>
+            </div>
+          )}
+
+          <div
+            className={`${
+              response.fetching ? "opacity-40 pointer-events-none" : ""
+            }`}
+          >
+            <h1 className="text-2xl font-bold text-center mb-4 dark:text-gray-200">
+              Login
+            </h1>
             <p className="text-center text-gray-600  dark:text-gray-200 mb-4">
               No account?{" "}
               <Link
