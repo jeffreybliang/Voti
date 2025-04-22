@@ -38,7 +38,7 @@ export default function Home() {
               className="flex justify-center text-center focus:ring-4 focus:ring-red-700 font-medium rounded-full text-2xl px-5 py-2 pt-3 text-white bg-red-700 dark:bg-red-700 hover:bg-red-600 dark:hover:bg-red-800 outline outline-red-600 dark:outline-red-700 outline-solid  outline-2 outline-offset-2 dark:focus:ring-red-800 transition-transform duration-150 ease-in-out hover:scale-105"
             >
               <Link
-                to="/dashboard"
+                to="/vote"
                 className="w-full h-full flex items-center justify-center"
                 style={{ fontFamily: "FuturaNowBold" }}
               >

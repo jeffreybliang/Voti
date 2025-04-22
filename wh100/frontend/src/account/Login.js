@@ -36,11 +36,12 @@ export default function Login() {
       <div className="fixed top-0 left-0 w-full h-full bg-[url('media/best400.png')] dark:bg-[url('media/darkbest.png')] bg-[length:100%_100%] bg-no-repeat bg-fixed -z-10" />
 
       <div className="flex justify-center items-center w-screen h-screen overflow-hidden fixed top-0 left-0">
-        <div className="relative sm:w-full max-w-md p-6 shadow-lg bg-white dark:bg-gray-700 rounded-2xl dark:text-gray-200">
-          {response.fetching && (
-            <div className="absolute inset-0 bg-white/80 dark:bg-gray-900/80 flex flex-col items-center justify-center z-10 rounded-2xl">
-              <h1 className="text-2xl font-semibold mb-2 text-center text-red-500
-">
+        <div className="relative sm:w-full max-w-md bg-white dark:bg-gray-700 p-6 rounded-2xl shadow-lg border border-gray-200 text-center dark:text-gray-200">
+            {response.fetching && (
+            <div className="absolute inset-0 bg-white/80 dark:bg-gray-700/80 flex flex-col items-center justify-center z-10 rounded-2xl">
+              <h1
+                className="text-2xl font-semibold mb-2 text-center text-red-500"
+              >
                 lol give us a sec
               </h1>
               <div className="p-2">
@@ -72,43 +73,47 @@ export default function Login() {
                   <div key={err}>{err}</div>
                 ))}
             </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 dark:text-gray-200 font-medium mb-1">
-                Username (uID)
+
+            <div className="space-y-4 text-left dark:text-gray-200">
+              <div>
+                <label className="block text-gray-700 dark:text-gray-200 font-medium mb-1">
+                  Username (uID)
+                </label>
                 <input
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   type="text"
                   required
-                  className="w-full px-3 py-2 border dark:bg-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border dark:bg-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
                   placeholder="uXXXXXXX"
                 />
-              </label>
+              </div>
+              <div>
+                <label className="block text-gray-700 dark:text-gray-200 font-medium mb-1">
+                  Password
+                  <input
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    type="password"
+                    required
+                    className="w-full px-4 py-2 border dark:bg-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder=""
+                  />
+                </label>
+                <Link
+                  to="/account/password/reset"
+                  className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                >
+                  Forgot your password?
+                </Link>
+              </div>
             </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 dark:text-gray-200 font-medium mb-1">
-                Password
-                <input
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  type="password"
-                  required
-                  className="w-full px-3 py-2 border dark:bg-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder=""
-                />
-              </label>
-              <Link
-                to="/account/password/reset"
-                className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
-              >
-                Forgot your password?
-              </Link>
-            </div>
+
             <button
               type="submit"
               disabled={response.fetching}
               onClick={() => submit()}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg disabled:opacity-50"
+              className="w-full bg-blue-600 text-white py-2 mt-4 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
               Login
             </button>

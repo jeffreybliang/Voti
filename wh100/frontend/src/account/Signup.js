@@ -43,20 +43,31 @@ export default function Signup() {
       <div className="flex justify-center items-center w-screen h-screen overflow-hidden fixed top-0 left-0">
         <div className="relative sm:w-full max-w-md bg-white dark:bg-gray-700 p-6 rounded-2xl shadow-lg border border-gray-200 text-center dark:text-gray-200">
           {response.fetching && (
-            <div className="absolute inset-0 bg-white/80 dark:bg-gray-900/80 flex flex-col items-center justify-center z-10 rounded-2xl">
-              <h1 className="text-2xl font-semibold mb-2 text-red-500">signing u up :)</h1>
+            <div className="absolute inset-0 bg-white/80 dark:bg-gray-700/80 flex flex-col items-center justify-center z-10 rounded-2xl">
+              <h1 className="text-2xl font-semibold mb-2 text-red-500">
+                signing u up :)
+              </h1>
               <div className="p-2">
                 <Spinner />
               </div>
             </div>
           )}
 
-          <div className={`${response.fetching ? "opacity-40 pointer-events-none" : ""}`}>
-            <h1 className="text-2xl font-bold text-gray-800 mb-4 dark:text-gray-200">Sign Up</h1>
+          <div
+            className={`${
+              response.fetching ? "opacity-40 pointer-events-none" : ""
+            }`}
+          >
+            <h1 className="text-2xl font-bold text-gray-800 mb-4 dark:text-gray-200">
+              Signup
+            </h1>
 
             <p className="text-gray-600 mb-4 dark:text-gray-200">
               Already have an account?{" "}
-              <Link to="/account/login" className="text-blue-600 dark:text-blue-400 hover:underline">
+              <Link
+                to="/account/login"
+                className="text-blue-600 dark:text-blue-400 hover:underline font-bold"
+              >
                 Login here.
               </Link>
             </p>
@@ -65,7 +76,9 @@ export default function Signup() {
 
             <div className="space-y-4 text-left dark:text-gray-200">
               <div>
-                <label className="block font-medium mb-1">Username (uID)</label>
+                <label className="block text-gray-700 dark:text-gray-200 font-medium mb-1">
+                  Username (uID)
+                </label>
                 <input
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
@@ -74,11 +87,16 @@ export default function Signup() {
                   className="w-full px-4 py-2 border dark:bg-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
                   placeholder="uXXXXXXX"
                 />
-                <FormErrors param="username" errors={response.content?.errors} />
+                <FormErrors
+                  param="username"
+                  errors={response.content?.errors}
+                />
               </div>
 
               <div>
-                <label className="block font-medium mb-1">Password</label>
+                <label className="block text-gray-700 dark:text-gray-200 font-medium mb-1">
+                  Password
+                </label>
                 <input
                   autoComplete="new-password"
                   value={password1}
@@ -87,7 +105,10 @@ export default function Signup() {
                   required
                   className="w-full px-4 py-2 border dark:bg-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 />
-                <FormErrors param="password" errors={response.content?.errors} />
+                <FormErrors
+                  param="password"
+                  errors={response.content?.errors}
+                />
               </div>
             </div>
 
@@ -95,7 +116,7 @@ export default function Signup() {
               type="submit"
               disabled={response.fetching}
               onClick={() => submit()}
-              className="w-full bg-blue-600 text-white py-2 mt-4 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="w-full bg-blue-600 text-white py-2 mt-8 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
               Sign Up
             </button>

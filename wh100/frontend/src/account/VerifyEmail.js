@@ -85,7 +85,7 @@ export default function VerifyEmail() {
   }
 
   if ([200, 401].includes(response.content?.status)) {
-    return <Navigate to="/dashboard" />;
+    return <Navigate to="/vote" />;
   }
 
   // Rest of your component remains the same...

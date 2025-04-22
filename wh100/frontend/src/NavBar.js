@@ -117,7 +117,7 @@ export default function NavBar({ emailAddresses, setEmailAddresses }) {
       {opened && (
         <div
           id="dropdown"
-          className="absolute z-50 right-0 top-8 bg-red-100 divide-y divide-gray-100 rounded shadow-sm w-28 dark:bg-red-600 mt-2 font-medium"
+          className="absolute z-50 right-0 top-8 bg-red-100 divide-y divide-gray-100 rounded shadow-sm w-32 dark:bg-red-600 mt-2 font-medium"
         >
           <ul className="text-center text-sm text-gray-700 dark:text-gray-200">
             <li>
@@ -158,7 +158,7 @@ export default function NavBar({ emailAddresses, setEmailAddresses }) {
             className="relative bg-red-600 flex justify-center items-center"
           >
             <ul className="flex h-8 ">
-              <NavBarItem to="/dashboard" name="VOTE" />
+              <NavBarItem to="/vote" name="VOTE" />
               {window.DEVELOPMENT ? (
                 <NavBarItem
                   href="http://localhost:1080"

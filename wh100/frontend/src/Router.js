@@ -34,7 +34,7 @@ function createRouter (config) {
           element: <Home />
         },
         {
-          path: '/dashboard',
+          path: '/vote',
           element: <AuthenticatedRoute><Dashboard /></AuthenticatedRoute>
         },
         {

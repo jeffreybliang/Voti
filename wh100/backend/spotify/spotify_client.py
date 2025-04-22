@@ -29,7 +29,7 @@ class SpotifyClient:
     
     def search(self, query: str, limit=12):
         sp_client = self.get_client()
-        search_results = sp_client.search(q=query + " year:2023-2024", limit=limit, type="track")['tracks']['items']
+        search_results = sp_client.search(q=query + " year:2024-2025", limit=limit, type="track")['tracks']['items']
         
         unique_tracks = {}
         for track in search_results:
