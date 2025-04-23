@@ -5,7 +5,7 @@ import hottest100logo from './media/hottest100logo.png';
 // import hottest100logosolid from './media/hottest100logosolid.png';
 // import hottest100logomulti from './media/hottest100logomulti.png';
 
-export const deadline = "2025-05-14T12:00:00+11:00";
+export const deadline = "2025-07-07T23:59:59+10:00";
 
 export default function Home() {
   const user = useUser();

@@ -50,7 +50,7 @@ export default function Rules() {
             >
               <ul className="list-disc list-inside">
                 <li className>
-                  Voting is open until 12:00 PM midday AEDT on Friday 14 March,
+                  Voting is open until 11:59 PM AEST on Monday 7 July,
                   2025.
                 </li>
                 <li>
@@ -82,7 +82,7 @@ export default function Rules() {
               <ul className="list-disc list-inside">
                 <li>
                   Songs must have been officially released (online or
-                  commercially) between 1 January 2024 and 30 April 2025.
+                  commercially) between 1 January 2024 and 30 June 2025.
                 </li>
               </ul>
             </div>
