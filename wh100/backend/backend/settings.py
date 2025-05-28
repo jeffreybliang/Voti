@@ -15,6 +15,7 @@ import dj_database_url
 import environ
 import os
 
+
 env = environ.Env(
     DEBUG=(bool, False)
 )
