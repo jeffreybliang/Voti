@@ -14,7 +14,7 @@ from pathlib import Path
 import dj_database_url
 import environ
 import os
-
+from corsheaders.defaults import default_headers
 
 env = environ.Env(
     DEBUG=(bool, False)
@@ -113,6 +113,10 @@ CORS_ALLOWED_ORIGINS = [
     'https://woroni100.com',
 ]
 
+CORS_ALLOW_HEADERS = [
+    *default_headers,
+    "X-Email-Verification-Key"
+]
 
 CORS_ALLOW_ALL_ORIGINS = True
 # CSRF_TRUSTED_ORIGINS = [
