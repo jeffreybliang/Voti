@@ -115,9 +115,9 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_HEADERS = [
     *default_headers,
-    "X-Email-Verification-Key"
-    "x-password-reset-key"
-    "X-Password-Reset-Key"
+    "X-Email-Verification-Key",
+    "x-password-reset-key",
+    "X-Password-Reset-Key",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
