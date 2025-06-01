@@ -249,10 +249,10 @@ ACCOUNT_FORMS = {'signup': 'accounts.forms.CustomSignupForm'}
 
 HEADLESS_ONLY = True
 HEADLESS_FRONTEND_URLS = {
-    "account_confirm_email": "https://woroni100.com/account/verify-email/{key}",
-    "account_reset_password": "/account/password/reset",
-    "account_reset_password_from_key": "/account/password/reset/key/{key}",
-    "account_signup": "/account/signup",
+    "account_confirm_email":           "https://woroni100.com/account/verify-email/{key}",
+    "account_reset_password":          "https://woroni100.com/account/password/reset",
+    "account_reset_password_from_key": "https://woroni100.com/account/password/reset/key/{key}",
+    "account_signup":                  "https://woroni100.com/account/signup",
 }
 
 SITE_ID = 1
