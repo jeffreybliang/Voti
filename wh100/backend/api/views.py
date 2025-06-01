@@ -34,7 +34,7 @@ import time
 def get_user_votes(request):
     user = request.user
     # Fetch votes and related songs in one query
-    votes = Vote.objects.filter(username=user).select_related('song')
+    votes = Vote.objects.filter(username=user).select_related('song').order_by('id')
     if not votes:
         return Response({'message': 'No votes found.'}, status=status.HTTP_404_NOT_FOUND)
     # Initialize Spotify client
