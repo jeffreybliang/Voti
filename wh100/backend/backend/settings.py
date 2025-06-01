@@ -249,7 +249,7 @@ ACCOUNT_FORMS = {'signup': 'accounts.forms.CustomSignupForm'}
 
 HEADLESS_ONLY = True
 HEADLESS_FRONTEND_URLS = {
-    "account_confirm_email": "/account/verify-email/{key}",
+    "account_confirm_email": "https://woroni100.com/account/verify-email/{key}",
     "account_reset_password": "/account/password/reset",
     "account_reset_password_from_key": "/account/password/reset/key/{key}",
     "account_signup": "/account/signup",
