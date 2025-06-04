@@ -5,3 +5,4 @@
 node_modules
 *Django_React_Demo*
 *.env*
+.venv/
