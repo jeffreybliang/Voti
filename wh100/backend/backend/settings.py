@@ -241,11 +241,13 @@ ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = False
 ACCOUNT_LOGIN_BY_CODE_ENABLED = True
 ACCOUNT_SESSION_REMEMBER = True
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_HOST = 'email-smtp.ap-southeast-2.amazonaws.com'
+#EMAIL_HOST = 'email-smtp.ap-southeast-2.amazonaws.com'
+EMAIL_HOST = 'email-smtp.us-east-1.amazonaws.com'
 EMAIL_BACKEND = 'django_ses.SESBackend'
 ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_USERNAME_REQUIRED = True
-DEFAULT_FROM_EMAIL = 'woronihottest100@gmail.com'
+#DEFAULT_FROM_EMAIL = 'woronihottest100@gmail.com'
+DEFAULT_FROM_EMAIL = 'woroni@woroni100.com'
 
 ACCOUNT_FORMS = {'signup': 'accounts.forms.CustomSignupForm'}
 
