@@ -25,7 +25,7 @@
                 <div class="code-box">{{ code }}</div>
                 {% else %}
                 <p>Please click the link below to confirm your email:</p>
-                <p class="link">{{ activate_url }}</p>
+                <p class="link"><a href="{{ activate_url }}">{{ activate_url }}</a></p>
                 {% endif %}
             </div>
         </div>
