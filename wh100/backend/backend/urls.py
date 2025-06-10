@@ -17,12 +17,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views import defaults
+from accounts.views import CustomSignupView
+from allauth.headless.constants import Client
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/email/", defaults.page_not_found, kwargs={"exception": Exception("Page not Found")},),
     path("accounts/", include("allauth.urls")),
     path('accounts/', include('accounts.urls')),
+    path(
+        "_allauth/browser/v1/auth/signup",
+        CustomSignupView.as_api_view(client=Client.BROWSER),
+    ),
     path("_allauth/", include("allauth.headless.urls")),
     path('api/', include('api.urls')),  # Include API URLs
 ]

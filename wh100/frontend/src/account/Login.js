@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-// import FormErrors from "../components/FormErrors";
+import FormErrors from "../components/FormErrors";
 import { login } from "../lib/allauth";
 import { Link } from "react-router-dom";
 import { useConfig } from "../auth";
@@ -37,11 +37,9 @@ export default function Login() {
 
       <div className="flex justify-center items-center w-screen h-screen overflow-hidden fixed top-0 left-0">
         <div className="relative sm:w-full max-w-md bg-white dark:bg-gray-700 p-6 rounded-2xl shadow-lg border border-gray-200 text-center dark:text-gray-200">
-            {response.fetching && (
+          {response.fetching && (
             <div className="absolute inset-0 bg-white/80 dark:bg-gray-700/80 flex flex-col items-center justify-center z-10 rounded-2xl">
-              <h1
-                className="text-2xl font-semibold mb-2 text-center text-red-500"
-              >
+              <h1 className="text-2xl font-semibold mb-2 text-center text-red-500">
                 lol give us a sec
               </h1>
               <div className="p-2">
@@ -67,11 +65,13 @@ export default function Login() {
                 Sign up here.
               </Link>
             </p>
-            <div className="text-red-500 text-sm mb-2">
-              {response.content?.errors &&
-                response.content.errors.map((err) => (
-                  <div key={err}>{err}</div>
-                ))}
+            <div className="text-red-700 dark:text-red-400 text-sm mb-2">
+              <div className="w-full">
+                {response.content?.errors &&
+                  response.content.errors.map((err) => (
+                    <div key={err.code}>{err.message}</div>
+                  ))}
+              </div>
             </div>
 
             <div className="space-y-4 text-left dark:text-gray-200">

@@ -191,8 +191,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_USERNAME_REQUIRED = True
 
-ACCOUNT_FORMS = {'signup': 'accounts.forms.CustomSignupForm'}
-
 HEADLESS_ONLY = True
 HEADLESS_FRONTEND_URLS = {
     "account_confirm_email": "/account/verify-email/{key}",
@@ -213,3 +211,9 @@ SIGNUP_PASSWORD_ENTER_TWICE = False
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 
 ACCOUNT_MAX_EMAIL_ADDRESSES = 1
+
+HEADLESS_ADAPTER = "accounts.headless_adapter.MyHeadlessAdapter"
+# This is crucial for the form to be used
+ACCOUNT_FORMS = {
+    'signup': 'accounts.headless_adapter.CustomSignupForm',
+}

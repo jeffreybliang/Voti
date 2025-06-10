@@ -62,7 +62,6 @@ export default function Root() {
   
     document.title = titles[matched] || baseTitle;
   }, [location.pathname]);
-  console.log("Current path:", location.pathname);
   
   return (
     <div className="flex flex-col min-h-screen">

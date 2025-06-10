@@ -74,7 +74,13 @@ export default function Signup() {
 
             <FormErrors errors={response.content?.errors} />
 
-            <div className="space-y-4 text-left dark:text-gray-200">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                submit();
+              }}
+              className="space-y-4 text-left dark:text-gray-200"
+            >
               <div>
                 <label className="block text-gray-700 dark:text-gray-200 font-medium mb-1">
                   Username (uID)
@@ -110,19 +116,20 @@ export default function Signup() {
                   errors={response.content?.errors}
                 />
               </div>
-            </div>
 
-            <button
-              type="submit"
-              disabled={response.fetching}
-              onClick={() => submit()}
-              className="w-full bg-blue-600 text-white py-2 mt-8 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-            >
-              Sign Up
-            </button>
+              <button
+                type="submit"
+                disabled={response.fetching}
+                className="w-full bg-blue-600 text-white py-2 mt-8 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              >
+                Signup
+              </button>
+            </form>
           </div>
         </div>
       </div>
     </>
   );
+
+
 }
