@@ -11,6 +11,7 @@ import { deadline } from "./Home";
 import hottest100logo from './media/hottest100logo.png';
 // import hottest100logosolid from './media/hottest100logosolid.png';
 // import hottest100logomulti from './media/hottest100logomulti.png';
+import { useLocation } from 'react-router-dom'; 
 
 export default function Dashboard() {
   // const user = useUser();
@@ -33,6 +34,45 @@ export default function Dashboard() {
 
   // const base = process.env.REACT_APP_BACKEND_BASE_URL;
   // const search_endpoint = process.env.REACT_APP_API_SEARCH;
+
+  const location = useLocation(); // React Router hook to access URL info
+  useEffect(() => {
+    // Parse the URL's query parameters
+    const params = new URLSearchParams(location.search);
+    const action = params.get('action'); // Get the 'action' parameter
+
+    if (action === 'create_playlist_after_auth') {
+      // 1. Clear the action parameter from the URL
+      // This prevents the action from re-triggering if the user
+      // refreshes the page or navigates back to this URL.
+      window.history.replaceState({}, document.title, location.pathname);
+
+      // 2. Now, make the API call to create the playlist
+      const createPlaylistApiCall = async () => {
+        try {
+          // This call should now succeed because the Spotify token is in the Django session
+          const response = await fetch('http://localhost/api/spotify/create-hottest-100/', {
+            method: 'GET',
+            credentials: 'include', // Ensure session cookies are sent
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          alert(data.message);
+        } catch (error) {
+          console.error("Error creating Hottest 100 playlist after authentication:", error);
+          alert(`Failed to create playlist: ${error.message}`);
+        }
+      };
+
+      createPlaylistApiCall(); // Execute the API call
+    }
+  }, [location]); // The effect re-runs if the 'location' object (URL) changes
+
 
   const closeAlert = () => {
     setShowAlert(false);
@@ -123,12 +163,12 @@ export default function Dashboard() {
 
       setShowSubmitVotesSpinner(false);
       const responseData = await response.json();
-      console.log("Votes submitted successfully:", responseData);
+      // console.log("Votes submitted successfully:", responseData);
       setTemporaryMessage("Votes submitted successfully");
       setShowTemporaryAlert(true);
       setAlertKey((prevKey) => prevKey + 1);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       setShowSubmitVotesSpinner(false);
       if (
         error.status === 400 &&
@@ -148,7 +188,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (showSubmitVotesSpinner) {
-      console.log("Submit Votes Spinner is now visible");
+      // console.log("Submit Votes Spinner is now visible");
     }
   }, [showSubmitVotesSpinner]);
 
@@ -162,11 +202,11 @@ export default function Dashboard() {
         const data = await votesResponse.json();
         setVotes(data.songs);
       } else {
-        console.error("Error fetching votes:", votesResponse.statusText);
+        // console.error("Error fetching votes:", votesResponse.statusText);
         setVotes([]);
       }
     } catch (error) {
-      console.error("Error fetching votes:", error);
+      // console.error("Error fetching votes:", error);
       setVotes([]);
       setShowSongTableSpinner(false);
     }
@@ -221,11 +261,11 @@ export default function Dashboard() {
         setResults(data);
         setShowResults(true); // show the results table when new results are loaded
       } else {
-        console.error("Error fetching search results:", response.statusText);
+        // console.error("Error fetching search results:", response.statusText);
         setResults(null);
       }
     } catch (error) {
-      console.error("Error fetching search results:", error);
+      // console.error("Error fetching search results:", error);
       setResults(null);
     }
   }, []);
@@ -301,7 +341,7 @@ export default function Dashboard() {
                 <TemporaryAlert
                   message={temporaryMessage}
                   duration={5000}
-                  key={alertKey}
+                  alertId={alertKey}
                 />
               </div>
             )}

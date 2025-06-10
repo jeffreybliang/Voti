@@ -42,7 +42,7 @@ const ResultsTable = React.memo(
 
                         return (
                           <tr
-                            key={song.id}
+                            key={song.song_id}
                             className="bg-red-50 transition-all duration-500 hover:bg-red-100 dark:hover:bg-red-100"
                           >
                             {/* <td className="px-4 w-12 text-sm sm:text-base text-center font-medium text-gray-900">

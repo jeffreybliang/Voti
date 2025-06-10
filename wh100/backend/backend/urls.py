@@ -30,5 +30,5 @@ urlpatterns = [
         CustomSignupView.as_api_view(client=Client.BROWSER),
     ),
     path("_allauth/", include("allauth.headless.urls")),
-    path('api/', include('api.urls')),  # Include API URLs
+    path('api/', include('api.urls')),  
 ]

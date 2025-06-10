@@ -28,7 +28,7 @@ const SongTable = ({ songs, handleDelete }) => {
                 ) : (
                   songs.map((song, index) => (
                     <tr
-                      key={song.id}
+                      key={song.song_id}
                       className="bg-white dark:bg-gray-800 transition-all duration-500 hover:bg-gray-50 dark:hover:bg-gray-900"
                     >
                       <td className="sm:px-3 min-w-8 sm:min-w-12 text-xs sm:text-sm text-center font-medium text-gray-900 dark:text-gray-100">

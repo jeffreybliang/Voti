@@ -42,12 +42,11 @@ function NavBarItem({ href, to, icon, name, onClick }) {
   );
 }
 
-
 export default function NavBar({ emailAddresses, setEmailAddresses }) {
   const user = useUser();
   const config = useConfig();
   const [opened, setOpened] = useState(false);
-
+  const ADMIN_USER_ID = process.env.REACT_APP_ADMIN_USER_ID;
 
   function handleLogout(event) {
     event.preventDefault(); // Prevent navigation
@@ -62,6 +61,52 @@ export default function NavBar({ emailAddresses, setEmailAddresses }) {
       });
   }
 
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split("; ");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i];
+        if (cookie.trim().startsWith(name + "=")) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+// In NavBar.js
+
+const handleCreateHottest100 = async () => {
+  try {
+      const response = await fetch('http://localhost/api/spotify/create-hottest-100/', { // No port here for API call too
+          method: 'GET',
+          credentials: 'include',
+      });
+      
+      if (response.status === 401) {
+          // Encode the specific frontend URL for post-auth action,
+          // also without a port if your frontend is proxied to localhost directly.
+          const frontendRedirectUrl = encodeURIComponent(`http://localhost/vote?action=create_playlist_after_auth`);
+
+          // Redirect the entire browser to start Spotify OAuth
+          window.location.href = `http://localhost/api/spotify/auth/?next=${frontendRedirectUrl}`; // No port here either
+          return; 
+      }
+
+      if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      alert(data.message);
+  } catch (error) {
+      console.error("Error creating Hottest 100 playlist:", error);
+      alert(`Failed to create playlist: ${error.message}`);
+  }
+};
   const anonNav = (
     <>
       <NavBarItem to="/account/login" name="LOGIN" />
@@ -97,11 +142,15 @@ export default function NavBar({ emailAddresses, setEmailAddresses }) {
     return () => {
       window.removeEventListener("storage", handleStorageChange);
     };
-  },); // Empty dependency to set up listener once
+  }); // Empty dependency to set up listener once
 
   const authHamburger = (
     <div className="flex items-center absolute right-3">
-      {user && <span className="text-white mr-2 text-xs sm:text-sm">{user.display}</span>}
+      {user && (
+        <span className="text-white mr-2 text-xs sm:text-sm">
+          {user.display}
+        </span>
+      )}
 
       <div
         className={classNames("tham tham-e-squeeze tham-w-6", {
@@ -120,6 +169,20 @@ export default function NavBar({ emailAddresses, setEmailAddresses }) {
           className="absolute z-50 right-0 top-8 bg-red-100 divide-y divide-gray-100 rounded shadow-sm w-32 dark:bg-red-600 mt-2 font-medium"
         >
           <ul className="text-center text-sm text-gray-700 dark:text-gray-200">
+            {user && user.id === process.env.REACT_APP_ADMIN_USER_ID && (
+              <li>
+                <Link
+                  to="#" // Using # to prevent navigation
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleCreateHottest100();
+                  }}
+                  className="block px-4 py-2 rounded hover:bg-red-200 dark:hover:bg-gray-600 dark:hover:text-white flex items-center"
+                >
+                  🎵 CREATE
+                </Link>
+              </li>
+            )}
             <li>
               <Link
                 to="/"
@@ -195,8 +258,12 @@ export default function NavBar({ emailAddresses, setEmailAddresses }) {
                         </svg>
                       </div>
                       <div>
-                        <p class="font-bold text-sm">Only votes from verified accounts count!</p>
-                        <p class="text-sm">Check your ANU email for the verification link to vote.
+                        <p class="font-bold text-sm">
+                          Only votes from verified accounts count!
+                        </p>
+                        <p class="text-sm">
+                          Check your ANU email for the verification link to
+                          vote.
                         </p>
                       </div>
                     </div>
@@ -209,4 +276,3 @@ export default function NavBar({ emailAddresses, setEmailAddresses }) {
     </div>
   );
 }
-

@@ -6,7 +6,7 @@ from collections import Counter
 
 CLIENT_ID = settings.SPOTIFY_CLIENT_ID
 CLIENT_SECRET = settings.SPOTIFY_CLIENT_SECRET
-REDIRECT_URI = "http://127.0.0.1:8000/spotify/callback/" # TODO: change this!!!!
+REDIRECT_URI = "http://localhost:8000/api/spotify/callback/"
 START_DATE=settings.START_DATE
 END_DATE=settings.END_DATE
 SCOPE = "playlist-modify-public"
@@ -27,7 +27,7 @@ class SpotifyClient:
     def get_client(self):
         return self.sp
     
-    def search(self, query: str, limit=12):
+    def search(self, query: str, limit=40):
         sp_client = self.get_client()
         search_results = sp_client.search(q=query + " year:2024-2025", limit=limit, type="track")['tracks']['items']
         
@@ -44,7 +44,7 @@ class SpotifyClient:
                 else:
                     # If the song is already in the dictionary, compare release dates
                     existing_song = unique_tracks[song_key]
-                    if song.release_date > existing_song.release_date:
+                    if song.release_date < existing_song.release_date:
                         unique_tracks[song_key] = song
         
         return list(unique_tracks.values())[:10]

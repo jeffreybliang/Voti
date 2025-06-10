@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const TemporaryAlert = ({ message, duration, key }) => {
+const TemporaryAlert = ({ message, duration, key: alertId }) => {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
@@ -11,7 +11,7 @@ const TemporaryAlert = ({ message, duration, key }) => {
 
     // Clean up the timer when the component unmounts
     return () => clearTimeout(timer);
-  }, [duration, key]); // Re-run effect when `key` changes
+  }, [duration, alertId]); // Re-run effect when `key` changes
 
   // Render the component only if it's visible
   return isVisible ? (
