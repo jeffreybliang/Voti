@@ -1,24 +1,31 @@
-from django.shortcuts import render, redirect
-from django.views.generic.edit import FormView
-from django.urls import reverse_lazy
-# from .forms import CustomUserForm
+# accounts/inputs.py
+from allauth.headless.account.inputs import SignupInput
+from django.core.exceptions import ValidationError
+from allauth.account.adapter import get_adapter
 
-# class CustomUserView(FormView):
-#     template_name = 'accounts/custom_user_form.html'
-#     form_class = CustomUserForm
-#     success_url = reverse_lazy('accounts')  # Replace with your desired redirect URL
+class CustomSignupInput(SignupInput):
+    def clean_username(self):
+        username = self.cleaned_data["username"]
 
-#     def dispatch(self, request, *args, **kwargs):
-#         if request.user.is_authenticated and request.user.username != "blah":
-#             return redirect(self.success_url)
-#         return super().dispatch(request, *args, **kwargs)
+        if not (len(username) == 8 and username.startswith('u') and username[1:].isdigit()):
+            raise ValidationError("Username must be of format uXXXXXXX where X are digits (0-9).")
 
-#     def get_form_kwargs(self):
-#         kwargs = super().get_form_kwargs()
-#         kwargs['instance'] = self.request.user  # Ensure we're updating the logged-in user
-#         return kwargs
+        # Run any other default username checks (e.g. blacklist, etc.)
+        get_adapter().clean_username(username)
+        return username
 
-#     def form_valid(self, form):
-#         print("Form is valid, calling save method.")
-#         user = form.save()
-#         return super().form_valid(form)
+# accounts/views.py
+from allauth.headless.account.views import SignupView
+import logging
+
+logger = logging.getLogger(__name__)
+
+class CustomSignupView(SignupView):
+    input_class = {"POST": CustomSignupInput}
+
+    def post(self, request, *args, **kwargs):
+        username = self.data.get("username")
+        if username and not self.data.get("email"):
+            self.data["email"] = f"{username}@anu.edu.au"
+
+        return super().post(request, *args, **kwargs)

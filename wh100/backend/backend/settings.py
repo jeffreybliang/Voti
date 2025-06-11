@@ -249,7 +249,11 @@ ACCOUNT_USERNAME_REQUIRED = True
 DEFAULT_FROM_EMAIL = 'woronihottest100@gmail.com'
 # DEFAULT_FROM_EMAIL = 'woroni@woroni100.com'
 
-ACCOUNT_FORMS = {'signup': 'accounts.forms.CustomSignupForm'}
+HEADLESS_ADAPTER = "accounts.headless_adapter.MyHeadlessAdapter"
+# This is crucial for the form to be used
+ACCOUNT_FORMS = {
+    'signup': 'accounts.headless_adapter.CustomSignupForm',
+}
 
 HEADLESS_ONLY = True
 HEADLESS_FRONTEND_URLS = {
