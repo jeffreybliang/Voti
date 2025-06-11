@@ -6,7 +6,7 @@ from collections import Counter
 
 CLIENT_ID = settings.SPOTIFY_CLIENT_ID
 CLIENT_SECRET = settings.SPOTIFY_CLIENT_SECRET
-REDIRECT_URI = "http://api.woroni100.com:8000/api/spotify/callback/"
+REDIRECT_URI = "https://api.woroni100.com/api/spotify/callback/"
 START_DATE=settings.START_DATE
 END_DATE=settings.END_DATE
 SCOPE = "playlist-modify-public"
