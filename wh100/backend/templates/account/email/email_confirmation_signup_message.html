@@ -20,13 +20,8 @@
             <div class="email-header">📧 Email Confirmation</div>
             <div class="email-body">
                 <p>You're receiving this email because your email address was used to register on woroni100.com.</p>
-                {% if code %}
-                <p>Your email verification code is:</p>
-                <div class="code-box">{{ code }}</div>
-                {% else %}
                 <p>Please click the link below to confirm your email:</p>
                 <p class="link"><a href="{{ activate_url }}">{{ activate_url }}</a></p>
-                {% endif %}
             </div>
         </div>
     </body>
