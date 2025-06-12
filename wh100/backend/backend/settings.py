@@ -246,8 +246,8 @@ EMAIL_HOST = 'email-smtp.us-east-1.amazonaws.com'
 EMAIL_BACKEND = 'django_ses.SESBackend'
 ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_USERNAME_REQUIRED = True
-DEFAULT_FROM_EMAIL = 'woronihottest100@gmail.com'
-# DEFAULT_FROM_EMAIL = 'woroni@woroni100.com'
+# DEFAULT_FROM_EMAIL = 'woronihottest100@gmail.com'
+DEFAULT_FROM_EMAIL = 'noreply@woroni100.com'
 
 HEADLESS_ADAPTER = "accounts.headless_adapter.MyHeadlessAdapter"
 # This is crucial for the form to be used
