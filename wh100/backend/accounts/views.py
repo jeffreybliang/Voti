@@ -5,7 +5,7 @@ from allauth.account.adapter import get_adapter
 
 class CustomSignupInput(SignupInput):
     def clean_username(self):
-        username = self.cleaned_data["username"]
+        username = self.cleaned_data["username"].lower()
 
         if not (len(username) == 8 and username.startswith('u') and username[1:].isdigit()):
             raise ValidationError("Username must be of format uXXXXXXX where X are digits (0-9).")
