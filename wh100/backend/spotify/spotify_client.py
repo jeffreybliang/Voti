@@ -44,7 +44,7 @@ class SpotifyClient:
                 else:
                     # If the song is already in the dictionary, compare release dates
                     existing_song = unique_tracks[song_key]
-                    if song.release_date < existing_song.release_date:
+                    if song.release_date < existing_song.release_date and valid_release_date(song.release_date):
                         unique_tracks[song_key] = song
         
         return list(unique_tracks.values())[:10]
