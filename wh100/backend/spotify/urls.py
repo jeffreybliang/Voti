@@ -10,4 +10,6 @@ urlpatterns = [
     
     # Any additional Spotify-related views like playlist creation
     path('create-hottest-100/', create_hottest_100, name='create_hottest_100'),
+
+    path('download-hottest-100-excel/', download_hottest_100_excel, name='download_hottest_100_excel'),
 ]

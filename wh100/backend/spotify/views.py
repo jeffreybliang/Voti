@@ -9,6 +9,10 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
 from datetime import datetime
 from rest_framework.response import Response
+from collections import defaultdict
+import io
+import pandas as pd
+from django.http import FileResponse
 
 FRONTEND_HOME_URL = "https://woroni100.com/vote" 
 
@@ -100,3 +104,94 @@ def create_hottest_100(request):
     
     # Return success message
     return Response({"message": f"Playlist '{playlist_name}' created successfully with the top 100 songs!"})
+
+from collections import defaultdict
+from datetime import datetime
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def create_hottest_100(request):
+    sp_client = get_spotify_client(request)
+    if not isinstance(sp_client, spotipy.Spotify):
+        return Response({'error': 'Spotify authentication required.'}, status=401)
+
+    # Only include verified users
+    verified_votes = Vote.objects.filter(username__emailaddress__verified=True)
+
+    # Count votes grouped by (song name, artists)
+    vote_counts = (
+        Song.objects
+        .filter(vote__in=verified_votes)
+        .values('name', 'artists')
+        .annotate(vote_count=Count('vote'))
+        .order_by('-vote_count')[:100]
+    )
+
+    # For each unique (name, artists), get the first Song object (to retrieve song_id)
+    song_map = defaultdict(list)
+    for song in Song.objects.filter(vote__in=verified_votes):
+        key = (song.name, tuple(song.artists))
+        song_map[key].append(song)
+
+    song_ids = []
+    for item in vote_counts:
+        key = (item['name'], tuple(item['artists']))
+        song_obj = song_map.get(key, [None])[0]
+        if song_obj:
+            song_ids.append(song_obj.song_id)
+
+    user_id = sp_client.current_user()['id']
+    current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M')
+    playlist_name = f"Hottest100 {current_datetime}"
+
+    playlist = sp_client.user_playlist_create(user=user_id, name=playlist_name)
+    sp_client.playlist_add_items(playlist_id=playlist['id'], items=song_ids)
+
+    return Response({"message": f"Playlist '{playlist_name}' created successfully with the top 100 songs!"})
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def download_hottest_100_excel(request):
+    verified_votes = Vote.objects.filter(username__emailaddress__verified=True)
+
+    # Group by (name, artists) and count votes
+    vote_counts = (
+        Song.objects
+        .filter(vote__in=verified_votes)
+        .values('name', 'artists')
+        .annotate(vote_count=Count('vote'))
+        .order_by('-vote_count')
+    )
+
+    # Map (name, artists) → list of Song objects (to get song_id)
+    song_map = defaultdict(list)
+    for song in Song.objects.filter(vote__in=verified_votes):
+        key = (song.name, tuple(song.artists))
+        song_map[key].append(song)
+
+    # Prepare data rows with rank
+    data = []
+    for rank, item in enumerate(vote_counts, start=1):
+        key = (item['name'], tuple(item['artists']))
+        song_obj = song_map.get(key, [None])[0]
+        if song_obj:
+            data.append({
+                'Rank': rank,
+                'Song ID': song_obj.song_id,
+                'Name': song_obj.name,
+                'Artists': ', '.join(song_obj.artists),
+                'Votes': item['vote_count'],
+            })
+
+    df = pd.DataFrame(data)
+
+    # Write to Excel in memory
+    buffer = io.BytesIO()
+    with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
+        df.to_excel(writer, index=False, sheet_name='Hottest100')
+
+    buffer.seek(0)
+    filename = f"hottest_100_{datetime.now().strftime('%Y%m%d_%H%M')}.xlsx"
+    return FileResponse(buffer, as_attachment=True, filename=filename)
