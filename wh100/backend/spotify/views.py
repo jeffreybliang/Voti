@@ -59,7 +59,7 @@ def get_spotify_client(request):
 
     if not token_info:
         # If no token, return None to indicate authentication is needed
-        return None 
+        return None
 
     sp_oauth = SpotifyOAuthClient()
     auth_manager = sp_oauth.get_oauth()
@@ -148,7 +148,7 @@ def download_hottest_100_excel(request):
 
     # If you need to strip to plain IDs:
     artist_ids = [aid.split(":")[-1] for aid in all_artist_ids]
-    sp = SpotifyClient().get_client  # ← ensure you inject valid token
+    sp = SpotifyClient().get_client()  # ← ensure you inject valid token
     artist_name_map = get_artist_names(sp, artist_ids)
 
     # Map (name, artists) → list of Song objects
