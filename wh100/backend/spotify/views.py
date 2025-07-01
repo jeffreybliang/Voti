@@ -72,42 +72,6 @@ def get_spotify_client(request):
     sp_client = spotipy.Spotify(auth_manager=auth_manager)
     return sp_client
 
-
-@api_view(['GET'])
-@permission_classes([IsAdminUser])  # Ensure only staff can access this
-def create_hottest_100(request):
-    # Check if the user has an authenticated Spotify session
-    sp_client = get_spotify_client(request)
-    if not isinstance(sp_client, spotipy.Spotify):
-        # Return a 401 status to signal to the frontend that authentication is required
-        return Response({'error': 'Spotify authentication required.'}, status=401)
-    
-    # Query to get the top 100 songs by the number of votes from verified users
-    verified_votes = Vote.objects.filter(username__emailaddress__verified=True)
-
-    top_100_songs = Song.objects.filter(vote__in=verified_votes).annotate(vote_count=Count('vote')).order_by('-vote_count')[:100]
-    
-    song_ids = [item.song_id for item in top_100_songs]
-
-    # Get the current user's Spotify ID
-    user_id = sp_client.current_user()['id']
-    
-    # Get the current date and time
-    current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M')
-
-    # Update playlist name with the date and time appended
-    playlist_name = f"Hottest100 {current_datetime}"
-    playlist = sp_client.user_playlist_create(user=user_id, name=playlist_name)
-    
-    # Add the top 100 songs to the new playlist
-    sp_client.playlist_add_items(playlist_id=playlist['id'], items=song_ids)
-    
-    # Return success message
-    return Response({"message": f"Playlist '{playlist_name}' created successfully with the top 100 songs!"})
-
-from collections import defaultdict
-from datetime import datetime
-
 @api_view(['GET'])
 @permission_classes([IsAdminUser])
 def create_hottest_100(request):
@@ -142,7 +106,7 @@ def create_hottest_100(request):
 
     user_id = sp_client.current_user()['id']
     current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M')
-    playlist_name = f"Hottest100 {current_datetime}"
+    playlist_name = f"Woroni's Hottest 100 {current_datetime}"
 
     playlist = sp_client.user_playlist_create(user=user_id, name=playlist_name)
     sp_client.playlist_add_items(playlist_id=playlist['id'], items=song_ids)
@@ -184,7 +148,7 @@ def download_hottest_100_excel(request):
 
     # If you need to strip to plain IDs:
     artist_ids = [aid.split(":")[-1] for aid in all_artist_ids]
-    sp = SpotifyClient().get_client()  # ← ensure you inject valid token
+    sp = SpotifyClient().get_client  # ← ensure you inject valid token
     artist_name_map = get_artist_names(sp, artist_ids)
 
     # Map (name, artists) → list of Song objects
