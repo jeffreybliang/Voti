@@ -127,6 +127,8 @@ def create_hottest_100(request):
         .order_by('-vote_count')[:100]
     )
 
+    sp_client = SpotifyClient() 
+
     # For each unique (name, artists), get the first Song object (to retrieve song_id)
     song_map = defaultdict(list)
     for song in Song.objects.filter(vote__in=verified_votes):
@@ -151,6 +153,18 @@ def create_hottest_100(request):
 
 
 
+def get_artist_names(sp, artist_ids):
+    cache = {}
+    unique_ids = list(set(artist_ids))
+    BATCH_SIZE = 50
+    for i in range(0, len(unique_ids), BATCH_SIZE):
+        batch_ids = unique_ids[i:i + BATCH_SIZE]
+        response = sp.artists(batch_ids)
+        for artist in response['artists']:
+            cache[artist['id']] = artist['name']
+    return cache
+
+
 @api_view(['GET'])
 @permission_classes([IsAdminUser])
 def download_hottest_100_excel(request):
@@ -165,29 +179,42 @@ def download_hottest_100_excel(request):
         .order_by('-vote_count')
     )
 
-    # Map (name, artists) → list of Song objects (to get song_id)
+    # Collect all artist IDs used
+    all_artist_ids = set()
+    for item in vote_counts:
+        all_artist_ids.update(item['artists'])  # assuming artists is a list of IDs/URIs
+
+    # If you need to strip to plain IDs:
+    artist_ids = [aid.split(":")[-1] for aid in all_artist_ids]
+    sp = SpotifyClient().get_client()  # ← ensure you inject valid token
+    artist_name_map = get_artist_names(sp, artist_ids)
+
+    # Map (name, artists) → list of Song objects
     song_map = defaultdict(list)
     for song in Song.objects.filter(vote__in=verified_votes):
         key = (song.name, tuple(song.artists))
         song_map[key].append(song)
 
-    # Prepare data rows with rank
+    # Build the final output
     data = []
     for rank, item in enumerate(vote_counts, start=1):
-        key = (item['name'], tuple(item['artists']))
+        raw_artist_ids = item['artists']
+        key = (item['name'], tuple(raw_artist_ids))
         song_obj = song_map.get(key, [None])[0]
         if song_obj:
+            plain_ids = [aid.split(":")[-1] for aid in raw_artist_ids]
+            resolved_names = [artist_name_map.get(aid, 'Unknown') for aid in plain_ids]
             data.append({
                 'Rank': rank,
                 'Song ID': song_obj.song_id,
                 'Name': song_obj.name,
-                'Artists': ', '.join(song_obj.artists),
+                'Artists': ', '.join(resolved_names),
                 'Votes': item['vote_count'],
             })
 
     df = pd.DataFrame(data)
 
-    # Write to Excel in memory
+    # Save to Excel
     buffer = io.BytesIO()
     with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
         df.to_excel(writer, index=False, sheet_name='Hottest100')
