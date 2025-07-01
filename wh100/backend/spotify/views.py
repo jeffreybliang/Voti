@@ -127,8 +127,6 @@ def create_hottest_100(request):
         .order_by('-vote_count')[:100]
     )
 
-    sp_client = SpotifyClient() 
-
     # For each unique (name, artists), get the first Song object (to retrieve song_id)
     song_map = defaultdict(list)
     for song in Song.objects.filter(vote__in=verified_votes):
