@@ -46,7 +46,7 @@ const CountdownTimer = ({ targetDateTime }) => {
 
 // Define common class names
 const containerClass = "flex flex-col p-3 bg-red-600/95 dark:bg-red-700/95 rounded-box text-white";
-const countdownTextClass = "dui-countdown text-[2.6rem] lg:text-7xl md:text-7xl sm:text-5xl px-1";
+const countdownTextClass = "dui-countdown text-4xl lg:text-7xl md:text-7xl sm:text-5xl px-1";
 const timeLabelClass = "text-xs sm:text-sm md:text-sm lg:text-base";
 
 return (

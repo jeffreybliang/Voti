@@ -14,21 +14,33 @@ export default function Root() {
 
   // Fetch email addresses if they are not already set
   useEffect(() => {
-    if (emailAddresses.length === 0) {
-      allauth
-        .getEmailAddresses()
-        .then((resp) => {
-          if (resp.status === 200) {
-            setEmailAddresses(resp.data); // Set in state
-            localStorage.setItem("emailAddresses", JSON.stringify(resp.data)); // Save to localStorage
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching email addresses:", error);
-        });
+    // Load from localStorage immediately to populate fast
+    const storedEmails = localStorage.getItem("emailAddresses");
+  
+    if (storedEmails) {
+      try {
+        const parsedEmails = JSON.parse(storedEmails);
+        if (Array.isArray(parsedEmails)) {
+          setEmailAddresses(parsedEmails);
+        }
+      } catch (error) {
+        console.error("Failed to parse stored emails:", error);
+      }
     }
-  }, [emailAddresses]);
-
+  
+    allauth
+    .getEmailAddresses()
+    .then((resp) => {
+      if (resp.status === 200) {
+        setEmailAddresses(resp.data);
+        localStorage.setItem("emailAddresses", JSON.stringify(resp.data));
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching email addresses:", error);
+    });
+}, []); // Run once on page load
+    
   const location = useLocation();
 
   useEffect(() => {

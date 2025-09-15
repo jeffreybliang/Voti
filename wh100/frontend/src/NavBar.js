@@ -51,13 +51,15 @@ export default function NavBar({ emailAddresses, setEmailAddresses }) {
   function handleLogout(event) {
     event.preventDefault(); // Prevent navigation
     localStorage.removeItem("emailAddresses"); // Clear stored emails
+    localStorage.removeItem("userVotes"); // Clear stored emails
+    localStorage.removeItem("initialVotes"); // Clear stored emails
     logout()
       .then(() => {
         // window.location.href = '/'; // Redirect to home after logout
       })
       .catch((e) => {
         console.error(e);
-        window.alert("Logout failed");
+        // window.alert("Logout failed");
       });
   }
 
@@ -76,37 +78,82 @@ export default function NavBar({ emailAddresses, setEmailAddresses }) {
     return cookieValue;
   }
 
-// In NavBar.js
+  // In NavBar.js
 
-const handleCreateHottest100 = async () => {
-  try {
-      const response = await fetch('http://localhost/api/spotify/create-hottest-100/', { // No port here for API call too
-          method: 'GET',
-          credentials: 'include',
-      });
-      
+  const handleCreateHottest100 = async () => {
+    try {
+      const response = await fetch(
+        "https://api.woroni100.com/api/spotify/create-hottest-100/",
+        {
+          // No port here for API call too
+          method: "GET",
+          credentials: "include",
+        }
+      );
+
       if (response.status === 401) {
-          // Encode the specific frontend URL for post-auth action,
-          // also without a port if your frontend is proxied to localhost directly.
-          const frontendRedirectUrl = encodeURIComponent(`http://localhost/vote?action=create_playlist_after_auth`);
+        // Encode the specific frontend URL for post-auth action,
+        // also without a port if your frontend is proxied to localhost directly.
+        const frontendRedirectUrl = encodeURIComponent(
+          `https://api.woroni100.com/vote?action=create_playlist_after_auth`
+        );
 
-          // Redirect the entire browser to start Spotify OAuth
-          window.location.href = `http://localhost/api/spotify/auth/?next=${frontendRedirectUrl}`; // No port here either
-          return; 
+        // Redirect the entire browser to start Spotify OAuth
+        window.location.href = `https://api.woroni100.com/api/spotify/auth/?next=${frontendRedirectUrl}`; // No port here either
+        return;
       }
 
       if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`
+        );
       }
 
       const data = await response.json();
       alert(data.message);
-  } catch (error) {
+    } catch (error) {
       console.error("Error creating Hottest 100 playlist:", error);
       alert(`Failed to create playlist: ${error.message}`);
-  }
-};
+    }
+  };
+
+  const handleDownloadHottest100Excel = async () => {
+    try {
+      const response = await fetch(
+        "https://api.woroni100.com/api/spotify/download-hottest-100-excel/",
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+
+      if (response.status === 401) {
+        return;
+      }
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`
+        );
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "hottest_100.xlsx"; // Optional: you can extract the filename from the response headers if needed
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      alert(`Failed to download spreadsheet: ${error.message}`);
+    }
+  };
+
   const anonNav = (
     <>
       <NavBarItem to="/account/login" name="LOGIN" />
@@ -131,7 +178,7 @@ const handleCreateHottest100 = async () => {
           const updatedEmails = JSON.parse(event.newValue);
           setEmailAddresses(updatedEmails); // Update the state when localStorage is modified
         } catch (error) {
-          console.error("Error parsing localStorage data", error);
+          // console.error("Error parsing localStorage data", error);
         }
       }
     };
@@ -170,18 +217,32 @@ const handleCreateHottest100 = async () => {
         >
           <ul className="text-center text-sm text-gray-700 dark:text-gray-200">
             {user && user.id === process.env.REACT_APP_ADMIN_USER_ID && (
-              <li>
-                <Link
-                  to="#" // Using # to prevent navigation
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleCreateHottest100();
-                  }}
-                  className="block px-4 py-2 rounded hover:bg-red-200 dark:hover:bg-gray-600 dark:hover:text-white flex items-center"
-                >
-                  🎵 CREATE
-                </Link>
-              </li>
+              <>
+                <li>
+                  <Link
+                    to="#" // Using # to prevent navigation
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleCreateHottest100();
+                    }}
+                    className="block px-4 py-2 rounded hover:bg-red-200 dark:hover:bg-gray-600 dark:hover:text-white flex items-center"
+                  >
+                    🎵 CREATE
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="#" // Using # to prevent navigation
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleDownloadHottest100Excel();
+                    }}
+                    className="block px-4 py-2 rounded hover:bg-red-200 dark:hover:bg-gray-600 dark:hover:text-white flex items-center"
+                  >
+                    📥 EXPORT
+                  </Link>
+                </li>
+              </>
             )}
             <li>
               <Link
@@ -207,7 +268,7 @@ const handleCreateHottest100 = async () => {
               <Link
                 to="/"
                 style={{ fontFamily: "FuturaNowBold" }}
-                className="relative text-white font-bold text-4xl mt-2"
+                className="relative text-white text-4xl mt-2"
               >
                 W
               </Link>
@@ -238,7 +299,7 @@ const handleCreateHottest100 = async () => {
       </nav>
       <div className="justify-center">
         {emailAddresses.length > 0 && (
-          <div className="fixed top-40 left-1/2 transform -translate-x-1/2 z-50 mx-auto text-sm sm:text-base w-[66vw] md:w-[42vw] lg:w-[35vw] xl:w-[28vw]">
+          <div className="fixed top-32 left-1/2 transform -translate-x-1/2 z-50 mx-auto text-sm sm:text-base w-[66vw] md:w-[42vw] lg:w-[35vw] xl:w-[28vw]">
             {emailAddresses.map(
               (emailObj, index) =>
                 !emailObj.verified && (
@@ -262,9 +323,74 @@ const handleCreateHottest100 = async () => {
                           Only votes from verified accounts count!
                         </p>
                         <p class="text-sm">
-                          Check your ANU email for the verification link to
-                          vote.
+                          Check your ANU email for the verification link (may
+                          take up to 1 hour). You can save votes now, but don't
+                          forget to verify later.
                         </p>
+                        {(
+                          <p className="text-sm">
+                            Can't find it?{" "}
+                            <a
+                              href="#"
+                              className="text-sm underline text-bold text-red-700 mt-1"
+                              onClick={async (e) => {
+                                e.preventDefault();
+
+                                const lastClickTime = sessionStorage.getItem(
+                                  "lastResendClickTime"
+                                );
+                                const currentTime = new Date().getTime();
+                                const tenMinutes = 10 * 60 * 1000; // 10 minutes in milliseconds
+
+                                if (
+                                  lastClickTime &&
+                                  currentTime - parseInt(lastClickTime, 10) <
+                                    tenMinutes
+                                ) {
+                                  alert(
+                                    "Please wait 10 minutes before resending the verification email."
+                                  );
+                                  return;
+                                }
+
+                                try {
+                                  const response = await fetch(
+                                    "https://api.woroni100.com/api/resend-verification/",
+                                    {
+                                      method: "POST",
+                                      headers: {
+                                        "Content-Type": "application/json",
+                                      },
+                                      body: JSON.stringify({
+                                        email: emailObj.email,
+                                      }),
+                                    }
+                                  );
+                                  if (!response.ok) {
+                                    const resJson = await response.json();
+                                    // You might want to display a more specific error message from resJson
+                                    alert(
+                                      "Failed to send verification email. Please try again."
+                                    );
+                                  } else {
+                                    alert("Verification email sent!");
+                                    sessionStorage.setItem(
+                                      "lastResendClickTime",
+                                      currentTime.toString()
+                                    ); // Store the current time
+                                  }
+                                } catch (err) {
+                                  alert(
+                                    "An error occurred while trying to send the verification email."
+                                  );
+                                  console.error(err); // Log the error for debugging
+                                }
+                              }}
+                            >
+                              Resend verification email.
+                            </a>
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>
