@@ -13,6 +13,17 @@ from django.http import JsonResponse
 from allauth.account.models import EmailAddress
 from allauth.account.utils import send_email_confirmation
 
+from django.core.cache import cache
+from django.core.mail import send_mail
+from django.core.mail import EmailMessage
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import uuid
+
+from django.template import loader
+
+
+
 User = get_user_model()
 
 @api_view(["POST"])
@@ -74,18 +85,53 @@ def get_user_votes(request):
         
 
 @api_view(['POST', 'PUT'])
-def submit_votes(request):
-    user = request.user
-    spotify_songs = request.data.get('songs', [])  # These are already SpotifySong instances
-    # Validation: Ensure the user is submitting up to 10 songs
+def store_votes(request):
+    if request.method == 'POST':
+        data = request.data
+        uid = data.get('uid')
+        votes = data.get('votes')
+        
+        # 1. Generate a unique token
+        token = str(uuid.uuid4())
+        
+        # 2. Store data in cache
+        cache.set(token, {'uid': uid, 'votes': votes}, timeout=86400) # 24-hour timeout
+
+        # 3. Construct and send confirmation email
+        confirm_url = f"http://localhost/confirm-votes/?token={token}"        
+        subject = "Confirm Your Vote"
+
+        html_message = loader.render_to_string(
+            'confirm_votes.html',
+            {'confirm_url': confirm_url}
+        )
+
+        from_email = "noreply@woroni100.com"
+        recipient_list = [f"{uid}@anu.edu.au"]
+
+        email = EmailMessage(subject, html_message, from_email, recipient_list)
+        email.content_subtype = "html"  # this makes the body HTML only
+        email.send()
+        
+        return JsonResponse({"message": "Confirmation email sent."})
+    return JsonResponse({"error": "Invalid request method"}, status=405)
+
+def save_user_votes(user, spotify_songs):
+    """
+    Saves or updates a user's votes in the database.
+    """
+    # Validation: Ensure the user is submitting more than 1 song
+    if len(spotify_songs) == 0:
+        return {'error': 'You cannot select 0 songs.'}
     if len(spotify_songs) > 10:
-        return Response({'error': 'You can only select up to 10 songs.'}, status=status.HTTP_400_BAD_REQUEST)
+        return {'error': 'You can only select up to 10 songs.'}
+
     # Retrieve current votes for the user
-    current_votes = set(Vote.objects.filter(username=user.username).values_list('song_id', flat=True))
+    current_votes = set(Vote.objects.filter(username=user).values_list('song_id', flat=True))
     new_song_ids = set()
     new_votes = []
+    
     for spotify_song in spotify_songs:
-        print(spotify_song)
         new_song_ids.add(spotify_song["song_id"])
         # Check if the song is already in the database
         song, _ = Song.objects.get_or_create(
@@ -98,14 +144,44 @@ def submit_votes(request):
         )
         if spotify_song["song_id"] not in current_votes:
             new_votes.append(Vote(username=user, song=song))
+    
     if new_votes:
         Vote.objects.bulk_create(new_votes)
+    
     # Remove songs that the user has unselected
     removed_votes = current_votes - new_song_ids
     if removed_votes:
-        Vote.objects.filter(username=user.username, song_id__in=removed_votes).delete()
-    return Response({'message': 'Votes submitted successfully to database!'}, status=status.HTTP_200_OK)
+        Vote.objects.filter(username=user, song_id__in=removed_votes).delete()
+    
+    return {'message': 'Votes submitted successfully to database!'}
 
+
+@api_view(['GET'])
+def confirm_votes(request):
+    token = request.GET.get('token')
+    
+    if not token:
+        return Response({'error': 'Invalid link. Missing token.'}, status=status.HTTP_400_BAD_REQUEST)
+    print(token)
+    cached_data = cache.get(token)
+
+    if cached_data:
+        uid = cached_data['uid']
+        votes = cached_data['votes']
+
+        # Find or create a user for this UID
+        user, _ = User.objects.get_or_create(username=uid, defaults={'email': f'{uid}@anu.edu.au'})
+        
+        # Call the refactored function
+        result = save_user_votes(user, votes)
+        if 'error' in result:
+            return Response({'error': result['error']}, status=status.HTTP_400_BAD_REQUEST)
+        
+        cache.delete(token)
+
+        return Response({'message': 'Your vote has been submitted successfully!'}, status=status.HTTP_200_OK)
+    
+    return Response({'error': 'This link has expired or is invalid.'}, status=status.HTTP_404_NOT_FOUND)
 
 class UserListView(generics.ListAPIView):
     User = get_user_model()
