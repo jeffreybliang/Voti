@@ -10,7 +10,8 @@ from rest_framework.response import Response
 from spotify.spotify_client import SpotifySong, SpotifyClient
 import spotipy
 from django.http import JsonResponse
-
+from allauth.account.models import EmailAddress
+from allauth.account.utils import send_email_confirmation
 
 from django.core.cache import cache
 from django.core.mail import send_mail
@@ -21,6 +22,27 @@ import uuid
 
 from django.template import loader
 
+
+
+User = get_user_model()
+
+@api_view(["POST"])
+def resend_verification_email(request):
+    email = request.data.get("email")
+    if not email:
+        return Response({"error": "Email is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        # Avoid leaking user existence
+        return Response(status=status.HTTP_200_OK)
+
+    email_address = EmailAddress.objects.filter(user=user, email=email).first()
+    if email_address and not email_address.verified:
+        send_email_confirmation(request, user, email=email)
+
+    return Response({"detail": "Verification email sent if applicable."}, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def search_songs(request):
@@ -60,6 +82,7 @@ def get_user_votes(request):
     # Serialize and return the data
     serializer = SpotifySongSerializer(spotify_songs, many=True)
     return Response({'songs': serializer.data}, status=status.HTTP_200_OK)
+        
 
 @api_view(['POST', 'PUT'])
 def store_votes(request):
@@ -139,7 +162,7 @@ def confirm_votes(request):
     
     if not token:
         return Response({'error': 'Invalid link. Missing token.'}, status=status.HTTP_400_BAD_REQUEST)
-    print(token)
+
     cached_data = cache.get(token)
 
     if cached_data:
@@ -160,8 +183,6 @@ def confirm_votes(request):
         return Response({'message': 'Your vote has been submitted successfully!'}, status=status.HTTP_200_OK)
     
     return Response({'error': 'This link has expired or is invalid.'}, status=status.HTTP_404_NOT_FOUND)
-
-
 
 class UserListView(generics.ListAPIView):
     User = get_user_model()

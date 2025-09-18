@@ -19,6 +19,8 @@ from django.urls import path, include
 from django.views import defaults
 from accounts.views import CustomSignupView
 from allauth.headless.constants import Client
+from django.urls import re_path
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -31,4 +33,6 @@ urlpatterns = [
     ),
     path("_allauth/", include("allauth.headless.urls")),
     path('api/', include('api.urls')),  
+    re_path(r"^(?!api/).*", TemplateView.as_view(template_name="index.html")),
+
 ]

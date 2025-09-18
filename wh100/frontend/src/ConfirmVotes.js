@@ -7,8 +7,10 @@ export default function ConfirmVotes() {
   const [status, setStatus] = useState('loading'); // 'loading', 'success', 'error'
   const [message, setMessage] = useState('');
 
+  const token = searchParams.get('token');
+
   useEffect(() => {
-    const token = searchParams.get('token');
+    if (!token) return;
 
     const confirmVote = async () => {
       if (!token) {
@@ -35,14 +37,14 @@ export default function ConfirmVotes() {
           setStatus('error');
           setMessage(data.error || 'Failed to confirm your vote. The token may be invalid or expired.');
         }
-      } catch (error) {
+      } catch (error) { 
         setStatus('error');
         setMessage('An error occurred. Please try again later.');
       }
     };
 
     confirmVote();
-  }, [searchParams]);
+  }, [token]);
 
   const renderContent = () => {
     switch (status) {
