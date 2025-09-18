@@ -9,7 +9,5 @@ urlpatterns = [
     path('search/', search_songs, name='search_songs'),
     path('spotify/', include('spotify.urls')),
     path('store-vote/', store_vote, name='store-vote'),
-    
-    # The API endpoint that the confirmation email link will hit.
     path('confirm-vote/', confirm_vote, name='confirm-vote'),
 ]
