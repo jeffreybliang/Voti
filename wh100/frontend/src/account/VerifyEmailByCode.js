@@ -15,8 +15,8 @@ export default function VerifyEmail () {
     verifyEmail(code).then((content) => {
       setResponse((r) => { return { ...r, content } })
     }).catch((e) => {
-      console.error(e)
-      window.alert(e)
+      // console.error(e)
+      // window.alert(e)
     }).then(() => {
       setResponse((r) => { return { ...r, fetching: false } })
     })

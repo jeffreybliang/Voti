@@ -42,7 +42,7 @@ function NavBarItem({ href, to, icon, name, onClick }) {
   );
 }
 
-export default function NavBar({ emailAddresses, setEmailAddresses }) {
+export default function NavBar() {
   const user = useUser();
   const config = useConfig();
   const [opened, setOpened] = useState(false);
@@ -50,7 +50,6 @@ export default function NavBar({ emailAddresses, setEmailAddresses }) {
 
   function handleLogout(event) {
     event.preventDefault(); // Prevent navigation
-    localStorage.removeItem("emailAddresses"); // Clear stored emails
     localStorage.removeItem("userVotes"); // Clear stored emails
     localStorage.removeItem("initialVotes"); // Clear stored emails
     logout()
@@ -170,26 +169,6 @@ export default function NavBar({ emailAddresses, setEmailAddresses }) {
     </>
   );
 
-  useEffect(() => {
-    // Listen for the "storage" event to handle cross-tab or window updates
-    const handleStorageChange = (event) => {
-      if (event.key === "emailAddresses") {
-        try {
-          const updatedEmails = JSON.parse(event.newValue);
-          setEmailAddresses(updatedEmails); // Update the state when localStorage is modified
-        } catch (error) {
-          // console.error("Error parsing localStorage data", error);
-        }
-      }
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-
-    // Cleanup the event listener when the component unmounts
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }); // Empty dependency to set up listener once
 
   const authHamburger = (
     <div className="flex items-center absolute right-3">
@@ -297,108 +276,6 @@ export default function NavBar({ emailAddresses, setEmailAddresses }) {
           </div>
         </div>
       </nav>
-      <div className="justify-center">
-        {emailAddresses.length > 0 && (
-          <div className="fixed top-32 left-1/2 transform -translate-x-1/2 z-50 mx-auto text-sm sm:text-base w-[66vw] md:w-[42vw] lg:w-[35vw] xl:w-[28vw]">
-            {emailAddresses.map(
-              (emailObj, index) =>
-                !emailObj.verified && (
-                  <div
-                    class="bg-red-100/95 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md"
-                    role="alert"
-                  >
-                    <div class="flex">
-                      <div class="py-1">
-                        <svg
-                          class="fill-current h-6 w-6 text-red-500 mr-4"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          transform="scale(1,-1)"
-                        >
-                          <path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z" />
-                        </svg>
-                      </div>
-                      <div>
-                        <p class="font-bold text-sm">
-                          Only votes from verified accounts count!
-                        </p>
-                        <p class="text-sm">
-                          Check your ANU email for the verification link (may
-                          take up to 1 hour). You can save votes now, but don't
-                          forget to verify later.
-                        </p>
-                        {(
-                          <p className="text-sm">
-                            Can't find it?{" "}
-                            <a
-                              href="#"
-                              className="text-sm underline text-bold text-red-700 mt-1"
-                              onClick={async (e) => {
-                                e.preventDefault();
-
-                                const lastClickTime = sessionStorage.getItem(
-                                  "lastResendClickTime"
-                                );
-                                const currentTime = new Date().getTime();
-                                const tenMinutes = 10 * 60 * 1000; // 10 minutes in milliseconds
-
-                                if (
-                                  lastClickTime &&
-                                  currentTime - parseInt(lastClickTime, 10) <
-                                    tenMinutes
-                                ) {
-                                  alert(
-                                    "Please wait 10 minutes before resending the verification email."
-                                  );
-                                  return;
-                                }
-
-                                try {
-                                  const response = await fetch(
-                                    "https://api.woroni100.com/api/resend-verification/",
-                                    {
-                                      method: "POST",
-                                      headers: {
-                                        "Content-Type": "application/json",
-                                      },
-                                      body: JSON.stringify({
-                                        email: emailObj.email,
-                                      }),
-                                    }
-                                  );
-                                  if (!response.ok) {
-                                    const resJson = await response.json();
-                                    // You might want to display a more specific error message from resJson
-                                    alert(
-                                      "Failed to send verification email. Please try again."
-                                    );
-                                  } else {
-                                    alert("Verification email sent!");
-                                    sessionStorage.setItem(
-                                      "lastResendClickTime",
-                                      currentTime.toString()
-                                    ); // Store the current time
-                                  }
-                                } catch (err) {
-                                  alert(
-                                    "An error occurred while trying to send the verification email."
-                                  );
-                                  console.error(err); // Log the error for debugging
-                                }
-                              }}
-                            >
-                              Resend verification email.
-                            </a>
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                )
-            )}
-          </div>
-        )}
-      </div>
     </div>
   );
 }

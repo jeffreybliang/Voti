@@ -59,9 +59,9 @@ def get_user_votes(request):
     return Response({'songs': serializer.data}, status=status.HTTP_200_OK)
 
 @api_view(['POST', 'PUT'])
-def store_vote(request):
+def store_votes(request):
     if request.method == 'POST':
-        data = request.json()  # Assuming a JSON payload from React
+        data = request.data
         uid = data.get('uid')
         votes = data.get('votes')
         
@@ -72,7 +72,7 @@ def store_vote(request):
         cache.set(token, {'uid': uid, 'votes': votes}, timeout=86400) # 24-hour timeout
 
         # 3. Construct and send confirmation email
-        confirm_url = f"https://woroni100.com/confirm-vote/?token={token}"        
+        confirm_url = f"localhost/confirm-vote/?token={token}"        
         subject = "Confirm Your Vote"
         message = f"Click the link to confirm your vote: {confirm_url}"
         from_email = "noreply@woroni100.com"
@@ -83,25 +83,13 @@ def store_vote(request):
         return JsonResponse({"message": "Confirmation email sent."})
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
-
-@api_view(['POST', 'PUT'])
-def submit_votes(request):
-    user = request.user
-    spotify_songs = request.data.get('songs', [])
-    
-    result = save_user_votes(user, spotify_songs)
-
-    if 'error' in result:
-        return Response(result, status=status.HTTP_400_BAD_REQUEST)
-    
-    return Response(result, status=status.HTTP_200_OK)
-
-
 def save_user_votes(user, spotify_songs):
     """
     Saves or updates a user's votes in the database.
     """
-    # Validation: Ensure the user is submitting up to 10 songs
+    # Validation: Ensure the user is submitting more than 1 song
+    if len(spotify_songs) == 0:
+        return {'error': 'You cannot select 0 songs.'}
     if len(spotify_songs) > 10:
         return {'error': 'You can only select up to 10 songs.'}
 
@@ -136,7 +124,7 @@ def save_user_votes(user, spotify_songs):
 
 
 @api_view(['GET'])
-def confirm_vote(request):
+def confirm_votes(request):
     token = request.GET.get('token')
     
     if not token:

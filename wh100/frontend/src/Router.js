@@ -22,6 +22,8 @@ import Reauthenticate from './account/Reauthenticate'
 import Root from './Root'
 import { useConfig } from './auth/hooks'
 import Rules from './Rules'
+import ConfirmVotes from './ConfirmVotes'
+
 
 function createRouter (config) {
   return createBrowserRouter([
@@ -35,11 +37,15 @@ function createRouter (config) {
         },
         {
           path: '/vote',
-          element: <AuthenticatedRoute><Dashboard /></AuthenticatedRoute>
+          element: <Dashboard />
         },
         {
           path: '/rules',
           element: <Rules />
+        },
+        {
+          path: '/confirm-votes',
+          element: <ConfirmVotes />
         },
         {
           path: '/account/login',

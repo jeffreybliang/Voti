@@ -6,40 +6,6 @@ import Footer from "./Footer";
 import { useLocation } from "react-router-dom";
 
 export default function Root() {
-  const [emailAddresses, setEmailAddresses] = useState(() => {
-    // Try to load from localStorage on initial load
-    const storedEmailAddresses = localStorage.getItem("emailAddresses");
-    return storedEmailAddresses ? JSON.parse(storedEmailAddresses) : [];
-  });
-
-  // Fetch email addresses if they are not already set
-  useEffect(() => {
-    // Load from localStorage immediately to populate fast
-    const storedEmails = localStorage.getItem("emailAddresses");
-  
-    if (storedEmails) {
-      try {
-        const parsedEmails = JSON.parse(storedEmails);
-        if (Array.isArray(parsedEmails)) {
-          setEmailAddresses(parsedEmails);
-        }
-      } catch (error) {
-        console.error("Failed to parse stored emails:", error);
-      }
-    }
-  
-    allauth
-    .getEmailAddresses()
-    .then((resp) => {
-      if (resp.status === 200) {
-        setEmailAddresses(resp.data);
-        localStorage.setItem("emailAddresses", JSON.stringify(resp.data));
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching email addresses:", error);
-    });
-}, []); // Run once on page load
     
   const location = useLocation();
 
@@ -77,14 +43,11 @@ export default function Root() {
   
   return (
     <div className="flex flex-col min-h-screen">
-      <NavBar
-        emailAddresses={emailAddresses}
-        setEmailAddresses={setEmailAddresses}
-      />
+      <NavBar      />
 
       <main className="flex-grow">
         <div className="container-fluid">
-          <Outlet context={{ emailAddresses, setEmailAddresses }} />
+          <Outlet />
         </div>
       </main>
 

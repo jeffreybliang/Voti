@@ -41,9 +41,9 @@ export function AuthContextProvider(props) {
     function onAuthChanged(e) {
       setAuth((auth) => {
         if (typeof auth === "undefined") {
-          console.log("Authentication status loaded");
+          // console.log("Authentication status loaded");
         } else {
-          console.log("Authentication status updated");
+          // console.log("Authentication status updated");
         }
         return e.detail;
       });
