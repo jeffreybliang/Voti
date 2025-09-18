@@ -67,10 +67,10 @@ function createRouter (config) {
           path: '/account/logout',
           element: <Logout />
         },
-        {
-          path: '/account/signup',
-          element: <AnonymousRoute><Signup /></AnonymousRoute>
-        },
+        // {
+        //   path: '/account/signup',
+        //   element: <AnonymousRoute><Signup /></AnonymousRoute>
+        // },
         {
           path: '/account/verify-email',
           element: config.data.account.email_verification_by_code_enabled ? <VerifyEmailByCode /> : <VerificationEmailSent />

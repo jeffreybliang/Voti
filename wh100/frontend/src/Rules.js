@@ -49,7 +49,7 @@ export default function Rules() {
               style={{ fontFamily: "FuturaNowRegular" }}
             >
               <ul className="list-disc list-inside">
-                <li className>
+                <li>
                   Voting is open until 11:59 PM AEST on Monday 7 July,
                   2025.
                 </li>

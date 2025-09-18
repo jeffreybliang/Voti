@@ -41,7 +41,7 @@ export default function UidModal({
       onClick={handleCloseModal}
     >
       <div
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-sm mx-4 relative"
+        className="bg-white dark:bg-gray-700 rounded-lg shadow-xl w-full max-w-sm mx-4 relative"
         onClick={(e) => e.stopPropagation()}
       >
         <div
@@ -59,7 +59,7 @@ export default function UidModal({
               Almost there!
             </h3>
             <p className="mt-2 text-lg text-gray-700 dark:text-gray-400">
-              Enter your ANU uID to get your confirmation link :)
+              Enter your ANU uID to confirm!
             </p>
           </div>
           <div className="flex flex-col items-center">
@@ -80,7 +80,7 @@ export default function UidModal({
                 }
               }}
               maxLength={8}
-              className="w-32 px-2 h-10 text-lg rounded-lg border border-gray-400 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-32 px-5 h-10 text-lg rounded-lg border border-gray-400 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
             {/* Error message display */}
             {uidError && (
@@ -89,10 +89,10 @@ export default function UidModal({
               </p>
             )}
           </div>
-          <div className="px-6 py-4 flex justify-end space-x-2 border-t border-gray-200 dark:border-gray-700 w-full">
+          <div className="px-6 py-4 flex justify-center space-x-2 border-t border-gray-200 dark:border-gray-700 w-full">
             <button
               onClick={handleCloseModal}
-              className="px-4 py-2 rounded-lg text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500"
+              className="px-4 py-2 rounded-full text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500"
             >
               Cancel
             </button>
@@ -111,7 +111,7 @@ export default function UidModal({
                   );
                 }
               }}
-              className="relative px-4 py-2 rounded-lg text-white bg-green-600 hover:bg-green-500"
+              className="relative px-4 py-2 rounded-full text-white bg-green-600 hover:bg-green-500"
             >
               <span className={showConfirmSpinner ? "opacity-0" : ""}>
                 Confirm & Send
@@ -140,11 +140,11 @@ export default function UidModal({
                 className="text-xl font-semibold text-gray-900 dark:text-gray-100"
                 style={{ fontFamily: "AdamCG" }}
               >
-                Link Sent!
+                Link Sent! 🚀
               </h3>
               <p className="mt-2 text-lg text-gray-700 dark:text-gray-200">
-                Check your ANU email for the confirmation link. Click it to make
-                your vote official.
+              We've sent a link to your ANU email. Click it to confirm your
+              vote, and you're all done!
               </p>
               <div className="mt-6">
                 <button
@@ -152,7 +152,7 @@ export default function UidModal({
                     handleCloseModal();
                     setInitialVotes(votes);
                   }}
-                  className="px-6 py-2 rounded-lg text-white bg-blue-600 hover:bg-blue-500"
+                  className="px-6 py-2 rounded-full text-white bg-blue-600 hover:bg-blue-500"
                 >
                   Close
                 </button>

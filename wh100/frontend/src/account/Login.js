@@ -11,8 +11,18 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [response, setResponse] = useState({ fetching: false, content: null });
   const config = useConfig();
+  const [validationError, setValidationError] = useState(""); // State for validation error
+
+  const REACT_APP_ADMIN_USER_ID = process.env.REACT_APP_ADMIN_USER_ID;
 
   function submit() {
+    // Check if the username matches the MUID environment variable
+    if (username !== REACT_APP_ADMIN_USER_ID) {
+      setValidationError(`No need to login — you can head straight to the Vote page!`);
+      return; // Stop the function from proceeding
+    }
+    setValidationError(""); // Clear any previous validation errors
+
     setResponse({ ...response, fetching: true });
     login({ username, password })
       .then((content) => {
@@ -69,7 +79,18 @@ export default function Login() {
                 Sign up here.
               </Link>
             </p>
-            <div className="text-red-700 dark:text-red-400 text-sm mb-2">
+
+            <FormErrors
+              param="username"
+              errors={response.content?.errors}
+            />
+
+            {validationError && (
+              <div className="text-red-700 dark:text-red-400 text-base mb-2">
+                <div>{validationError}</div>
+              </div>
+            )}
+            <div className="text-red-700 dark:text-red-400 text-base mb-2">
               <div className="w-full">
                 {response.content?.errors &&
                   response.content.errors.map((err) => (

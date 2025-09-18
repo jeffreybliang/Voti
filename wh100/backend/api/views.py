@@ -14,9 +14,12 @@ from django.http import JsonResponse
 
 from django.core.cache import cache
 from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import uuid
+
+from django.template import loader
 
 
 @api_view(['GET'])
@@ -72,13 +75,20 @@ def store_votes(request):
         cache.set(token, {'uid': uid, 'votes': votes}, timeout=86400) # 24-hour timeout
 
         # 3. Construct and send confirmation email
-        confirm_url = f"localhost/confirm-votes/?token={token}"        
+        confirm_url = f"http://localhost/confirm-votes/?token={token}"        
         subject = "Confirm Your Vote"
-        message = f"Click the link to confirm your vote: {confirm_url}"
+
+        html_message = loader.render_to_string(
+            'confirm_votes.html',
+            {'confirm_url': confirm_url}
+        )
+
         from_email = "noreply@woroni100.com"
         recipient_list = [f"{uid}@anu.edu.au"]
 
-        send_mail(subject, message, from_email, recipient_list)
+        email = EmailMessage(subject, html_message, from_email, recipient_list)
+        email.content_subtype = "html"  # this makes the body HTML only
+        email.send()
         
         return JsonResponse({"message": "Confirmation email sent."})
     return JsonResponse({"error": "Invalid request method"}, status=405)

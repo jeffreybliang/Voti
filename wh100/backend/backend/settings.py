@@ -94,13 +94,14 @@ CORS_ALLOW_CREDENTIALS = True
 # SESSION_COOKIE_HTTPONLY = False
 # CSRF_COOKIE_HTTPONLY = False
 
-
+import os
 ROOT_URLCONF = 'backend.urls'
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

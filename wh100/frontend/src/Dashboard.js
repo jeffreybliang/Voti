@@ -225,9 +225,9 @@ export default function Dashboard() {
       const responseData = await response.json();
       // console.log("Votes submitted successfully:", responseData);
       setInitialVotes(votes);
-      setTemporaryMessage("Votes submitted successfully");
-      setShowTemporaryAlert(true);
-      setAlertKey((prevKey) => prevKey + 1);
+      // setTemporaryMessage("Votes submitted successfully");
+      // setShowTemporaryAlert(true);
+      // setAlertKey((prevKey) => prevKey + 1);
     } catch (error) {
       // console.log(error);
       setShowStoreVotesSpinner(false);

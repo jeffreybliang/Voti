@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background-color: #ffebee;
+        color: #333;
+      }
+      .email-container {
+        max-width: 600px;
+        margin: 40px auto;
+        background: #fff;
+        border-top: 6px solid #dc2626;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      }
+      .logo img {
+        max-width: 300px;
+        margin-bottom: 30px;
+      }
+      .email-header {
+        color: #dc2626;
+        font-size: 30px;
+        margin-bottom: 20px;
+        font-weight: bold;
+      }
+      .email-body {
+        font-size: 20px;
+        margin-bottom: 20px;
+        line-height: 1.6;
+      }
+      .code-box {
+        background: #fee2e2;
+        color: #dc2626;
+        font-size: 32px;
+        font-weight: bold;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px auto;
+      }
+
+      /* Button styling */
+      .button-link {
+        display: inline-block;
+        padding: 15px 30px;
+        background-color: #dc2626;
+        color: #ffffff;
+        font-size: 18px;
+        font-weight: bold;
+        text-decoration: none;
+        border-radius: 50px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s ease, transform 0.3s ease,
+          box-shadow 0.3s ease;
+        letter-spacing: 1px;
+      }
+      .button-link:hover {
+        background-color: #b91c1c;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="email-container">
+      <div class="logo">
+        <img
+          src="https://www.woroni.com.au/wp-content/uploads/2019/05/WORONI-red-1200x300.png"
+          alt="Woroni Logo"
+        />
+      </div>
+      <div class="email-header">📧 Email Confirmation</div>
+      <div class="email-body">
+        <p style="font-size: 20px">
+          Last step! Please click the button below to confirm your votes.
+        </p>
+
+        <a href="{{ confirm_url }}" class="button-link">CONFIRM VOTES</a>
+
+        <p style="margin-top: 30px">
+          If the button above does not work, you can also copy and paste the
+          following link into your browser:
+        </p>
+        <p class="link"><a href="{{ confirm_url }}">{{ confirm_url }}</a></p>
+      </div>
+    </div>
+  </body>
+</html>
