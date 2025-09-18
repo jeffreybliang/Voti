@@ -1,10 +1,17 @@
 import { useState } from "react";
 import Spinner from "./Spinner";
-export default function UidModal({ showUidModal, setShowUidModal, saveVotes, votes, setInitialVotes }) {
+export default function UidModal({
+  showUidModal,
+  setShowUidModal,
+  saveVotes,
+  votes,
+  setInitialVotes,
+}) {
   const [uid, setUid] = useState("");
   const [linkSent, setLinkSent] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [showConfirmSpinner, setShowConfirmSpinner] = useState(false);
+  const [uidError, setUidError] = useState("");
 
   const handleSendLink = async () => {
     if (!uid) return;
@@ -39,7 +46,9 @@ export default function UidModal({ showUidModal, setShowUidModal, saveVotes, vot
       >
         <div
           className={`transition-all duration-300 ${
-            !linkSent ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
+            !linkSent
+              ? "opacity-100 scale-100"
+              : "opacity-0 scale-95 pointer-events-none"
           }`}
         >
           <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 w-full text-center">
@@ -53,15 +62,32 @@ export default function UidModal({ showUidModal, setShowUidModal, saveVotes, vot
               Enter your ANU uID to get your confirmation link :)
             </p>
           </div>
-          <div className="px-6 py-4 flex justify-center w-full">
+          <div className="flex flex-col items-center">
             <input
               type="text"
               placeholder="u1234567"
               value={uid}
-              onChange={(e) => setUid(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                const validRegex = /^[uU]\d{0,7}$/;
+
+                if (
+                  value === "" ||
+                  value.toLowerCase() === "u" ||
+                  validRegex.test(value)
+                ) {
+                  setUid(value);
+                }
+              }}
               maxLength={8}
               className="w-32 px-2 h-10 text-lg rounded-lg border border-gray-400 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
+            {/* Error message display */}
+            {uidError && (
+              <p className="mt-2 text-red-700 dark:text-red-400 text-sm text-center">
+                {uidError}
+              </p>
+            )}
           </div>
           <div className="px-6 py-4 flex justify-end space-x-2 border-t border-gray-200 dark:border-gray-700 w-full">
             <button
@@ -72,46 +98,60 @@ export default function UidModal({ showUidModal, setShowUidModal, saveVotes, vot
             </button>
             <button
               onClick={() => {
-                handleSendLink();
-                setShowConfirmSpinner(true);
-            }}
+                const finalRegex = /^[uU]\d{7}$/;
+                if (finalRegex.test(uid)) {
+                  // If valid, clear any errors and proceed
+                  setUidError("");
+                  handleSendLink();
+                  setShowConfirmSpinner(true);
+                } else {
+                  // If invalid, show an error message
+                  setUidError(
+                    "User ID must start with 'u' and be followed by 7 digits."
+                  );
+                }
+              }}
               className="relative px-4 py-2 rounded-lg text-white bg-green-600 hover:bg-green-500"
             >
-                <span className={showConfirmSpinner ? "opacity-0" : ""}>
+              <span className={showConfirmSpinner ? "opacity-0" : ""}>
                 Confirm & Send
-                </span>
-
-                {showConfirmSpinner && (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <Spinner colorClass="text-green-400"  className="w-6 h-6 text-white" />
-                  </div>
-                )}
-
+              </span>
+              {showConfirmSpinner && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Spinner
+                    colorClass="text-green-400"
+                    className="w-6 h-6 text-white"
+                  />
+                </div>
+              )}
             </button>
           </div>
-        </div>
+        </div>{" "}
         <div
           className={`absolute inset-0 transition-all duration-300 flex flex-col justify-center items-center text-center px-6 py-6 ${
-            linkSent ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
+            linkSent
+              ? "opacity-100 scale-100"
+              : "opacity-0 scale-95 pointer-events-none"
           }`}
         >
           {linkSent && (
             <>
               <h3
-                className="text-xl font-semibold text-gray-900 dark:text-white"
+                className="text-xl font-semibold text-gray-900 dark:text-gray-100"
                 style={{ fontFamily: "AdamCG" }}
               >
                 Link Sent!
               </h3>
-              <p className="mt-2 text-lg text-gray-700 dark:text-gray-400">
-                Check your ANU email for the confirmation link. Click it to make your vote official.
+              <p className="mt-2 text-lg text-gray-700 dark:text-gray-200">
+                Check your ANU email for the confirmation link. Click it to make
+                your vote official.
               </p>
               <div className="mt-6">
                 <button
                   onClick={() => {
                     handleCloseModal();
                     setInitialVotes(votes);
-                }}
+                  }}
                   className="px-6 py-2 rounded-lg text-white bg-blue-600 hover:bg-blue-500"
                 >
                   Close

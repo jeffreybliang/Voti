@@ -9,9 +9,9 @@ export const deadline = "2025-09-30T23:59:59+10:00";
 
 export default function Home() {
   const user = useUser();
-  const linkPath = user ? "/vote" : "/account/signup";
-  const buttonText = user ? "VOTE NOW" : "SIGNUP TO VOTE";
-  const leftAlign = user ? "left-[24%] sm:left-[36%]" : "left-[14%] sm:left-[29%]";
+  const linkPath = user ? "/vote" : "/vote";
+  const buttonText = user ? "VOTE NOW" : "VOTE NOW";
+  const leftAlign = user ? "left-[24%] sm:left-[36%]" : "left-[24%] sm:left-[36%]";
   return (
     <div className="flex justify-center w-screen h-screen bg-[url('media/best400.png')] dark:bg-[url('media/darkbest.png')] bg-[length:100%_100%] bg-no-repeat fixed top-0 left-0 z-40">
       <div className="justify-center">

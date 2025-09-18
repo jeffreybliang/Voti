@@ -270,7 +270,7 @@ export default function NavBar() {
                 />
               ) : null}
               <NavBarItem to="/rules" name="RULES" />
-              {user ? authNav : anonNav}
+              {/* {user ? authNav : anonNav} */}
             </ul>
             {user && authHamburger}
           </div>

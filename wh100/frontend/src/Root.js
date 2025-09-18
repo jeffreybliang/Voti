@@ -16,6 +16,7 @@ export default function Root() {
       "/": baseTitle,
       "/vote": "Vote | " + baseTitle,
       "/rules": "Rules | " + baseTitle,
+      "/confirm-votes": "Confirm Votes | " + baseTitle,
       "/account/login": "Login | " + baseTitle,
       "/account/signup": "Sign Up | " + baseTitle,
       "/account/login/code": "Login Code | " + baseTitle,

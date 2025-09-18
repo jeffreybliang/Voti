@@ -18,7 +18,7 @@ export default function ConfirmVotes() {
       }
 
       try {
-        const confirmUrl = `api/confirm-votes/?token=${token}`;
+        const confirmUrl = `/api/confirm-votes/?token=${token}`;
         const response = await fetch(confirmUrl, {
           method: 'GET',
           headers: {
