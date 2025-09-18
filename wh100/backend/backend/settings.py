@@ -221,7 +221,7 @@ ACCOUNT_FORMS = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://default:VNMYeuejNPwNJtdiMkxFQxqyanyxgJMd@maglev.proxy.rlwy.net:38029",  # Replace with your Railway Redis URL
+        "LOCATION": env('REDIS'),  # Replace with your Railway Redis URL
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
