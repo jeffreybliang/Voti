@@ -80,11 +80,6 @@ export default function Login() {
               </Link>
             </p>
 
-            <FormErrors
-              param="username"
-              errors={response.content?.errors}
-            />
-
             {validationError && (
               <div className="text-red-700 dark:text-red-400 text-base mb-2">
                 <div>{validationError}</div>
