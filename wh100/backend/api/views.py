@@ -132,14 +132,14 @@ def store_votes(request):
 
         # 3. Construct and send confirmation email
         confirm_url = f"https://woroni100.com/confirm-votes/?token={token}"        
-        subject = "Confirm Your Vote"
+        subject = "Confirm Your Votes!"
 
         html_message = loader.render_to_string(
             'account/email/confirm_votes.html',
             {'confirm_url': confirm_url}
         )
 
-        from_email = "noreply@woroni100.com"
+        from_email = "Woroni Hottest 100 <noreply@woroni100.com>"
         recipient_list = [f"{uid}@anu.edu.au"]
 
         email = EmailMessage(subject, html_message, from_email, recipient_list)
