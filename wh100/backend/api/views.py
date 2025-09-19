@@ -192,28 +192,38 @@ def save_user_votes(user, spotify_songs):
 @api_view(['GET'])
 def confirm_votes(request):
     token = request.GET.get('token')
+    print(f"Received token: {token}")  # Debug: Check the incoming token
     
     if not token:
+        print("No token provided in request.")  # Debug
         return Response({'error': 'Invalid link. Missing token.'}, status=status.HTTP_400_BAD_REQUEST)
 
     cached_data = cache.get(token)
+    print(f"Cached data retrieved: {cached_data}")  # Debug: Check cache content
 
     if cached_data:
         uid = cached_data['uid']
         votes = cached_data['votes']
+        print(f"UID: {uid}, Votes: {votes}")  # Debug: Check UID and votes
 
         # Find or create a user for this UID
-        user, _ = User.objects.get_or_create(username=uid, defaults={'email': f'{uid}@anu.edu.au'})
-        
+        user, created = User.objects.get_or_create(username=uid, defaults={'email': f'{uid}@anu.edu.au'})
+        print(f"User {'created' if created else 'retrieved'}: {user.username}")  # Debug
+
         # Call the refactored function
         result = save_user_votes(user, votes)
+        print(f"Result from save_user_votes: {result}")  # Debug: Check result
+
         if 'error' in result:
+            print(f"Error saving votes: {result['error']}")  # Debug
             return Response({'error': result['error']}, status=status.HTTP_400_BAD_REQUEST)
         
         cache.delete(token)
+        print(f"Token {token} deleted from cache.")  # Debug
 
         return Response({'message': 'Your vote has been submitted successfully!'}, status=status.HTTP_200_OK)
     
+    print("Token is invalid or expired.")  # Debug
     return Response({'error': 'This link has expired or is invalid.'}, status=status.HTTP_404_NOT_FOUND)
 
 class UserListView(generics.ListAPIView):
