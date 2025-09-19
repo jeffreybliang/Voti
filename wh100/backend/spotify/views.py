@@ -75,17 +75,16 @@ def get_spotify_client(request):
 @api_view(['GET'])
 @permission_classes([IsAdminUser])
 def create_hottest_100(request):
+    """
+    Creates a Spotify playlist of the top 100 songs based on all user votes.
+    """
     sp_client = get_spotify_client(request)
     if not isinstance(sp_client, spotipy.Spotify):
         return Response({'error': 'Spotify authentication required.'}, status=401)
 
-    # Only include verified users
-    verified_votes = Vote.objects.filter(username__emailaddress__verified=True)
-
-    # Count votes grouped by (song name, artists)
+    # Count votes grouped by (song name, artists) for all votes
     vote_counts = (
         Song.objects
-        .filter(vote__in=verified_votes)
         .values('name', 'artists')
         .annotate(vote_count=Count('vote'))
         .order_by('-vote_count')[:100]
@@ -93,7 +92,7 @@ def create_hottest_100(request):
 
     # For each unique (name, artists), get the first Song object (to retrieve song_id)
     song_map = defaultdict(list)
-    for song in Song.objects.filter(vote__in=verified_votes):
+    for song in Song.objects.all():  # Changed to include all songs
         key = (song.name, tuple(song.artists))
         song_map[key].append(song)
 
@@ -114,7 +113,6 @@ def create_hottest_100(request):
     return Response({"message": f"Playlist '{playlist_name}' created successfully with the top 100 songs!"})
 
 
-
 def get_artist_names(sp, artist_ids):
     cache = {}
     unique_ids = list(set(artist_ids))
@@ -130,12 +128,12 @@ def get_artist_names(sp, artist_ids):
 @api_view(['GET'])
 @permission_classes([IsAdminUser])
 def download_hottest_100_excel(request):
-    verified_votes = Vote.objects.filter(username__emailaddress__verified=True)
-
-    # Group by (name, artists) and count votes
+    """
+    Downloads an Excel file of the Hottest 100 songs based on all user votes.
+    """
+    # Group by (name, artists) and count votes for ALL songs
     vote_counts = (
         Song.objects
-        .filter(vote__in=verified_votes)
         .values('name', 'artists')
         .annotate(vote_count=Count('vote'))
         .order_by('-vote_count')
@@ -144,16 +142,16 @@ def download_hottest_100_excel(request):
     # Collect all artist IDs used
     all_artist_ids = set()
     for item in vote_counts:
-        all_artist_ids.update(item['artists'])  # assuming artists is a list of IDs/URIs
+        all_artist_ids.update(item['artists'])
 
     # If you need to strip to plain IDs:
     artist_ids = [aid.split(":")[-1] for aid in all_artist_ids]
-    sp = SpotifyClient().get_client()  # ← ensure you inject valid token
+    sp = SpotifyClient().get_client()
     artist_name_map = get_artist_names(sp, artist_ids)
 
-    # Map (name, artists) → list of Song objects
+    # Map (name, artists) → list of Song objects for all songs
     song_map = defaultdict(list)
-    for song in Song.objects.filter(vote__in=verified_votes):
+    for song in Song.objects.all():
         key = (song.name, tuple(song.artists))
         song_map[key].append(song)
 
