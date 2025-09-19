@@ -124,11 +124,24 @@ def store_votes(request):
         uid = data.get('uid')
         votes = data.get('votes')
         
+        # Log the received data
+        print(f"Received request to store votes for UID: {uid}")
+        print(f"Votes received: {votes}")
+
         # 1. Generate a unique token
         token = str(uuid.uuid4())
+        print(f"Generated a unique token: {token}")
         
         # 2. Store data in cache
-        cache.set(token, {'uid': uid, 'votes': votes}, timeout=86400) # 24-hour timeout
+        cache_data = {'uid': uid, 'votes': votes}
+        cache.set(token, cache_data, timeout=86400) # 24-hour timeout
+        
+        # Log the data being stored and the key used
+        print(f"Storing the following data in cache with key '{token}': {cache_data}")
+
+        # You can add a statement to verify the data was set by retrieving it
+        retrieved_data = cache.get(token)
+        print(f"Successfully retrieved from cache with key '{token}': {retrieved_data}")
 
         # 3. Construct and send confirmation email
         confirm_url = f"https://woroni100.com/confirm-votes/?token={token}"        
@@ -143,10 +156,15 @@ def store_votes(request):
         recipient_list = [f"{uid}@anu.edu.au"]
 
         email = EmailMessage(subject, html_message, from_email, recipient_list)
-        email.content_subtype = "html"  # this makes the body HTML only
+        email.content_subtype = "html"
         email.send()
         
+        # Log the email sending process
+        print(f"Sent confirmation email to: {recipient_list}")
+        
         return JsonResponse({"message": "Confirmation email sent."})
+
+    print(f"Invalid request method: {request.method}")
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
 def save_user_votes(user, spotify_songs):
