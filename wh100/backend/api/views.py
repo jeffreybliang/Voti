@@ -131,7 +131,7 @@ def store_votes(request):
         cache.set(token, {'uid': uid, 'votes': votes}, timeout=86400) # 24-hour timeout
 
         # 3. Construct and send confirmation email
-        confirm_url = f"https://api.woroni100.com/api/confirm-votes/?token={token}"        
+        confirm_url = f"https://woroni100.com/confirm-votes/?token={token}"        
         subject = "Confirm Your Vote"
 
         html_message = loader.render_to_string(
