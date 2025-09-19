@@ -95,7 +95,7 @@ def submit_votes(request):
     new_song_ids = set()
     new_votes = []
     for spotify_song in spotify_songs:
-        print(spotify_song)
+        ## print(spotify_song)
         new_song_ids.add(spotify_song["song_id"])
         # Check if the song is already in the database
         song, _ = Song.objects.get_or_create(
@@ -125,23 +125,23 @@ def store_votes(request):
         votes = data.get('votes')
         
         # Log the received data
-        print(f"Received request to store votes for UID: {uid}")
-        print(f"Votes received: {votes}")
+        ## print(f"Received request to store votes for UID: {uid}")
+        ## print(f"Votes received: {votes}")
 
         # 1. Generate a unique token
         token = str(uuid.uuid4())
-        print(f"Generated a unique token: {token}")
+        ## print(f"Generated a unique token: {token}")
         
         # 2. Store data in cache
         cache_data = {'uid': uid, 'votes': votes}
         cache.set(token, cache_data, timeout=600) # 24-hour timeout
         
         # Log the data being stored and the key used
-        print(f"Storing the following data in cache with key '{token}': {cache_data}")
+        ## print(f"Storing the following data in cache with key '{token}': {cache_data}")
 
         # You can add a statement to verify the data was set by retrieving it
         retrieved_data = cache.get(token)
-        print(f"Successfully retrieved from cache with key '{token}': {retrieved_data}")
+        ## print(f"Successfully retrieved from cache with key '{token}': {retrieved_data}")
 
         # 3. Construct and send confirmation email
         confirm_url = f"https://woroni100.com/confirm-votes/?token={token}"        
@@ -160,11 +160,11 @@ def store_votes(request):
         email.send()
         
         # Log the email sending process
-        print(f"Sent confirmation email to: {recipient_list}")
+        ## print(f"Sent confirmation email to: {recipient_list}")
         
         return JsonResponse({"message": "Confirmation email sent."})
 
-    print(f"Invalid request method: {request.method}")
+    ## print(f"Invalid request method: {request.method}")
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
 def save_user_votes(user, spotify_songs):
@@ -210,35 +210,41 @@ def save_user_votes(user, spotify_songs):
 @api_view(['GET'])
 def confirm_votes(request):
     token = request.GET.get('token')
-    print(f"Received token: {token}")  # Debug: Check the incoming token
+    ## print(f"Received token: {token}")  # Debug: Check the incoming token
     
     if not token:
-        print("No token provided in request.")  # Debug
+        ## print("No token provided in request.")  # Debug
         return Response({'error': 'Invalid link. Missing token.'}, status=status.HTTP_400_BAD_REQUEST)
 
     cached_data = cache.get(token)
-    print(f"Cached data retrieved: {cached_data}")  # Debug: Check cache content
+    ## print(f"Cached data retrieved: {cached_data}")  # Debug: Check cache content
 
     if cached_data:
-        uid = cached_data['uid']
+        raw_uid = cached_data['uid']
+        digits = ''.join(filter(str.isdigit, raw_uid))
+
+        if len(digits) != 7:
+            raise ValueError(f"Invalid UID '{raw_uid}': must contain exactly 7 digits")
+
+        uid = f"u{digits}"
         votes = cached_data['votes']
-        print(f"UID: {uid}, Votes: {votes}")  # Debug: Check UID and votes
+        ## print(f"UID: {uid}, Votes: {votes}")  # Debug: Check UID and votes
 
         # Find or create a user for this UID
         user, created = User.objects.get_or_create(username=uid, defaults={'email': f'{uid}@anu.edu.au'})
-        print(f"User {'created' if created else 'retrieved'}: {user.username}")  # Debug
+        ## print(f"User {'created' if created else 'retrieved'}: {user.username}")  # Debug
 
         # Call the refactored function
         result = save_user_votes(user, votes)
-        print(f"Result from save_user_votes: {result}")  # Debug: Check result
+        ## print(f"Result from save_user_votes: {result}")  # Debug: Check result
 
         if 'error' in result:
-            print(f"Error saving votes: {result['error']}")  # Debug
+            ## print(f"Error saving votes: {result['error']}")  # Debug
             return Response({'error': result['error']}, status=status.HTTP_400_BAD_REQUEST)
         
         return Response({'message': 'Your vote has been submitted successfully!'}, status=status.HTTP_200_OK)
     
-    print("Token is invalid or expired.")  # Debug
+    ## print("Token is invalid or expired.")  # Debug
     return Response({'error': 'This link has expired or is invalid.'}, status=status.HTTP_404_NOT_FOUND)
 
 class UserListView(generics.ListAPIView):
