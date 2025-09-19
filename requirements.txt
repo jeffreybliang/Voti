@@ -9,6 +9,7 @@ django-allauth==65.3.0
 django-cors-headers==4.6.0
 django-environ==0.11.2
 django-extensions==3.2.3
+django-redis==6.0.0
 django-ses==4.4.0
 djangorestframework==3.15.2
 environ==1.0
@@ -31,6 +32,7 @@ spotipy==2.24.0
 sqlparse==0.5.2
 typing_extensions==4.12.2
 urllib3==2.2.3
+uuid==1.30
 wheel==0.45.1
 whitenoise==6.9.0
 XlsxWriter>=3.1.0

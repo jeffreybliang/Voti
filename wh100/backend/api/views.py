@@ -98,11 +98,11 @@ def store_votes(request):
         cache.set(token, {'uid': uid, 'votes': votes}, timeout=86400) # 24-hour timeout
 
         # 3. Construct and send confirmation email
-        confirm_url = f"http://localhost/confirm-votes/?token={token}"        
+        confirm_url = f"https://api.woroni100.com/api/confirm-votes/?token={token}"        
         subject = "Confirm Your Vote"
 
         html_message = loader.render_to_string(
-            'confirm_votes.html',
+            'account/email/confirm_votes.html',
             {'confirm_url': confirm_url}
         )
 
@@ -162,7 +162,7 @@ def confirm_votes(request):
     
     if not token:
         return Response({'error': 'Invalid link. Missing token.'}, status=status.HTTP_400_BAD_REQUEST)
-    print(token)
+
     cached_data = cache.get(token)
 
     if cached_data:
