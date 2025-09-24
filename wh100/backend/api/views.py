@@ -22,7 +22,13 @@ import uuid
 
 from django.template import loader
 
+from django.conf import settings
+from PIL import Image, ImageDraw, ImageFont
+import base64
+from io import BytesIO
+from pathlib import Path
 
+from spotify.spotify_client import SpotifyClient
 
 User = get_user_model()
 
@@ -241,11 +247,112 @@ def confirm_votes(request):
         if 'error' in result:
             ## print(f"Error saving votes: {result['error']}")  # Debug
             return Response({'error': result['error']}, status=status.HTTP_400_BAD_REQUEST)
-        
-        return Response({'message': 'Your vote has been submitted successfully!'}, status=status.HTTP_200_OK)
+        img_str = generate_image(votes)
+
+        return Response({
+            'message': 'Your vote has been submitted successfully!',
+            'image': img_str   # frontend will receive this
+        }, status=status.HTTP_200_OK)
     
     ## print("Token is invalid or expired.")  # Debug
     return Response({'error': 'This link has expired or is invalid.'}, status=status.HTTP_404_NOT_FOUND)
+
+def generate_image(votes):
+    base_dir = Path(settings.BASE_DIR).parent
+
+    background_path = base_dir /'frontend' / 'src' / 'media' / 'ivotedcard.png'
+
+    background = Image.open(background_path).convert("RGBA")
+    draw = ImageDraw.Draw(background)
+
+    # Load fonts
+    title_font_path = base_dir  / 'frontend' / 'src' / 'fonts' / 'FuturaNowHeadline.ttf'
+    regular_font_path = base_dir  / 'frontend' / 'src' / 'fonts' / 'FuturaNowHeadline.ttf'
+    bold_font_path = base_dir  / 'frontend' / 'src' / 'fonts' / 'FuturaNowHeadlineBold.ttf'
+
+    title_font = ImageFont.truetype(str(title_font_path), 48)
+    regular_font = ImageFont.truetype(str(regular_font_path), 28)
+    bold_font = ImageFont.truetype(str(bold_font_path), 28)
+    rect = (108, 473, 108 + 864, 473 + 784)
+
+    # Define the bounding box for the text
+    center_x = rect[0] + (rect[2] - rect[0]) // 2
+    y_start = rect[1] + 40
+
+    # Write the title "My Votes:" centered horizontally
+    title_text = "My Votes:"
+    draw.text((center_x, y_start), title_text, font=title_font, fill="black", anchor="ma")
+
+    # Update y_start for the first song
+    y_start += draw.textbbox((0, 0), title_text, font=title_font)[3] - draw.textbbox((0, 0), title_text, font=title_font)[1] + 40
+
+    # Define the maximum text width for the song lines
+    max_width = rect[2] - rect[0] - 100
+
+    all_artist_ids = set()
+    for vote in votes:
+        for artist_id in vote['artist_ids']:
+            # Strip extra URI info if needed
+            all_artist_ids.add(artist_id.split(":")[-1])
+    
+    # 2. Get artist names from Spotify API
+    # Assuming you have a SpotifyClient and a get_artist_names function
+    try:
+        sp = SpotifyClient().get_client()
+        artist_details = sp.artists(list(all_artist_ids))
+        artist_name_map = {artist['id']: artist['name'] for artist in artist_details['artists']}
+    except Exception as e:
+        # Handle cases where the Spotify API call fails
+        print(f"Error fetching artist names from Spotify API: {e}")
+        artist_name_map = {} # Use an empty map to prevent errors later
+
+    # Draw each song
+    for vote in votes:
+        song_name = vote['name']
+        resolved_names = [artist_name_map.get(aid.split(":")[-1], 'Unknown') for aid in vote['artist_ids']]
+        artists_str = ", ".join(resolved_names)
+        
+        # Measure widths of individual parts
+        song_name_width = draw.textbbox((0, 0), song_name, font=bold_font)[2] - draw.textbbox((0, 0), song_name, font=bold_font)[0]
+        dash_width = draw.textbbox((0, 0), " — ", font=regular_font)[2] - draw.textbbox((0, 0), " — ", font=regular_font)[0]
+        artists_width = draw.textbbox((0, 0), artists_str, font=regular_font)[2] - draw.textbbox((0, 0), artists_str, font=regular_font)[0]
+        
+        full_text_width = song_name_width + dash_width + artists_width
+
+        # Check for overflow and truncate artists if necessary
+        if full_text_width > max_width:
+            artists_available_width = max_width - song_name_width - dash_width - (draw.textbbox((0, 0), "...", font=regular_font)[2] - draw.textbbox((0, 0), "...", font=regular_font)[0])
+            truncated_artists = ""
+            for char in artists_str:
+                test_string = truncated_artists + char
+                if (draw.textbbox((0, 0), test_string, font=regular_font)[2] - draw.textbbox((0, 0), test_string, font=regular_font)[0]) > artists_available_width:
+                    break
+                truncated_artists += char
+            artists_str = truncated_artists.strip() + "..."
+            artists_width = draw.textbbox((0, 0), artists_str, font=regular_font)[2] - draw.textbbox((0, 0), artists_str, font=regular_font)[0]
+        
+        # Calculate starting x-coordinate to center the combined text
+        total_line_width = song_name_width + dash_width + artists_width
+        start_x = center_x - (total_line_width // 2)
+
+        # Draw the bold song name
+        draw.text((start_x, y_start), song_name, font=bold_font, fill="black")
+        
+        # Draw the regular font artists
+        artists_start_x = start_x + song_name_width
+        draw.text((artists_start_x, y_start), f" — {artists_str}", font=regular_font, fill="black")
+        
+        # Update y_start for the next line
+        y_start += 63
+
+    buffer = BytesIO()
+    background.save(buffer, format="PNG")
+    buffer.seek(0)
+
+    # Encode as base64
+    img_str = base64.b64encode(buffer.read()).decode('utf-8')
+    return img_str
+
 
 class UserListView(generics.ListAPIView):
     User = get_user_model()
