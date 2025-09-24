@@ -6,6 +6,7 @@ export default function ConfirmVotes() {
   const [searchParams] = useSearchParams();
   const [status, setStatus] = useState('loading'); // 'loading', 'success', 'error'
   const [message, setMessage] = useState('');
+  const [imageSrc, setImageSrc] = useState(null); // <-- new state for base64 image
 
   const token = searchParams.get('token');
 
@@ -32,12 +33,15 @@ export default function ConfirmVotes() {
 
         if (response.ok) {
           setStatus('success');
-          setMessage(data.message || 'Your vote has been successfully confirmed!');
+          setMessage(data.message);
+          if (data.image) {
+            setImageSrc(`data:image/png;base64,${data.image}`);
+          }
         } else {
           setStatus('error');
-          setMessage(data.error || 'Failed to confirm your vote. The token may be invalid or expired.');
+          setMessage('Failed to confirm your vote. Please resubmit your votes.');
         }
-      } catch (error) { 
+              } catch (error) { 
         setStatus('error');
         setMessage('An error occurred. Please try again later.');
       }
@@ -60,10 +64,23 @@ export default function ConfirmVotes() {
       case 'success':
         return (
           <>
-            <h1 className="text-2xl font-semibold text-green-600 dark:text-green-400 mb-4">
+            <h1 className="text-2xl font-semibold text-green-600 dark:text-green-400 mb-4 justify-center">
               Vote Confirmed! 🎉
             </h1>
             <p className="text-gray-600 dark:text-gray-300">{message}</p>
+            <p className="text-gray-600 dark:text-gray-300">
+              Share your votes with friends by saving the image below!
+            </p>
+            {imageSrc && (
+              <div className="mt-4 flex justify-center">
+                <img
+                  src={imageSrc}
+                  alt="My Votes"
+                  className="rounded-lg shadow-md w-[90%] mx-auto"
+                />
+              </div>
+            )}
+
           </>
         );
       case 'error':
@@ -84,8 +101,8 @@ export default function ConfirmVotes() {
     <>
       <div className="fixed top-0 left-0 w-full h-full bg-[url('media/best400.png')] dark:bg-[url('media/darkbest.png')] bg-[length:100%_100%] bg-no-repeat -z-10" />
 
-      <div className="flex justify-center items-center w-screen h-screen overflow-hidden fixed top-0 left-0">
-        <div className="max-w-md w-full bg-white dark:bg-gray-700 p-6 rounded-2xl shadow-lg border border-gray-200 text-center">
+      <div className="flex justify-center items-center w-screen h-screen overflow-hidden fixed top-0 left-0 px-4">
+        <div className="max-w-md w-full bg-white dark:bg-gray-700 p-6 rounded-2xl shadow-lg border border-gray-200 text-center justify-center">
           {renderContent()}
         </div>
       </div>
