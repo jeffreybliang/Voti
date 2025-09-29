@@ -75,42 +75,58 @@ def get_spotify_client(request):
 @api_view(['GET'])
 @permission_classes([IsAdminUser])
 def create_hottest_100(request):
-    """
-    Creates a Spotify playlist of the top 100 songs based on all user votes.
-    """
     sp_client = get_spotify_client(request)
     if not isinstance(sp_client, spotipy.Spotify):
         return Response({'error': 'Spotify authentication required.'}, status=401)
 
-    # Count votes grouped by (song name, artists) for all votes
+    # Only include votes from verified users
+    verified_votes = Vote.objects.filter(username__emailaddress__verified=True)
+
+    # Count votes grouped by (song name, artists)
     vote_counts = (
         Song.objects
+        .filter(vote__in=verified_votes)
         .values('name', 'artists')
         .annotate(vote_count=Count('vote'))
-        .order_by('-vote_count')[:100]
+        .order_by('-vote_count')
     )
 
-    # For each unique (name, artists), get the first Song object (to retrieve song_id)
+    # Get the 100th place threshold
+    top_100 = list(vote_counts[:100])
+    if len(top_100) == 100:
+        threshold = top_100[-1]['vote_count']
+    else:
+        threshold = 0  # fewer than 100 songs total
+
+    # Extend to include ties at the threshold
+    final_vote_counts = [item for item in vote_counts if item['vote_count'] >= threshold]
+
+    # Map (name, artists) → Song objects to retrieve song_ids
     song_map = defaultdict(list)
-    for song in Song.objects.all():  # Changed to include all songs
+    for song in Song.objects.filter(vote__in=verified_votes):
         key = (song.name, tuple(song.artists))
         song_map[key].append(song)
 
+    # Collect Spotify song IDs for the playlist
     song_ids = []
-    for item in vote_counts:
+    for item in final_vote_counts:
         key = (item['name'], tuple(item['artists']))
         song_obj = song_map.get(key, [None])[0]
         if song_obj:
             song_ids.append(song_obj.song_id)
 
+    # Create a playlist on Spotify
     user_id = sp_client.current_user()['id']
     current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M')
-    playlist_name = f"Woroni's Hottest 100 {current_datetime}"
+    playlist_name = f"Hottest100 {current_datetime}"
 
     playlist = sp_client.user_playlist_create(user=user_id, name=playlist_name)
     sp_client.playlist_add_items(playlist_id=playlist['id'], items=song_ids)
 
-    return Response({"message": f"Playlist '{playlist_name}' created successfully with the top 100 songs!"})
+    return Response({
+        "message": f"Playlist '{playlist_name}' created successfully with {len(song_ids)} songs!",
+        "threshold_votes": threshold
+    })
 
 
 def get_artist_names(sp, artist_ids):
