@@ -140,7 +140,7 @@ def store_votes(request):
         
         # 2. Store data in cache
         cache_data = {'uid': uid, 'votes': votes}
-        cache.set(token, cache_data, timeout=600) # 24-hour timeout
+        cache.set(token, cache_data, timeout=1200) # 24-hour timeout
         
         # Log the data being stored and the key used
         ## print(f"Storing the following data in cache with key '{token}': {cache_data}")
