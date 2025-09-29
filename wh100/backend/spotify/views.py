@@ -80,12 +80,11 @@ def create_hottest_100(request):
         return Response({'error': 'Spotify authentication required.'}, status=401)
 
     # Only include votes from verified users
-    verified_votes = Vote.objects.filter(username__emailaddress__verified=True)
-
+    all_votes = Vote.objects.all()
     # Count votes grouped by (song name, artists)
     vote_counts = (
         Song.objects
-        .filter(vote__in=verified_votes)
+        .filter(vote__in=all_votes)
         .values('name', 'artists')
         .annotate(vote_count=Count('vote'))
         .order_by('-vote_count')
@@ -97,13 +96,13 @@ def create_hottest_100(request):
         threshold = top_100[-1]['vote_count']
     else:
         threshold = 0  # fewer than 100 songs total
-
+    
     # Extend to include ties at the threshold
     final_vote_counts = [item for item in vote_counts if item['vote_count'] >= threshold]
 
     # Map (name, artists) → Song objects to retrieve song_ids
     song_map = defaultdict(list)
-    for song in Song.objects.filter(vote__in=verified_votes):
+    for song in Song.objects.filter(vote__in=all_votes):
         key = (song.name, tuple(song.artists))
         song_map[key].append(song)
 
