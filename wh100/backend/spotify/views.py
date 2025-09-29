@@ -121,12 +121,16 @@ def create_hottest_100(request):
     playlist_name = f"Hottest100 {current_datetime}"
 
     playlist = sp_client.user_playlist_create(user=user_id, name=playlist_name)
-    sp_client.playlist_add_items(playlist_id=playlist['id'], items=song_ids)
+    for i in range(0, len(song_ids), 100):
+        batch = song_ids[i:i+100]
+        sp_client.playlist_add_items(playlist_id=playlist['id'], items=batch)
 
     return Response({
         "message": f"Playlist '{playlist_name}' created successfully with {len(song_ids)} songs!",
         "threshold_votes": threshold
     })
+
+
 
 
 def get_artist_names(sp, artist_ids):
