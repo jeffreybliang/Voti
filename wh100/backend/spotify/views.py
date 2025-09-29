@@ -65,12 +65,12 @@ def get_spotify_client(request):
     auth_manager = sp_oauth.get_oauth()
 
     token_info = auth_manager.validate_token(token_info)
+
     if not token_info:
         # If token is invalid, return None
         return None
     
-    sp_client = spotipy.Spotify(auth_manager=auth_manager)
-    return sp_client
+    return spotipy.Spotify(auth=token_info['access_token'])
 
 @api_view(['GET'])
 @permission_classes([IsAdminUser])
